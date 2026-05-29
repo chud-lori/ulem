@@ -28,6 +28,23 @@
     box-shadow:0 14px 30px rgba(90,67,52,.22), inset 0 0 0 1px #fff8;position:relative;}
   .card::before{content:"";position:absolute;top:-13px;left:50%;transform:translateX(-50%) rotate(-3deg);
     width:120px;height:26px;background:var(--tape);border:1px dashed #d8b98a55;border-radius:2px;}
+  /* ---- cover styled as a closed photo album that swings open ---- */
+  .card.album{background:linear-gradient(135deg,#d8b98a,#c39e66);
+    box-shadow:0 16px 36px rgba(90,67,52,.4), inset 0 0 0 2px #fff5, inset 0 0 0 11px rgba(255,255,255,.16);}
+  .card.album::before{display:none;}
+  .album .ribbon{position:absolute;top:0;bottom:0;right:34px;width:26px;background:var(--rose);
+    box-shadow:0 0 8px rgba(0,0,0,.2);}
+  .album .ribbon::after{content:"";position:absolute;top:50%;left:50%;width:18px;height:18px;border-radius:50%;
+    background:var(--rose-dk);transform:translate(-50%,-50%);}
+  .album-frame{background:#fff;padding:8px;border-radius:3px;display:inline-block;transform:rotate(-1.5deg);
+    box-shadow:0 8px 16px rgba(90,67,52,.3);}
+  .album-frame img{width:min(56vw,210px);animation:none;filter:none;display:block;}
+  .album-plate{background:#fbf3e3;border-radius:4px;padding:8px 14px;margin-top:14px;display:inline-block;
+    box-shadow:0 4px 10px rgba(90,67,52,.2);}
+  .album-plate h1{font-size:clamp(22px,6.5vw,32px);}
+  .album-plate .sub{color:#8a6d56;}
+  .page.cover{transition:opacity .9s ease, transform .9s cubic-bezier(.4,.05,.45,1);}
+  .page.cover.leftout{transform:rotateY(-150deg);opacity:0;}
   h1{font-size:clamp(28px,9vw,52px);line-height:1.05;color:var(--rose-dk);font-weight:700;}
   h2{font-size:clamp(20px,5.5vw,30px);color:var(--rose-dk);margin-bottom:6px;}
   .amp{font-style:italic;color:var(--gold);}
@@ -101,8 +118,9 @@
   <button class="navbtn" id="next" aria-label="next">›</button>
 </div>
 
-<!-- SHARED content + backend + music (same as every template) -->
+<!-- SHARED content + backend + music + opening effects (same as every template) -->
 <script src="../data.js"></script>
+<script src="../fx.js"></script>
 <script type="module" src="../firebase.js"></script>
 <script src="../music.js" defer></script>
 <script>
@@ -133,13 +151,13 @@ const PAGES = [
 
 /* ---- page builders ---- */
 function build(p, i){
-  if(p.type==="cover") return `<div class="card">
+  if(p.type==="cover") return `<div class="card album">
+      <span class="ribbon"></span>
       <p class="greet" id="greet"></p>
-      <img id="coupleImg" src="../photos/couple.png" alt="" onerror="this.style.display='none'"/>
-      <h1>${W.bride}<span class="amp"> &amp; </span>${W.groom}</h1>
-      <p class="sub">are getting married</p>
-      <p class="hand big">${W.dateLabel}</p>
-      <div class="acts"><button class="btn" onclick="go(1)">Open our story ✿</button></div></div>`;
+      <div class="album-frame"><img id="coupleImg" src="../photos/couple.png" alt="" onerror="this.style.display='none'"/></div>
+      <div class="album-plate"><h1>${W.bride}<span class="amp"> &amp; </span>${W.groom}</h1>
+        <p class="sub">our photo album</p><p class="hand big">${W.dateLabel}</p></div>
+      <div class="acts"><button class="btn" onclick="go(1)">Untie &amp; open ✿</button></div></div>`;
   if(p.type==="countdown") return `<div class="card">
       <h2>Counting down…</h2><p class="sub">until we say "I do"</p>
       <div class="cd" id="cd"></div></div>`;
@@ -263,6 +281,8 @@ function withWB(fn){ const WB=window.WB; if(WB) fn(WB); else addEventListener("w
   if(open){ const k=PAGES.findIndex(p=>p.type===open||(p.s&&p.s.id===open)); if(k>=0) idx=k; }
   go(idx);
 })();
+// ambient drifting petals
+if(window.FX) FX.particles({ chars:["✿","❀","✽","♥"], color:"#e8889c", count:13, z:0, min:11, var:18 });
 </script>
 </body>
 </html>

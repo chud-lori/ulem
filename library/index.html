@@ -44,12 +44,18 @@
   .ph{color:var(--leather);border-bottom:1px dotted #b59; }
   .ph{color:var(--leather);background:#efe0bf;padding:0 3px;border-radius:2px;}
 
-  /* ---- cover (closed book) ---- */
+  /* ---- cover (closed book that swings open) ---- */
+  .page.cover{z-index:5;}                 /* keep the cover above the page it reveals */
   .page.cover .sheet{background:linear-gradient(135deg,var(--leather),var(--leather2));border:none;
     color:#f3e4c0;box-shadow:0 24px 50px rgba(0,0,0,.6), inset 0 0 0 2px var(--gold), inset 0 0 0 12px rgba(201,162,75,.25);
-    padding:26px 26px 30px;}
+    padding:26px 26px 30px;transform-origin:left center;backface-visibility:hidden;}
+  /* a hint of the gilded spine on the hinge side */
+  .page.cover .sheet::before{content:"";position:absolute;left:0;top:0;bottom:0;width:12px;
+    background:linear-gradient(90deg,#2c0f17,rgba(201,162,75,.5));border-radius:4px 0 0 4px;}
   .page.cover .sheet::after{box-shadow:none;}
-  .page.cover.leftout{transform:rotateY(-118deg);opacity:0;}
+  /* swing the whole cover open on its left hinge (slower than a normal page turn) */
+  .page.cover{transition:opacity .9s ease, transform .95s cubic-bezier(.4,.05,.45,1);}
+  .page.cover.leftout{transform:rotateY(-152deg);opacity:0;}
   .cover h1{color:#f7e9c6;font-size:clamp(24px,7vw,44px);}
   .cover .couple{width:min(40vw,140px);}
   .cover .rule{margin:12px auto;}
@@ -141,8 +147,9 @@
   <button class="navbtn" id="next">›</button>
 </div>
 
-<!-- SHARED content + backend + music (same as every template) -->
+<!-- SHARED content + backend + music + effects (same as every template) -->
 <script src="../data.js"></script>
+<script src="../fx.js"></script>
 <script type="module" src="../firebase.js"></script>
 <script src="../music.js" defer></script>
 <script>
@@ -250,6 +257,7 @@ function go(n){ n=Math.max(0,Math.min(PAGES.length-1,n));
   document.getElementById("prev").disabled=n===0; document.getElementById("next").disabled=n===PAGES.length-1;
   document.getElementById("pageno").textContent="p. "+(n+1)+" / "+PAGES.length; cur=n; }
 window.go=go;
+// contextual opening: the leather cover swings open on its left hinge → page 2 (contents)
 window.openBook=()=>go(1);
 document.getElementById("prev").onclick=()=>go(cur-1);
 document.getElementById("next").onclick=()=>go(cur+1);
@@ -307,6 +315,8 @@ function withWB(fn){ const WB=window.WB; if(WB) fn(WB); else addEventListener("w
 (function(){ const open=new URLSearchParams(location.search).get("open"); let idx=0;
   if(open){ const k=PAGES.findIndex(p=>p.type===open||(p.s&&p.s.id===open)); if(k>=0) idx=k; }
   go(idx); })();
+// ambient gold dust drifting behind the book
+if(window.FX) FX.particles({ chars:["✦","·","❉","✧"], color:"rgba(201,162,75,.8)", count:16, z:0, min:9, var:14, minDur:11, varDur:12 });
 </script>
 </body>
 </html>

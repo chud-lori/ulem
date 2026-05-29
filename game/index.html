@@ -19,7 +19,12 @@
   /* loading + title */
   #titleScreen{position:fixed;inset:0;z-index:40;display:flex;flex-direction:column;align-items:center;
     justify-content:center;text-align:center;gap:24px;padding:24px;
-    background:linear-gradient(180deg,#f3c8d2 0%,#f7ddc9 55%,#e9f1d0 100%);}
+    background:linear-gradient(180deg,#f3c8d2 0%,#f7ddc9 55%,#e9f1d0 100%);
+    clip-path:circle(150% at 50% 56%);transition:clip-path .75s ease-in, opacity .75s ease-in;}
+  /* arcade "iris-in": the title closes to a shrinking circle, revealing the town */
+  #titleScreen.iris{clip-path:circle(0% at 50% 56%);opacity:0;}
+  #startBtn:not([disabled]){animation:press 1.05s steps(1) infinite;}
+  @keyframes press{50%{filter:brightness(1.25)}}
   #titleScreen h1{font-size:clamp(16px,4.2vw,30px);line-height:1.7;color:var(--rose-dk);
     text-shadow:2px 2px 0 #fff,4px 4px 0 rgba(0,0,0,.08);}
   #titleScreen .amp{color:var(--gold);}
@@ -140,6 +145,8 @@
 
 <!-- SHARED content for all templates (one source of truth): defines window.WEDDING -->
 <script src="../data.js"></script>
+<!-- SHARED opening effects (petals / entrance / typewriter) -->
+<script src="../fx.js"></script>
 <!-- SHARED live backend (RSVP / wishes / book-claims) via Firebase (optional) -->
 <script type="module" src="../firebase.js"></script>
 <!-- SHARED music widget (YouTube bg track + guest playlist; from window.MUSIC) -->
@@ -170,7 +177,7 @@ const IMG = {};
 let loaded=0, total=Object.keys(ASSET_SRC).length;
 function preload(done){
   const lbl=document.getElementById("startLabel");
-  const tick=()=>{ loaded++; lbl.textContent = loaded<total?`Loading… ${loaded}/${total}`:"Begin the Stroll";
+  const tick=()=>{ loaded++; lbl.textContent = loaded<total?`Loading… ${loaded}/${total}`:"▶ PRESS START";
     if(loaded>=total) done(); };
   for(const k in ASSET_SRC){
     const im=new Image(); IMG[k]=im; im.ok=false;
@@ -622,6 +629,10 @@ const GUEST = new URLSearchParams(location.search).get("to");
   // personalised greeting from ?to=Name
   const g=document.getElementById("guestGreet");
   if(g && GUEST){ g.textContent=`Dear ${GUEST}, you're invited 💌`; g.style.display="inline-block"; }
+  // animated opening: staggered entrance + drifting hearts behind the title
+  if(window.FX){ const ts=document.getElementById("titleScreen");
+    FX.stagger("#titleScreen > *",{step:130});
+    FX.particles({layer:ts, z:0, chars:["♥","✿","❀"], color:"#e8889c", count:12, min:12, var:16}); }
 })();
 function fmtCountdown(){
   const t=new Date(WEDDING.date).getTime()-Date.now();
@@ -680,7 +691,9 @@ const HAS_YT_MUSIC = !!(window.MUSIC && (window.MUSIC.youtube || (window.MUSIC.p
 if(HAS_YT_MUSIC){ const mb=document.getElementById("musicBtn"); if(mb) mb.style.display="none"; }
 document.getElementById("startBtn").addEventListener("click",()=>{
   if(document.getElementById("startBtn").disabled) return;
-  document.getElementById("titleScreen").style.display="none";
+  const ts=document.getElementById("titleScreen");
+  ts.classList.add("iris");                       // arcade iris-in to the town
+  setTimeout(()=>{ ts.style.display="none"; }, 760);
   started=true; if(!HAS_YT_MUSIC && !musicOn) toggleMusic();
   // deep-link: ?open=rsvp jumps straight to a section (also handy for sharing)
   const open=new URLSearchParams(location.search).get("open");
