@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+<title>Our Story — A Wedding Scrapbook</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link href="https://fonts.googleapis.com/css2?family=Caveat:wght@500;700&family=Playfair+Display:ital,wght@0,500;0,700;1,500&display=swap" rel="stylesheet" />
+<style>
+  :root{ --ink:#5a4334; --rose:#e8889c; --rose-dk:#c75d75; --gold:#cda33e; --paper:#fbf3e6; --tape:#f7d9a733; }
+  *{box-sizing:border-box;margin:0;padding:0;}
+  html,body{height:100%;}
+  body{font-family:"Playfair Display",Georgia,serif;color:var(--ink);overflow:hidden;
+    background:#e9d9c3 radial-gradient(circle at 30% 20%,#fdf6ea,#e7d4ba);
+    -webkit-tap-highlight-color:transparent;}
+  .hand{font-family:"Caveat",cursive;}
+
+  /* book + pages */
+  #book{position:fixed;inset:0;}
+  .page{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;
+    gap:14px;padding:34px 22px 96px;overflow-y:auto;text-align:center;
+    opacity:0;transform:translateX(60px) rotateY(8deg);transform-origin:left center;pointer-events:none;
+    transition:opacity .45s ease,transform .45s ease;}
+  .page.active{opacity:1;transform:none;pointer-events:auto;}
+  .page.leftout{opacity:0;transform:translateX(-60px) rotateY(-8deg);}
+  /* a scrapbook "card" */
+  .card{background:var(--paper);max-width:520px;width:100%;border-radius:10px;padding:24px 22px 28px;
+    box-shadow:0 14px 30px rgba(90,67,52,.22), inset 0 0 0 1px #fff8;position:relative;}
+  .card::before{content:"";position:absolute;top:-13px;left:50%;transform:translateX(-50%) rotate(-3deg);
+    width:120px;height:26px;background:var(--tape);border:1px dashed #d8b98a55;border-radius:2px;}
+  h1{font-size:clamp(28px,9vw,52px);line-height:1.05;color:var(--rose-dk);font-weight:700;}
+  h2{font-size:clamp(20px,5.5vw,30px);color:var(--rose-dk);margin-bottom:6px;}
+  .amp{font-style:italic;color:var(--gold);}
+  .sub{font-family:"Caveat",cursive;font-size:clamp(18px,5vw,24px);color:var(--ink);}
+  p{font-size:clamp(13px,3.4vw,16px);line-height:1.8;margin:8px 0;}
+  .hand.big{font-size:clamp(20px,5.5vw,26px);line-height:1.5;}
+  .ph{color:var(--rose-dk);background:#fbe3ea;padding:0 4px;border-radius:3px;}
+  .greet{font-family:"Caveat",cursive;font-size:clamp(18px,5vw,23px);color:var(--rose-dk);
+    background:#fff8;border:1.5px dashed var(--rose);border-radius:30px;padding:6px 18px;display:none;}
+
+  /* polaroid */
+  .polaroid{background:#fff;padding:10px 10px 16px;border-radius:3px;box-shadow:0 8px 18px rgba(90,67,52,.25);
+    display:inline-block;transform:rotate(-2.5deg);}
+  .polaroid img{display:block;width:min(72vw,260px);height:min(72vw,260px);object-fit:cover;background:#efe2cd;border-radius:2px;}
+  .polaroid.r{transform:rotate(2.5deg);}
+  .polaroid .cap{font-family:"Caveat",cursive;font-size:19px;margin-top:8px;color:#8a6d56;}
+  .avatar img{width:min(40vw,150px);height:min(40vw,150px);}
+
+  /* couple cover image */
+  #coupleImg{width:min(74vw,300px);filter:drop-shadow(0 10px 14px rgba(90,67,52,.25));
+    animation:bob 3.2s ease-in-out infinite;}
+  @keyframes bob{0%,100%{transform:translateY(0) rotate(-1deg)}50%{transform:translateY(-9px) rotate(1deg)}}
+
+  /* countdown */
+  .cd{display:flex;gap:10px;justify-content:center;flex-wrap:wrap;}
+  .cd div{background:#fff;border-radius:10px;padding:10px 12px;min-width:62px;box-shadow:0 6px 12px rgba(90,67,52,.18);}
+  .cd b{display:block;font-size:clamp(22px,6vw,32px);color:var(--rose-dk);}
+  .cd span{font-family:"Caveat",cursive;font-size:14px;color:#8a6d56;}
+
+  /* details / agenda */
+  .detail{display:flex;gap:12px;text-align:left;margin:9px 0;font-size:15px;line-height:1.6;}
+  .detail .k{font-family:"Caveat",cursive;color:var(--rose-dk);min-width:90px;font-size:18px;}
+
+  /* buttons + forms */
+  .btn{font-family:"Caveat",cursive;font-size:20px;cursor:pointer;border:none;background:var(--rose);color:#fff;
+    padding:11px 26px;border-radius:30px;box-shadow:0 5px 0 var(--rose-dk);transition:transform .05s,box-shadow .05s;}
+  .btn:active{transform:translateY(4px);box-shadow:0 1px 0 var(--rose-dk);}
+  .btn.ghost{background:#fff;color:var(--rose-dk);box-shadow:0 5px 0 #e6d3bd;}
+  .acts{display:flex;gap:10px;flex-wrap:wrap;justify-content:center;margin-top:10px;}
+  label{display:block;font-family:"Caveat",cursive;font-size:18px;text-align:left;margin:10px 0 4px;color:#8a6d56;}
+  input,select,textarea{width:100%;font-family:"Playfair Display",serif;font-size:14px;padding:10px 12px;
+    border:2px solid #e6d3bd;border-radius:8px;background:#fffdf8;color:var(--ink);}
+  .books{display:flex;flex-direction:column;gap:8px;margin:10px 0;text-align:left;}
+  .bookrow{display:flex;justify-content:space-between;align-items:center;gap:8px;background:#fffdf8;
+    border:2px solid #e6d3bd;border-radius:8px;padding:9px 12px;font-size:14px;flex-wrap:wrap;}
+  .claim{font-family:"Caveat",cursive;font-size:16px;cursor:pointer;background:var(--rose);color:#fff;border:none;
+    border-radius:20px;padding:5px 14px;}
+  .taken{color:#2c7a3f;font-family:"Caveat",cursive;font-size:16px;}
+  .wishes{display:flex;flex-direction:column;gap:9px;text-align:left;max-height:42vh;overflow:auto;margin-top:10px;width:100%;}
+  .wish{background:#fffdf8;border:1.5px solid #f0ddc4;border-left:4px solid var(--rose);border-radius:8px;padding:9px 12px;}
+  .wish b{font-family:"Caveat",cursive;font-size:18px;color:var(--rose-dk);display:block;}
+  .note{font-family:"Caveat",cursive;font-size:15px;color:#a88;}
+
+  /* nav */
+  #nav{position:fixed;left:0;right:0;bottom:18px;display:flex;align-items:center;justify-content:center;gap:18px;z-index:10;}
+  .navbtn{font-family:"Caveat",cursive;font-size:20px;background:#fff;border:2px solid var(--rose);color:var(--rose-dk);
+    width:52px;height:52px;border-radius:50%;cursor:pointer;box-shadow:0 4px 10px rgba(90,67,52,.2);}
+  .navbtn:disabled{opacity:.35;cursor:default;}
+  #dots{display:flex;gap:6px;flex-wrap:wrap;max-width:55vw;justify-content:center;}
+  #dots i{width:8px;height:8px;border-radius:50%;background:#d8c3a6;transition:background .2s,transform .2s;}
+  #dots i.on{background:var(--rose);transform:scale(1.4);}
+  .pageno{position:fixed;top:14px;right:16px;font-family:"Caveat",cursive;color:#a88;font-size:16px;z-index:10;}
+</style>
+</head>
+<body>
+<div id="book"></div>
+<div class="pageno" id="pageno"></div>
+<div id="nav">
+  <button class="navbtn" id="prev" aria-label="previous">‹</button>
+  <div id="dots"></div>
+  <button class="navbtn" id="next" aria-label="next">›</button>
+</div>
+
+<!-- SHARED content + backend (same as every template) -->
+<script src="../data.js"></script>
+<script type="module" src="../firebase.js"></script>
+<script>
+"use strict";
+/* ===================================================================
+   STORYBOOK / SCRAPBOOK template. Reads window.WEDDING from ../data.js
+   and window.WB from ../firebase.js. Edit content in ../data.js only.
+   =================================================================== */
+const W = window.WEDDING;
+const GUEST = new URLSearchParams(location.search).get("to");
+const esc = s => String(s==null?"":s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+const photo = (file,cls,cap) =>
+  `<div class="polaroid ${cls||""}"><img src="assets/photos/${file}" onerror="this.onerror=null;this.src='assets/photos/_placeholder.png'"/>${cap?`<div class="cap">${cap}</div>`:""}</div>`;
+
+/* ---- page list (built from shared content) ---- */
+const PAGES = [
+  { type:"cover" },
+  { type:"countdown" },
+  { type:"profiles" },
+  ...W.story.map(s => ({ type:"story", s })),
+  { type:"venue" },
+  { type:"agenda" },
+  { type:"gift" },
+  { type:"wishes" },
+  { type:"rsvp" },
+  { type:"closing" },
+];
+
+/* ---- page builders ---- */
+function build(p, i){
+  if(p.type==="cover") return `<div class="card">
+      <p class="greet" id="greet"></p>
+      <img id="coupleImg" src="assets/couple.png" alt="" onerror="this.style.display='none'"/>
+      <h1>${W.bride}<span class="amp"> &amp; </span>${W.groom}</h1>
+      <p class="sub">are getting married</p>
+      <p class="hand big">${W.dateLabel}</p>
+      <div class="acts"><button class="btn" onclick="go(1)">Open our story ✿</button></div></div>`;
+  if(p.type==="countdown") return `<div class="card">
+      <h2>Counting down…</h2><p class="sub">until we say "I do"</p>
+      <div class="cd" id="cd"></div></div>`;
+  if(p.type==="profiles") return `<div class="card"><h2>Meet the Couple</h2>
+      <div style="display:flex;gap:14px;flex-wrap:wrap;justify-content:center;align-items:flex-start;margin-top:8px">
+        <div>${photo("bride.jpg","avatar")}<p class="hand big">${W.brideFull}</p><p class="note">${W.brideParents}</p></div>
+        <div>${photo("groom.jpg","avatar r")}<p class="hand big">${W.groomFull}</p><p class="note">${W.groomParents}</p></div>
+      </div></div>`;
+  if(p.type==="story"){ const s=p.s; return `<div class="card"><h2>${s.icon} ${s.title}</h2>
+      ${photo(s.photo, i%2?"r":"", s.label)}<div class="hand big" style="margin-top:12px">${s.html}</div></div>`; }
+  if(p.type==="venue") return `<div class="card"><h2>💒 You're Invited</h2>
+      <div class="detail"><span class="k">When</span><span>${W.dateLabel}<br/>Ceremony ${W.ceremonyTime}</span></div>
+      <div class="detail"><span class="k">Where</span><span>${W.venueName}<br/>${W.venueAddress}</span></div>
+      <div class="detail"><span class="k">Dress</span><span>${W.dress}</span></div>
+      <p class="hand" id="venueCd" style="font-size:18px;color:var(--rose-dk)"></p>
+      <div class="acts"><button class="btn" id="mapBtn">📍 Map</button>
+        <button class="btn ghost" onclick="addToCalendar()">📅 Calendar</button></div></div>`;
+  if(p.type==="agenda") return `<div class="card"><h2>🎉 Order of the Day</h2>
+      ${W.agenda.map(a=>`<div class="detail"><span class="k">${a.time}</span><span>${a.label}</span></div>`).join("")}</div>`;
+  if(p.type==="gift"){ const g=W.gift;
+    const items=g.wishlist.map((b,k)=>`<div class="bookrow"><span>📖 <b>${b.title}</b>${b.author?` — <i>${b.author}</i>`:""}</span>
+      <span id="bk${k}">${b.link?`<a href="${b.link}" target="_blank">view</a> · `:""}<button class="claim" data-i="${k}">I'll send this</button></span></div>`).join("");
+    return `<div class="card"><h2>📚 Gift a Book</h2><p class="hand big">${g.note}</p>
+      <div class="books">${items}</div>
+      <div class="detail"><span class="k">Send to</span><span>${g.sendTo}</span></div>
+      <p class="note" id="giftNote"></p></div>`; }
+  if(p.type==="wishes") return `<div class="card"><h2>💬 Leave a Wish</h2>
+      <form id="wishForm"><label>Your name</label><input name="name" required placeholder="your name"/>
+        <label>Your wish / prayer</label><textarea name="msg" rows="2" required placeholder="something sweet…"></textarea>
+        <div class="acts"><button class="btn" type="submit">Send wish ✿</button></div></form>
+      <div class="wishes" id="wishList"><p class="note" id="wishNote">Loading wishes…</p></div></div>`;
+  if(p.type==="rsvp") return `<div class="card"><h2>💌 Will You Join Us?</h2>
+      <form id="rsvpForm"><label>Your name</label><input name="name" required placeholder="your name"/>
+        <label>Will you attend?</label><select name="attending"><option>Joyfully accepts 🎊</option><option>Sadly declines 💔</option></select>
+        <label>Number of guests</label><input name="guests" type="number" min="1" value="1"/>
+        <label>A note for us</label><textarea name="note" rows="2" placeholder="song request, dietary needs…"></textarea>
+        <div class="acts"><button class="btn" type="submit">Send RSVP 💕</button></div></form>
+      <p class="note" id="rsvpNote"></p></div>`;
+  if(p.type==="closing") return `<div class="card"><h2>With love,</h2>
+      <img src="assets/couple.png" style="width:min(60vw,240px)" onerror="this.style.display='none'"/>
+      <h1 style="font-size:clamp(24px,7vw,40px)">${W.bride} <span class="amp">&amp;</span> ${W.groom}</h1>
+      <p class="hand big">Thank you for reading our story.<br/>We can't wait to celebrate with you! 💕</p></div>`;
+  return `<div class="card"></div>`;
+}
+
+/* ---- render pages ---- */
+const book=document.getElementById("book"), dotsEl=document.getElementById("dots");
+PAGES.forEach((p,i)=>{ const d=document.createElement("div"); d.className="page"; d.dataset.i=i; d.innerHTML=build(p,i); book.appendChild(d);
+  const dot=document.createElement("i"); dotsEl.appendChild(dot); });
+const pageEls=[...book.children];
+let cur=0;
+function go(n){
+  n=Math.max(0,Math.min(PAGES.length-1,n));
+  pageEls.forEach((el,i)=>{ el.classList.toggle("active",i===n); el.classList.toggle("leftout",i<n); el.scrollTop=0; });
+  [...dotsEl.children].forEach((d,i)=>d.classList.toggle("on",i===n));
+  document.getElementById("prev").disabled = n===0;
+  document.getElementById("next").disabled = n===PAGES.length-1;
+  document.getElementById("pageno").textContent = `${n+1} / ${PAGES.length}`;
+  cur=n;
+}
+window.go=go;
+document.getElementById("prev").onclick=()=>go(cur-1);
+document.getElementById("next").onclick=()=>go(cur+1);
+addEventListener("keydown",e=>{ if(e.key==="ArrowRight")go(cur+1); if(e.key==="ArrowLeft")go(cur-1); });
+// swipe
+let sx=0; addEventListener("touchstart",e=>sx=e.touches[0].clientX,{passive:true});
+addEventListener("touchend",e=>{ const dx=e.changedTouches[0].clientX-sx; if(Math.abs(dx)>50) go(cur+(dx<0?1:-1)); },{passive:true});
+
+/* ---- guest name + countdown ---- */
+(function(){ const g=document.getElementById("greet");
+  if(g&&GUEST){ g.textContent=`Dear ${GUEST}, you're invited 💌`; g.style.display="inline-block"; } })();
+function cdParts(){ const t=new Date(W.date).getTime()-Date.now();
+  if(isNaN(t)||t<=0) return null;
+  return {d:Math.floor(t/864e5),h:Math.floor(t/36e5)%24,m:Math.floor(t/6e4)%60,s:Math.floor(t/1e3)%60}; }
+setInterval(()=>{ const c=cdParts(), box=document.getElementById("cd"), v=document.getElementById("venueCd");
+  if(box) box.innerHTML = c?`<div><b>${c.d}</b><span>days</span></div><div><b>${c.h}</b><span>hours</span></div><div><b>${c.m}</b><span>mins</span></div><div><b>${c.s}</b><span>secs</span></div>`:`<div><b>🎉</b><span>today!</span></div>`;
+  if(v) v.textContent = c?`⏳ ${c.d}d ${c.h}h ${c.m}m ${c.s}s to go`:"🎉 Today is the day!";
+},1000);
+
+/* ---- calendar + map ---- */
+window.addToCalendar=function(){ const d=new Date(W.date), pad=n=>String(n).padStart(2,"0");
+  const fmt=t=>t.getUTCFullYear()+pad(t.getUTCMonth()+1)+pad(t.getUTCDate())+"T"+pad(t.getUTCHours())+pad(t.getUTCMinutes())+"00Z";
+  const ics=["BEGIN:VCALENDAR","VERSION:2.0","BEGIN:VEVENT",`SUMMARY:${W.bride} & ${W.groom} Wedding`,
+    `DTSTART:${fmt(d)}`,`DTEND:${fmt(new Date(d.getTime()+5*36e5))}`,`LOCATION:${W.venueName}, ${W.venueAddress}`,
+    "DESCRIPTION:We can't wait to celebrate with you!","END:VEVENT","END:VCALENDAR"].join("\n");
+  const a=document.createElement("a"); a.href=URL.createObjectURL(new Blob([ics],{type:"text/calendar"}));
+  a.download="our-wedding.ics"; a.click(); };
+{ const mb=document.getElementById("mapBtn"); if(mb) mb.onclick=()=>window.open("https://maps.google.com/?q="+encodeURIComponent(W.mapsQuery),"_blank"); }
+
+/* ---- Firebase: wishes + rsvp + book claims (graceful without config) ---- */
+function withWB(fn){ const WB=window.WB; if(WB) fn(WB); else addEventListener("wb-ready",()=>fn(window.WB),{once:true}); }
+// wishes
+(function(){ const f=document.getElementById("wishForm"); if(!f) return;
+  const list=document.getElementById("wishList"), note=document.getElementById("wishNote");
+  withWB(WB=>{ if(WB.ready){ WB.watchWishes(items=>{ list.innerHTML = items.length
+        ? items.map(w=>`<div class="wish"><b>${esc(w.name)}</b>${esc(w.msg)}</div>`).join("")
+        : `<p class="note">Be the first to leave a wish 💕</p>`; }); }
+    else note.textContent="(Live wishes need Firebase — see ../firebase.js)"; });
+  f.addEventListener("submit",e=>{ e.preventDefault(); const d=new FormData(f), WB=window.WB;
+    if(WB&&WB.ready){ WB.addWish(d.get("name"),d.get("msg")).catch(()=>{}); f.reset(); }
+    else note.textContent="(Set up Firebase to share your wish.)"; }); })();
+// rsvp
+(function(){ const f=document.getElementById("rsvpForm"); if(!f) return; const note=document.getElementById("rsvpNote");
+  f.addEventListener("submit",e=>{ e.preventDefault(); const d=new FormData(f), WB=window.WB,
+    data={name:d.get("name"),attending:d.get("attending"),guests:d.get("guests"),note:d.get("note"),to:GUEST||""};
+    if(WB&&WB.ready) WB.addRSVP(data).catch(()=>{});
+    else if(W.rsvpEmail) location.href=`mailto:${W.rsvpEmail}?subject=Wedding RSVP - ${encodeURIComponent(data.name)}&body=`+
+      encodeURIComponent(`Name: ${data.name}\nAttending: ${data.attending}\nGuests: ${data.guests}\nNote: ${data.note}`);
+    f.style.display="none"; note.innerHTML=`<span style="font-size:20px;color:var(--rose-dk)">Thank you, ${esc(data.name)||"friend"}! 💕<br/>Your RSVP is in.</span>`; }); })();
+// book claims
+(function(){ const note=document.getElementById("giftNote"); if(!note) return;
+  const setTaken=(i,by)=>{ const el=document.getElementById("bk"+i); if(el) el.innerHTML=`<span class="taken">✓ sent by ${esc(by)}</span>`; };
+  withWB(WB=>{ if(WB.ready){ WB.watchClaims(m=>Object.keys(m).forEach(i=>setTaken(i,(m[i]&&m[i].by)||"a guest")));
+      document.querySelectorAll(".claim").forEach(b=>b.onclick=()=>{ const i=b.dataset.i, by=GUEST||(prompt("Your name?")||"a guest");
+        WB.claimBook(i,by).then(()=>setTaken(i,by)).catch(()=>alert("Someone may have just claimed it — refresh.")); }); }
+    else { note.textContent="(Live claims need Firebase — guests can still pick one and tell you.)";
+      document.querySelectorAll(".claim").forEach(b=>b.onclick=()=>setTaken(b.dataset.i,GUEST||"you")); } }); })();
+
+/* ---- deep link ?open=cover|profiles|venue|gift|wishes|rsvp|<story id> & start ---- */
+(function(){ const open=new URLSearchParams(location.search).get("open"); let idx=0;
+  if(open){ const k=PAGES.findIndex(p=>p.type===open||(p.s&&p.s.id===open)); if(k>=0) idx=k; }
+  go(idx);
+})();
+</script>
+</body>
+</html>
