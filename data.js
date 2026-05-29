@@ -67,6 +67,23 @@ window.WEDDING = {
 };
 
 /* -------------------------------------------------------------------
+   MUSIC — plays a YouTube track as background music (starts on the first
+   tap, because browsers block silent autoplay). Optionally give guests a
+   PLAYLIST they can open and pick from. Shared by every template.
+   Paste a normal YouTube link (or just the video id) — both work.
+   Leave youtube:"" and playlist:[] for no music.
+   ------------------------------------------------------------------- */
+window.MUSIC = {
+  youtube:"",            // background track, e.g. "https://youtu.be/450p7goxZqg"
+  loop:true,             // loop the background track
+  title:"", by:"",       // optional label for the background track
+  playlist:[             // optional — guests can browse & play these
+    // { title:"Can't Help Falling in Love", by:"Elvis", youtube:"https://youtu.be/vGJTaP6anOU" },
+    // { title:"First Day of My Life",        by:"Bright Eyes", youtube:"https://youtu.be/U6tcWofH2nM" },
+  ],
+};
+
+/* -------------------------------------------------------------------
    FIREBASE (live RSVP + wishes + book claims). Free tier, shared by
    all templates. Leave apiKey:"" to run without it (graceful fallback).
    Setup steps are in firebase.js.

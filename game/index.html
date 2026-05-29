@@ -142,6 +142,8 @@
 <script src="../data.js"></script>
 <!-- SHARED live backend (RSVP / wishes / book-claims) via Firebase (optional) -->
 <script type="module" src="../firebase.js"></script>
+<!-- SHARED music widget (YouTube bg track + guest playlist; from window.MUSIC) -->
+<script src="../music.js" defer></script>
 <script>
 "use strict";
 /* ===================================================================
@@ -672,10 +674,14 @@ preload(()=>{
   document.getElementById("startBtn").disabled=false;
   if(IMG.couple.ok){ const h=document.getElementById("coupleHero"); h.src=ASSET_SRC.couple; h.style.display="block"; }
 });
+// If a YouTube track/playlist is configured (data.js), the shared music widget
+// handles background music — suppress the built-in chiptune to avoid doubling up.
+const HAS_YT_MUSIC = !!(window.MUSIC && (window.MUSIC.youtube || (window.MUSIC.playlist&&window.MUSIC.playlist.length)));
+if(HAS_YT_MUSIC){ const mb=document.getElementById("musicBtn"); if(mb) mb.style.display="none"; }
 document.getElementById("startBtn").addEventListener("click",()=>{
   if(document.getElementById("startBtn").disabled) return;
   document.getElementById("titleScreen").style.display="none";
-  started=true; if(!musicOn) toggleMusic();
+  started=true; if(!HAS_YT_MUSIC && !musicOn) toggleMusic();
   // deep-link: ?open=rsvp jumps straight to a section (also handy for sharing)
   const open=new URLSearchParams(location.search).get("open");
   if(open){ const s=SPOTS.find(x=>x.id===open); if(s){ player.x=s.x; camera=Math.max(0,s.x-VIEW_W*0.42); openSpot(s); } }

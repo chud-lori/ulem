@@ -1,0 +1,312 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+<title>The Library of Us — A Wedding Invitation</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;1,500&family=EB+Garamond:ital@0;1&family=Special+Elite&family=Caveat:wght@600&display=swap" rel="stylesheet" />
+<style>
+  :root{ --ink:#3a2c22; --leather:#5b2230; --leather2:#3f1722; --gold:#c9a24b; --paper:#f5ecd8;
+         --paper2:#efe3c6; --rule:#c9b48f; --stamp:#a23b34; }
+  *{box-sizing:border-box;margin:0;padding:0;}
+  html,body{height:100%;}
+  body{font-family:"EB Garamond",Georgia,serif;color:var(--ink);overflow:hidden;
+    background:#241712 radial-gradient(circle at 50% 0%,#3a2418,#1c110c 80%);
+    -webkit-tap-highlight-color:transparent;}
+  .serif{font-family:"Cormorant Garamond",serif;}
+  .type{font-family:"Special Elite",monospace;}
+  .sign{font-family:"Caveat",cursive;}
+
+  #book{position:fixed;inset:0;perspective:2000px;}
+  .page{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;padding:30px 18px 92px;
+    opacity:0;transform:translateX(50px) rotateY(10deg);transform-origin:left center;pointer-events:none;
+    transition:opacity .5s ease,transform .5s ease;}
+  .page.active{opacity:1;transform:none;pointer-events:auto;}
+  .page.leftout{opacity:0;transform:translateX(-40px) rotateY(-10deg);}
+  /* paper sheet */
+  .sheet{position:relative;width:100%;max-width:560px;max-height:84vh;overflow:auto;background:
+      linear-gradient(180deg,#f7efdc,#ece0c2);border:1px solid #d8c6a0;border-radius:4px;
+    padding:30px 26px 34px;box-shadow:0 18px 40px rgba(0,0,0,.5),inset 0 0 60px rgba(150,120,70,.18);
+    text-align:center;}
+  .sheet::after{content:"";position:absolute;inset:0;pointer-events:none;border-radius:4px;
+    box-shadow:inset 0 0 90px rgba(120,90,50,.22);}
+
+  h1{font-family:"Cormorant Garamond",serif;font-weight:600;font-size:clamp(30px,9vw,58px);line-height:1.05;color:var(--leather);}
+  h2{font-family:"Cormorant Garamond",serif;font-weight:600;font-size:clamp(22px,6vw,34px);color:var(--leather);margin-bottom:4px;}
+  .amp{font-style:italic;color:var(--gold);}
+  p{font-size:clamp(14px,3.6vw,17px);line-height:1.85;margin:10px 0;}
+  .epigraph{font-style:italic;color:#6b5640;font-size:clamp(14px,3.7vw,18px);line-height:1.7;margin:6px auto 18px;max-width:90%;}
+  .epigraph cite{display:block;font-style:normal;font-size:12px;letter-spacing:.5px;color:#8a6f4e;margin-top:6px;}
+  .chapno{font-family:"Special Elite",monospace;letter-spacing:3px;font-size:12px;color:#8a6f4e;text-transform:uppercase;}
+  .drop::first-letter{font-family:"Cormorant Garamond",serif;float:left;font-size:3.1em;line-height:.8;
+    padding:6px 8px 0 0;color:var(--leather);}
+  .ph{color:var(--leather);border-bottom:1px dotted #b59; }
+  .ph{color:var(--leather);background:#efe0bf;padding:0 3px;border-radius:2px;}
+
+  /* ---- cover (closed book) ---- */
+  .page.cover .sheet{background:linear-gradient(135deg,var(--leather),var(--leather2));border:none;
+    color:#f3e4c0;box-shadow:0 24px 50px rgba(0,0,0,.6), inset 0 0 0 2px var(--gold), inset 0 0 0 12px rgba(201,162,75,.25);
+    padding:26px 26px 30px;}
+  .page.cover .sheet::after{box-shadow:none;}
+  .page.cover.leftout{transform:rotateY(-118deg);opacity:0;}
+  .cover h1{color:#f7e9c6;font-size:clamp(24px,7vw,44px);}
+  .cover .couple{width:min(40vw,140px);}
+  .cover .rule{margin:12px auto;}
+  .cover p{margin:6px 0;}
+  .cover .rule{height:1px;background:var(--gold);width:60%;margin:16px auto;opacity:.7;}
+  .cover .label{font-family:"Special Elite",monospace;letter-spacing:3px;font-size:11px;color:var(--gold);text-transform:uppercase;}
+  .bookplate{background:#f5ecd8;color:var(--ink);border:1px solid var(--gold);border-radius:3px;
+    padding:8px 12px;margin:14px auto 0;max-width:280px;font-size:13px;display:none;}
+  .bookplate b{font-family:"Caveat",cursive;font-size:20px;color:var(--leather);}
+
+  /* couple illustration */
+  .couple{width:min(56vw,220px);filter:drop-shadow(0 8px 12px rgba(0,0,0,.35));}
+
+  /* table of contents */
+  .toc{list-style:none;text-align:left;margin-top:6px;}
+  .toc li{display:flex;align-items:baseline;gap:6px;cursor:pointer;padding:7px 2px;font-size:clamp(15px,4vw,19px);}
+  .toc li:hover .t{color:var(--leather);}
+  .toc .no{font-family:"Special Elite",monospace;font-size:12px;color:#8a6f4e;min-width:26px;}
+  .toc .t{white-space:nowrap;overflow:hidden;}
+  .toc .dots{flex:1;border-bottom:1.5px dotted #b6a079;transform:translateY(-4px);}
+  .toc .pg{font-family:"Special Elite",monospace;font-size:12px;color:#8a6f4e;}
+
+  /* countdown */
+  .cd{display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin-top:6px;}
+  .cd div{border:1px solid var(--rule);border-radius:4px;padding:8px 12px;min-width:62px;background:#fbf3df;}
+  .cd b{display:block;font-family:"Cormorant Garamond",serif;font-size:clamp(24px,6vw,34px);color:var(--leather);}
+  .cd span{font-family:"Special Elite",monospace;font-size:10px;color:#8a6f4e;letter-spacing:1px;}
+
+  /* details / agenda */
+  .detail{display:flex;gap:12px;text-align:left;margin:9px 0;font-size:16px;line-height:1.6;}
+  .detail .k{font-family:"Special Elite",monospace;font-size:12px;color:var(--leather);min-width:92px;padding-top:3px;}
+
+  /* portraits */
+  .authors{display:flex;gap:16px;flex-wrap:wrap;justify-content:center;}
+  .author{flex:1;min-width:140px;}
+  .author img{width:min(38vw,140px);height:min(38vw,140px);object-fit:cover;border-radius:3px;border:5px solid #fff;
+    box-shadow:0 6px 14px rgba(0,0,0,.3);background:#e3d4ad;}
+  .author .nm{font-family:"Cormorant Garamond",serif;font-size:21px;color:var(--leather);margin-top:8px;}
+  .author .pr{font-size:13px;color:#6b5640;}
+
+  /* library / catalog cards */
+  .card-lib{background:repeating-linear-gradient(#fcf6e6,#fcf6e6 27px,#e7d9b6 28px);
+    border:1px solid #cdb787;border-radius:3px;padding:14px;text-align:left;box-shadow:0 6px 14px rgba(0,0,0,.2);}
+  .card-lib .hd{font-family:"Special Elite",monospace;font-size:11px;letter-spacing:2px;color:var(--leather);
+    border-bottom:2px solid var(--leather);padding-bottom:4px;text-transform:uppercase;margin-bottom:8px;}
+  label{display:block;font-family:"Special Elite",monospace;font-size:11px;color:#6b5640;margin:10px 0 3px;letter-spacing:.5px;}
+  input,select,textarea{width:100%;font-family:"Caveat",cursive;font-size:19px;padding:4px 6px;color:#23406b;
+    border:none;border-bottom:1.5px solid #b6a079;background:transparent;}
+  select{font-family:"EB Garamond",serif;font-size:15px;}
+  textarea{font-size:18px;line-height:27px;}
+  .catalog{display:flex;flex-direction:column;gap:10px;text-align:left;margin:10px 0;}
+  .catcard{position:relative;background:#fcf6e6;border:1px solid #cdb787;border-radius:3px;padding:11px 13px;
+    box-shadow:0 4px 10px rgba(0,0,0,.15);}
+  .catcard .call{font-family:"Special Elite",monospace;font-size:10px;color:#8a6f4e;}
+  .catcard .ttl{font-family:"Cormorant Garamond",serif;font-size:19px;color:var(--leather);line-height:1.2;}
+  .catcard .au{font-size:13px;font-style:italic;color:#6b5640;}
+  .catcard .co{margin-top:8px;}
+  .checkout{font-family:"Special Elite",monospace;font-size:12px;cursor:pointer;background:var(--leather);color:#f3e4c0;
+    border:none;border-radius:3px;padding:7px 12px;letter-spacing:1px;}
+  .stamp{font-family:"Special Elite",monospace;color:var(--stamp);border:2px solid var(--stamp);border-radius:4px;
+    padding:3px 8px;display:inline-block;transform:rotate(-7deg);font-size:12px;letter-spacing:1px;opacity:.85;}
+  .btn{font-family:"Special Elite",monospace;font-size:13px;letter-spacing:1px;cursor:pointer;background:var(--leather);
+    color:#f3e4c0;border:none;border-radius:4px;padding:11px 20px;box-shadow:0 4px 0 #2c0f17;}
+  .btn:active{transform:translateY(3px);box-shadow:0 1px 0 #2c0f17;}
+  .btn.gold{background:var(--gold);color:#3a2c22;box-shadow:0 4px 0 #9c7a2f;}
+  .acts{display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin-top:14px;}
+  .wishes{display:flex;flex-direction:column;gap:10px;text-align:left;max-height:42vh;overflow:auto;margin-top:12px;}
+  .wishcard{background:#fcf6e6;border:1px solid #cdb787;border-left:4px solid var(--leather);border-radius:3px;padding:9px 12px;}
+  .wishcard b{font-family:"Caveat",cursive;font-size:20px;color:var(--leather);display:block;}
+  .wishcard .dot{font-family:"Special Elite",monospace;font-size:10px;color:#8a6f4e;}
+  .note{font-family:"Special Elite",monospace;font-size:11px;color:#a08; color:#9b8156;}
+
+  /* nav */
+  #nav{position:fixed;left:0;right:0;bottom:16px;display:flex;align-items:center;justify-content:center;gap:14px;z-index:10;}
+  .navbtn{font-family:"Cormorant Garamond",serif;font-size:22px;background:#f3e4c0;border:1px solid var(--gold);
+    color:var(--leather);width:50px;height:50px;border-radius:50%;cursor:pointer;box-shadow:0 4px 10px rgba(0,0,0,.4);}
+  .navbtn:disabled{opacity:.3;}
+  #toc-btn{font-family:"Special Elite",monospace;font-size:11px;letter-spacing:1px;background:#f3e4c0;border:1px solid var(--gold);
+    color:var(--leather);border-radius:20px;padding:0 16px;height:42px;cursor:pointer;}
+  .pageno{position:fixed;top:12px;right:14px;font-family:"Special Elite",monospace;color:#e7d2a3;font-size:12px;z-index:10;opacity:.8;}
+</style>
+</head>
+<body>
+<div id="book"></div>
+<div class="pageno" id="pageno"></div>
+<div id="nav">
+  <button class="navbtn" id="prev">‹</button>
+  <button id="toc-btn">☰ Contents</button>
+  <button class="navbtn" id="next">›</button>
+</div>
+
+<!-- SHARED content + backend + music (same as every template) -->
+<script src="../data.js"></script>
+<script type="module" src="../firebase.js"></script>
+<script src="../music.js" defer></script>
+<script>
+"use strict";
+/* THE LIBRARY OF US — reads window.WEDDING (../data.js), window.WB (../firebase.js),
+   window.MUSIC (../music.js). Edit content in ../data.js + photos in ../photos. */
+const W=window.WEDDING, GUEST=new URLSearchParams(location.search).get("to");
+const esc=s=>String(s==null?"":s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+const QUOTES=[
+  ["Whatever our souls are made of, his and mine are the same.","Emily Brontë, <i>Wuthering Heights</i>"],
+  ["You pierce my soul. I am half agony, half hope.","Jane Austen, <i>Persuasion</i>"],
+  ["I have for the first time found what I can truly love.","Charlotte Brontë, <i>Jane Eyre</i>"],
+  ["Love is not love which alters when it alteration finds.","Shakespeare, <i>Sonnet 116</i>"],
+  ["We loved with a love that was more than love.","Edgar Allan Poe, <i>Annabel Lee</i>"],
+  ["I would rather share one lifetime with you than face all the ages of this world alone.","J.R.R. Tolkien"],
+];
+const q=i=>QUOTES[i%QUOTES.length];
+const img=(file,cls)=>`<img class="${cls||""}" src="../photos/${file}" onerror="this.onerror=null;this.src='../photos/_placeholder.png'"/>`;
+
+/* page list */
+const PAGES=[
+  {type:"cover", tocSkip:1},
+  {type:"contents", tocSkip:1},
+  {type:"authors", title:"About the Authors"},
+  ...W.story.map(s=>({type:"story", s, title:s.title})),
+  {type:"venue", title:"Where to Find Us"},
+  {type:"agenda", title:"The Itinerary"},
+  {type:"gift", title:"Our Card Catalog"},
+  {type:"wishes", title:"Sign the Card"},
+  {type:"rsvp", title:"Check In"},
+  {type:"closing", tocSkip:1},
+];
+
+/* builders */
+function sheet(inner,cls){ return `<div class="sheet ${cls||""}">${inner}</div>`; }
+function build(p,i){
+  if(p.type==="cover") return sheet(`
+    <div class="label">A Wedding Invitation</div><div class="rule"></div>
+    ${img("couple.png","couple")}
+    <h1>The Story of<br/>${W.bride} <span class="amp">&amp;</span> ${W.groom}</h1>
+    <div class="rule"></div>
+    <p class="serif" style="font-size:20px">${W.dateLabel}</p>
+    <div class="bookplate" id="plate">Ex Libris<br/><b id="plateName"></b></div>
+    <div class="acts"><button class="btn gold" onclick="openBook()">Open the book ❧</button></div>`,"");
+  if(p.type==="contents"){ const items=PAGES.map((pp,k)=>({pp,k})).filter(x=>!x.pp.tocSkip);
+    return sheet(`<div class="chapno">Contents</div><h2>Table of Contents</h2>
+      <ul class="toc">${items.map((x,n)=>`<li onclick="go(${x.k})"><span class="no">${String(n+1).padStart(2,"0")}</span>
+        <span class="t">${esc(x.pp.title||x.pp.type)}</span><span class="dots"></span><span class="pg">p.${x.k+1}</span></li>`).join("")}</ul>`); }
+  if(p.type==="countdown") return sheet(`<div class="chapno">Soon</div><h2>The Day Approaches</h2>
+    <div class="cd" id="cd"></div>`);
+  if(p.type==="authors") return sheet(`<div class="chapno">Dramatis Personæ</div><h2>About the Authors</h2>
+    <div class="authors">
+      <div class="author">${img("bride.jpg")}<div class="nm">${W.brideFull}</div><div class="pr">${W.brideParents}</div></div>
+      <div class="author">${img("groom.jpg")}<div class="nm">${W.groomFull}</div><div class="pr">${W.groomParents}</div></div>
+    </div>`);
+  if(p.type==="story"){ const s=p.s, e=q(i);
+    return sheet(`<div class="chapno">Chapter — ${s.label}</div><h2>${s.title}</h2>
+      <div class="epigraph">“${e[0]}”<cite>— ${e[1]}</cite></div>
+      ${s.photo?`<div style="margin:10px 0">${img(s.photo)}</div>`:""}
+      <div class="drop" style="text-align:left;font-size:17px">${s.html}</div>`); }
+  if(p.type==="venue") return sheet(`<div class="chapno">Location &amp; Hours</div><h2>Where to Find Us</h2>
+    <div class="detail"><span class="k">When</span><span>${W.dateLabel}<br/>Ceremony ${W.ceremonyTime}</span></div>
+    <div class="detail"><span class="k">Where</span><span>${W.venueName}<br/>${W.venueAddress}</span></div>
+    <div class="detail"><span class="k">Attire</span><span>${W.dress}</span></div>
+    <p class="type" id="venueCd" style="font-size:12px;color:var(--leather)"></p>
+    <div class="acts"><button class="btn" id="mapBtn">📍 Map</button><button class="btn gold" onclick="addToCalendar()">📅 Calendar</button></div>`);
+  if(p.type==="agenda") return sheet(`<div class="chapno">Programme</div><h2>The Itinerary</h2>
+    ${W.agenda.map(a=>`<div class="detail"><span class="k">${a.time}</span><span>${a.label}</span></div>`).join("")}`);
+  if(p.type==="gift"){ const g=W.gift;
+    const cards=g.wishlist.map((b,k)=>`<div class="catcard"><div class="call">REG · ${String(k+1).padStart(3,"0")}</div>
+      <div class="ttl">${b.title}</div>${b.author?`<div class="au">${b.author}</div>`:""}
+      <div class="co" id="co${k}"><button class="checkout" data-i="${k}">✓ Check out &amp; send</button></div></div>`).join("");
+    return sheet(`<div class="chapno">In lieu of gifts</div><h2>Our Card Catalog</h2>
+      <p>${g.note}</p><div class="catalog">${cards}</div>
+      <div class="detail"><span class="k">Return to</span><span>${g.sendTo}</span></div>
+      <p class="note" id="giftNote"></p>`); }
+  if(p.type==="wishes") return sheet(`<div class="chapno">Marginalia</div><h2>Sign the Card</h2>
+    <div class="card-lib"><div class="hd">Guest Book · leave your mark</div>
+      <form id="wishForm"><label>Name</label><input name="name" required/>
+        <label>A note in the margin</label><textarea name="msg" rows="2" required></textarea>
+        <div class="acts"><button class="btn" type="submit">Stamp it ✦</button></div></form></div>
+    <div class="wishes" id="wishList"><p class="note" id="wishNote">Loading…</p></div>`);
+  if(p.type==="rsvp") return sheet(`<div class="chapno">Circulation Desk</div><h2>Check In</h2>
+    <div class="card-lib"><div class="hd">Library Card · please sign</div>
+      <form id="rsvpForm"><label>Borrower (your name)</label><input name="name" required/>
+        <label>Will you attend?</label><select name="attending"><option>Checking in 🎊</option><option>Returning regrets 💔</option></select>
+        <label>Party size</label><input name="guests" type="number" min="1" value="1" style="font-family:'EB Garamond',serif;font-size:16px"/>
+        <label>Note for the librarians</label><textarea name="note" rows="2"></textarea>
+        <div class="acts"><button class="btn" type="submit">Stamp my card</button></div></form></div>
+    <p class="note" id="rsvpNote"></p>`);
+  if(p.type==="closing") return sheet(`<h2 class="serif">Finis</h2>${img("couple.png","couple")}
+    <h1 style="font-size:clamp(26px,7vw,42px)">${W.bride} <span class="amp">&amp;</span> ${W.groom}</h1>
+    <p class="serif" style="font-size:19px">Thank you for reading our story.<br/>Come help us begin the next chapter. ❧</p>`,"");
+  return sheet("");
+}
+
+/* render + nav */
+const book=document.getElementById("book");
+PAGES.forEach((p,i)=>{ const d=document.createElement("div"); d.className="page"+(p.type==="cover"?" cover":"");
+  d.dataset.i=i; d.innerHTML=build(p,i); book.appendChild(d); });
+const pageEls=[...book.children]; let cur=0;
+function go(n){ n=Math.max(0,Math.min(PAGES.length-1,n));
+  pageEls.forEach((el,i)=>{ el.classList.toggle("active",i===n); el.classList.toggle("leftout",i<n);
+    const sh=el.querySelector(".sheet"); if(sh) sh.scrollTop=0; });
+  document.getElementById("prev").disabled=n===0; document.getElementById("next").disabled=n===PAGES.length-1;
+  document.getElementById("pageno").textContent="p. "+(n+1)+" / "+PAGES.length; cur=n; }
+window.go=go;
+window.openBook=()=>go(1);
+document.getElementById("prev").onclick=()=>go(cur-1);
+document.getElementById("next").onclick=()=>go(cur+1);
+document.getElementById("toc-btn").onclick=()=>go(1);
+addEventListener("keydown",e=>{ if(e.key==="ArrowRight")go(cur+1); if(e.key==="ArrowLeft")go(cur-1); });
+let sx=0; addEventListener("touchstart",e=>sx=e.touches[0].clientX,{passive:true});
+addEventListener("touchend",e=>{ const dx=e.changedTouches[0].clientX-sx; if(Math.abs(dx)>55) go(cur+(dx<0?1:-1)); },{passive:true});
+
+/* guest bookplate + countdown */
+(function(){ if(GUEST){ const pl=document.getElementById("plate"), nm=document.getElementById("plateName");
+  if(pl&&nm){ nm.textContent=GUEST; pl.style.display="inline-block"; } } })();
+function cdParts(){ const t=new Date(W.date).getTime()-Date.now(); if(isNaN(t)||t<=0)return null;
+  return {d:Math.floor(t/864e5),h:Math.floor(t/36e5)%24,m:Math.floor(t/6e4)%60,s:Math.floor(t/1e3)%60}; }
+setInterval(()=>{ const c=cdParts(), box=document.getElementById("cd"), v=document.getElementById("venueCd");
+  if(box) box.innerHTML=c?`<div><b>${c.d}</b><span>DAYS</span></div><div><b>${c.h}</b><span>HRS</span></div><div><b>${c.m}</b><span>MIN</span></div><div><b>${c.s}</b><span>SEC</span></div>`:`<div><b>❧</b><span>TODAY</span></div>`;
+  if(v) v.textContent=c?`Due in ${c.d}d ${c.h}h ${c.m}m`:"Due today!"; },1000);
+
+/* calendar + map */
+window.addToCalendar=function(){ const d=new Date(W.date),pad=n=>String(n).padStart(2,"0");
+  const fmt=t=>t.getUTCFullYear()+pad(t.getUTCMonth()+1)+pad(t.getUTCDate())+"T"+pad(t.getUTCHours())+pad(t.getUTCMinutes())+"00Z";
+  const ics=["BEGIN:VCALENDAR","VERSION:2.0","BEGIN:VEVENT",`SUMMARY:${W.bride} & ${W.groom} Wedding`,
+    `DTSTART:${fmt(d)}`,`DTEND:${fmt(new Date(d.getTime()+5*36e5))}`,`LOCATION:${W.venueName}, ${W.venueAddress}`,
+    "DESCRIPTION:Come help us begin the next chapter!","END:VEVENT","END:VCALENDAR"].join("\n");
+  const a=document.createElement("a"); a.href=URL.createObjectURL(new Blob([ics],{type:"text/calendar"})); a.download="our-wedding.ics"; a.click(); };
+{ const mb=document.getElementById("mapBtn"); if(mb) mb.onclick=()=>window.open("https://maps.google.com/?q="+encodeURIComponent(W.mapsQuery),"_blank"); }
+
+/* Firebase: wishes + rsvp + book checkouts (graceful without config) */
+function withWB(fn){ const WB=window.WB; if(WB) fn(WB); else addEventListener("wb-ready",()=>fn(window.WB),{once:true}); }
+(function(){ const f=document.getElementById("wishForm"); if(!f) return;
+  const list=document.getElementById("wishList"), note=document.getElementById("wishNote");
+  withWB(WB=>{ if(WB.ready) WB.watchWishes(items=>{ list.innerHTML=items.length
+        ? items.map(w=>`<div class="wishcard"><b>${esc(w.name)}</b>${esc(w.msg)}<div class="dot">— stamped with love</div></div>`).join("")
+        : `<p class="note">Be the first to sign 📖</p>`; });
+    else note.textContent="(Live guestbook needs Firebase — see ../firebase.js)"; });
+  f.addEventListener("submit",e=>{ e.preventDefault(); const d=new FormData(f),WB=window.WB;
+    if(WB&&WB.ready){ WB.addWish(d.get("name"),d.get("msg")).catch(()=>{}); f.reset(); }
+    else note.textContent="(Set up Firebase to share your note.)"; }); })();
+(function(){ const f=document.getElementById("rsvpForm"); if(!f) return; const note=document.getElementById("rsvpNote");
+  f.addEventListener("submit",e=>{ e.preventDefault(); const d=new FormData(f),WB=window.WB,
+    data={name:d.get("name"),attending:d.get("attending"),guests:d.get("guests"),note:d.get("note"),to:GUEST||""};
+    if(WB&&WB.ready) WB.addRSVP(data).catch(()=>{});
+    else if(W.rsvpEmail) location.href=`mailto:${W.rsvpEmail}?subject=Wedding RSVP - ${encodeURIComponent(data.name)}&body=`+
+      encodeURIComponent(`Name: ${data.name}\nAttending: ${data.attending}\nGuests: ${data.guests}\nNote: ${data.note}`);
+    f.parentElement.innerHTML=`<div class="hd">Library Card</div><p style="text-align:center;margin-top:10px">
+      <span class="stamp">CHECKED IN ✓</span></p><p style="text-align:center">Thank you, <b>${esc(data.name)||"friend"}</b>! Your card is stamped.</p>`; }); })();
+(function(){ const note=document.getElementById("giftNote"); if(!note) return;
+  const setOut=(i,by)=>{ const el=document.getElementById("co"+i); if(el) el.innerHTML=`<span class="stamp">CHECKED OUT</span> <span class="note">by ${esc(by)}</span>`; };
+  withWB(WB=>{ if(WB.ready){ WB.watchClaims(m=>Object.keys(m).forEach(i=>setOut(i,(m[i]&&m[i].by)||"a guest")));
+      document.querySelectorAll(".checkout").forEach(b=>b.onclick=()=>{ const i=b.dataset.i,by=GUEST||(prompt("Your name?")||"a guest");
+        WB.claimBook(i,by).then(()=>setOut(i,by)).catch(()=>alert("Already checked out — refresh.")); }); }
+    else { note.textContent="(Live checkouts need Firebase — guests can still pick one and tell you.)";
+      document.querySelectorAll(".checkout").forEach(b=>b.onclick=()=>setOut(b.dataset.i,GUEST||"you")); } }); })();
+
+/* deep link + start */
+(function(){ const open=new URLSearchParams(location.search).get("open"); let idx=0;
+  if(open){ const k=PAGES.findIndex(p=>p.type===open||(p.s&&p.s.id===open)); if(k>=0) idx=k; }
+  go(idx); })();
+</script>
+</body>
+</html>
