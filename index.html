@@ -381,8 +381,8 @@ function roundRect(x,y,w,h,r){ ctx.beginPath(); ctx.moveTo(x+r,y); ctx.arcTo(x+w
 /* chibi walk-cycle sheets: one horizontal row of N cells, character facing RIGHT.
    metadata measured from the re-packed sheets (see assets/*_walk.png) */
 const WALK={
-  groom:{n:10, fw:149, fh:269, idle:7},
-  bride:{n: 8, fw:170, fh:291, idle:0},
+  groom:{n:10, fw:158, fh:271, idle:0},
+  bride:{n: 8, fw:178, fh:293, idle:0},
 };
 const CHAR_TH=80, CHAR_BOT=4;   // on-screen height (logical) + baseline pad baked into the cell
 function drawCouple(){ worldTransform();
@@ -391,15 +391,11 @@ function drawCouple(){ worldTransform();
   const gf = player.walking ? Math.floor(player.step)%gm.n : gm.idle;
   const bf = player.walking ? Math.floor(player.step)%bm.n : bm.idle;
   player.frame=gf;
-  if(player.walking){
-    // both face the direction of travel (sheets face right; flip when going left)
-    if(player.dir>0){ char(IMG.groom,gm,gf,cx-dx,by,false); char(IMG.bride,bm,bf,cx+dx,by,false); }
-    else            { char(IMG.bride,bm,bf,cx-dx,by,true);  char(IMG.groom,gm,gf,cx+dx,by,true); }
-  } else {
-    // idle: both face right, standing side by side
-    char(IMG.groom,gm,gf,cx-dx,by,false);
-    char(IMG.bride,bm,bf,cx+dx,by,false);
-  }
+  // Same facing rule whether walking or idle: face the last travel direction so they
+  // don't snap around when you stop. Sheets face right -> flip when heading left.
+  const flip = player.dir<0;
+  if(!flip){ char(IMG.groom,gm,gf,cx-dx,by,false); char(IMG.bride,bm,bf,cx+dx,by,false); }
+  else     { char(IMG.bride,bm,bf,cx-dx,by,true);  char(IMG.groom,gm,gf,cx+dx,by,true); }
   // little hand-link heart
   if(Math.sin(now/300)>0.5){ ctx.fillStyle="#e8889c"; ctx.font="9px 'Press Start 2P',monospace";
     ctx.textAlign="center"; ctx.fillText("♥",cx,by-CHAR_TH*0.6); }
