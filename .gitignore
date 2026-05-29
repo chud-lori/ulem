@@ -1,0 +1,8 @@
+# source / working images not needed for the live site
+ChatGPT Image*.png
+/char.png
+/groom.png
+/bride.png
+# unused early face experiments
+assets/groom_face.png
+assets/bride_face.png
