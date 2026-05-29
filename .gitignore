@@ -4,5 +4,5 @@ ChatGPT Image*.png
 /groom.png
 /bride.png
 # unused early face experiments
-assets/groom_face.png
-assets/bride_face.png
+game/assets/groom_face.png
+game/assets/bride_face.png
