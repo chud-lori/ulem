@@ -6,9 +6,10 @@
    it holds the *content* (names, dates, story, photos), never how a
    particular theme looks. Each template adds its own presentation.
 
-   Photos live in each template's  assets/photos/  folder, named:
-     bride.jpg, groom.jpg, cafe.jpg, proposal.jpg, venue.jpg
-   (Add the same names under every template you use.)
+   Photos live in ONE shared folder used by every template:  /photos/
+   Drop your images there once, named:
+     bride.jpg, groom.jpg, cafe.jpg, proposal.jpg, venue.jpg, couple.png
+   Missing files fall back to _placeholder.png automatically.
    =================================================================== */
 
 window.WEDDING = {

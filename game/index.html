@@ -162,7 +162,7 @@ const ASSET_SRC = {
   headGroom:"assets/head_groom.png", headBride:"assets/head_bride.png",  // chibi faces for lpc bodies
   // OPTIONAL custom chibi art — drop these in to replace the pixel couple.
   // Front-facing, transparent background. See assets/CHARACTERS_README.txt
-  groomChibi:"assets/groom.png", brideChibi:"assets/bride.png", couple:"assets/couple.png",
+  groomChibi:"assets/groom.png", brideChibi:"assets/bride.png", couple:"../photos/couple.png",
 };
 const IMG = {};
 let loaded=0, total=Object.keys(ASSET_SRC).length;
@@ -484,14 +484,14 @@ function esc(s){ return String(s==null?"":s).replace(/[&<>"]/g,c=>({"&":"&amp;",
 function popHearts(n){ for(let i=0;i<n;i++) hearts.push({x:player.x+(Math.random()*160-80),y:GROUND-Math.random()*70,vy:-(0.4+Math.random()*0.7),a:1,s:6+Math.random()*8}); }
 function photoBlock(s){
   if(!s.photo) return "";
-  return `<div class="polaroid"><img src="assets/photos/${s.photo}"
-    onerror="this.onerror=null;this.src='assets/photos/_placeholder.png'"/>
+  return `<div class="polaroid"><img src="../photos/${s.photo}"
+    onerror="this.onerror=null;this.src='../photos/_placeholder.png'"/>
     <div class="cap">${s.sign}</div></div>`;
 }
 /* ---- per-spot body builders ---- */
 function profileCard(p){
   return `<div class="pcard">
-    <img class="pavatar" src="assets/photos/${p.photo}" onerror="this.onerror=null;this.src='assets/photos/_placeholder.png'"/>
+    <img class="pavatar" src="../photos/${p.photo}" onerror="this.onerror=null;this.src='../photos/_placeholder.png'"/>
     <div class="prole">${p.role}</div><div class="pname">${p.name}</div>
     <div class="pparents">${p.parents}</div>
     ${p.ig?`<a class="pig" href="https://instagram.com/${p.ig}" target="_blank">@${p.ig}</a>`:""}</div>`;

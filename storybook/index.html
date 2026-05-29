@@ -114,7 +114,7 @@ const W = window.WEDDING;
 const GUEST = new URLSearchParams(location.search).get("to");
 const esc = s => String(s==null?"":s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
 const photo = (file,cls,cap) =>
-  `<div class="polaroid ${cls||""}"><img src="assets/photos/${file}" onerror="this.onerror=null;this.src='assets/photos/_placeholder.png'"/>${cap?`<div class="cap">${cap}</div>`:""}</div>`;
+  `<div class="polaroid ${cls||""}"><img src="../photos/${file}" onerror="this.onerror=null;this.src='../photos/_placeholder.png'"/>${cap?`<div class="cap">${cap}</div>`:""}</div>`;
 
 /* ---- page list (built from shared content) ---- */
 const PAGES = [
@@ -134,7 +134,7 @@ const PAGES = [
 function build(p, i){
   if(p.type==="cover") return `<div class="card">
       <p class="greet" id="greet"></p>
-      <img id="coupleImg" src="assets/couple.png" alt="" onerror="this.style.display='none'"/>
+      <img id="coupleImg" src="../photos/couple.png" alt="" onerror="this.style.display='none'"/>
       <h1>${W.bride}<span class="amp"> &amp; </span>${W.groom}</h1>
       <p class="sub">are getting married</p>
       <p class="hand big">${W.dateLabel}</p>
@@ -178,7 +178,7 @@ function build(p, i){
         <div class="acts"><button class="btn" type="submit">Send RSVP 💕</button></div></form>
       <p class="note" id="rsvpNote"></p></div>`;
   if(p.type==="closing") return `<div class="card"><h2>With love,</h2>
-      <img src="assets/couple.png" style="width:min(60vw,240px)" onerror="this.style.display='none'"/>
+      <img src="../photos/couple.png" style="width:min(60vw,240px)" onerror="this.style.display='none'"/>
       <h1 style="font-size:clamp(24px,7vw,40px)">${W.bride} <span class="amp">&amp;</span> ${W.groom}</h1>
       <p class="hand big">Thank you for reading our story.<br/>We can't wait to celebrate with you! 💕</p></div>`;
   return `<div class="card"></div>`;
