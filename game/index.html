@@ -145,6 +145,8 @@
 
 <!-- SHARED content for all templates (one source of truth): defines window.WEDDING -->
 <script src="../data.js"></script>
+<!-- git-ignored real keys (Firebase etc.); optional, overrides data.js defaults -->
+<script src="../config.local.js" onerror="/* absent on showcase — runs key-free */"></script>
 <!-- SHARED opening effects (petals / entrance / typewriter) -->
 <script src="../fx.js"></script>
 <!-- SHARED live backend (RSVP / wishes / book-claims) via Firebase (optional) -->

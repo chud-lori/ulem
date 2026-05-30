@@ -6,3 +6,6 @@ ChatGPT Image*.png
 # unused early face experiments
 game/assets/groom_face.png
 game/assets/bride_face.png
+
+# real secrets / keys — never commit (copy config.example.js → config.local.js)
+config.local.js

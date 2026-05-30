@@ -14,56 +14,71 @@
 
 window.WEDDING = {
   /* --- names --- */
-  bride:"[Bride]",  groom:"[Groom]",                 // short, shown big
-  brideFull:"[Bride Full Name]", groomFull:"[Groom Full Name]",
-  brideParents:"Daughter of [Mr. Father] &amp; [Mrs. Mother]",
-  groomParents:"Son of [Mr. Father] &amp; [Mrs. Mother]",
-  brideIg:"", groomIg:"",                            // instagram handle, no @ (optional)
+  bride: "Kamelia",
+  groom: "Lori", // short, shown big
+  brideFull: "[Kamelia]",
+  groomFull: "[Lori]",
+  brideParents: "Daughter of ... &amp; ...",
+  groomParents: "Son of ... &amp; ...",
+  brideIg: "",
+  groomIg: "", // instagram handle, no @ (optional)
 
   /* --- when & where --- */
-  date:"2026-12-12T16:00:00+07:00",                  // ISO + timezone → countdown & calendar
-  dateLabel:"Saturday, 12 December 2026",
-  ceremonyTime:"4:00 PM",
-  venueName:"[Venue Name]",
-  venueAddress:"[Full venue address]",
-  mapsQuery:"[Venue Name, City]",                    // Google Maps search
-  dress:"[Garden formal · pastels welcome]",
+  date: "2026-12-12T16:00:00+07:00", // ISO + timezone → countdown & calendar
+  dateLabel: "Saturday, 12 December 2026",
+  ceremonyTime: "4:00 PM",
+  venueName: "Solo",
+  venueAddress: "Solo, Indonesia",
+  mapsQuery: "[Venue Name, City]", // Google Maps search
+  dress: "[Garden formal · pastels welcome]",
 
   /* --- love-story beats (add/remove freely) --- */
-  story:[
-    { id:"cafe", icon:"☕", label:"How We Met", title:"Where It All Began", photo:"cafe.jpg",
-      html:`<p>It started at <span class="ph">[the little café on (street)]</span>, over
+  story: [
+    {
+      id: "cafe",
+      icon: "☕",
+      label: "How We Met",
+      title: "Where It All Began",
+      photo: "cafe.jpg",
+      html: `<p>It started at <span class="ph">[the little café on (street)]</span>, over
             <span class="ph">[two coffees and a shared umbrella]</span>.</p>
             <p>Neither of us knew an ordinary <span class="ph">[Tuesday]</span> would
-            become the rest of our lives. 💛</p>` },
-    { id:"proposal", icon:"💍", label:"The Proposal", title:"The Big Question", photo:"proposal.jpg",
-      html:`<p>On <span class="ph">[the date]</span>, under <span class="ph">[the old oak in the park]</span>,
-            one of us got down on one knee…</p><p>and the other said <b>YES!</b> ✨</p>` },
+            become the rest of our lives. 💛</p>`,
+    },
+    {
+      id: "proposal",
+      icon: "💍",
+      label: "The Proposal",
+      title: "The Big Question",
+      photo: "proposal.jpg",
+      html: `<p>On <span class="ph">[the date]</span>, under <span class="ph">[the old oak in the park]</span>,
+            one of us got down on one knee…</p><p>and the other said <b>YES!</b> ✨</p>`,
+    },
   ],
 
   /* --- order of the day --- */
-  agenda:[
-    { time:"[3:30]", label:"Guests arrive" },
-    { time:"[4:00]", label:"Ceremony 💐" },
-    { time:"[5:00]", label:"Cocktails &amp; photos 📸" },
-    { time:"[6:30]", label:"Dinner &amp; speeches 🥂" },
-    { time:"[8:00]", label:"Dancing till late 🕺" },
+  agenda: [
+    { time: "[3:30]", label: "Guests arrive" },
+    { time: "[4:00]", label: "Ceremony 💐" },
+    { time: "[5:00]", label: "Cocktails &amp; photos 📸" },
+    { time: "[6:30]", label: "Dinner &amp; speeches 🥂" },
+    { time: "[8:00]", label: "Dancing till late 🕺" },
   ],
 
   /* --- GIFT = BOOKS ONLY (no money). Guests claim a book to send you. --- */
-  gift:{
-    note:"No money, no flowers — we're building our home library! 📚<br/>If you'd like to bless us, send us a <b>book you love</b>. Pick one below so we don't get duplicates.",
-    sendTo:"[Your Name] · [Full shipping address] · [City, ZIP] · [Phone]",
-    wishlist:[
-      { title:"[Book title 1]", author:"[Author]", link:"" },
-      { title:"[Book title 2]", author:"[Author]", link:"" },
-      { title:"[Book title 3]", author:"[Author]", link:"" },
-      { title:"Surprise us!", author:"any book you love", link:"" },
+  gift: {
+    note: "No money, no flowers — we're building our home library! 📚<br/>If you'd like to bless us, send us a <b>book you love</b>. Pick one below so we don't get duplicates.",
+    sendTo: "[Your Name] · [Full shipping address] · [City, ZIP] · [Phone]",
+    wishlist: [
+      { title: "[Book title 1]", author: "[Author]", link: "" },
+      { title: "[Book title 2]", author: "[Author]", link: "" },
+      { title: "[Book title 3]", author: "[Author]", link: "" },
+      { title: "Surprise us!", author: "any book you love", link: "" },
     ],
   },
 
   /* --- RSVP e-mail fallback if you DON'T use Firebase ("" = none) --- */
-  rsvpEmail:"",
+  rsvpEmail: "",
 };
 
 /* -------------------------------------------------------------------
@@ -74,10 +89,12 @@ window.WEDDING = {
    Leave youtube:"" and playlist:[] for no music.
    ------------------------------------------------------------------- */
 window.MUSIC = {
-  youtube:"",            // background track, e.g. "https://youtu.be/450p7goxZqg"
-  loop:true,             // loop the background track
-  title:"", by:"",       // optional label for the background track
-  playlist:[             // optional — guests can browse & play these
+  youtube: "", // background track, e.g. "https://youtu.be/450p7goxZqg"
+  loop: true, // loop the background track
+  title: "",
+  by: "", // optional label for the background track
+  playlist: [
+    // optional — guests can browse & play these
     // { title:"Can't Help Falling in Love", by:"Elvis", youtube:"https://youtu.be/vGJTaP6anOU" },
     // { title:"First Day of My Life",        by:"Bright Eyes", youtube:"https://youtu.be/U6tcWofH2nM" },
   ],
@@ -89,8 +106,8 @@ window.MUSIC = {
    Setup steps are in firebase.js.
    ------------------------------------------------------------------- */
 window.FIREBASE = {
-  apiKey:"",
-  authDomain:"",
-  projectId:"",
-  appId:"",
+  apiKey: "",
+  authDomain: "",
+  projectId: "",
+  appId: "",
 };

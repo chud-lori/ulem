@@ -2,16 +2,27 @@
    Config comes from window.FIREBASE (set in data.js). If it's empty, this
    module sets window.WB.ready=false and the game degrades gracefully.
 
-   Firestore security rules to paste (Firestore → Rules) — lets guests add
-   entries and read them, but not edit/delete others' entries:
+   Firestore security rules to paste (Firestore Database → Rules → Publish).
+   Guests can submit; nobody can edit/delete; RSVPs are write-only (you read
+   them in the Firebase console, so guests can't see who else is coming):
 
    rules_version = '2';
    service cloud.firestore {
-     match /databases/{db}/documents {
-       match /wishes/{id}   { allow read, create: if true; }
-       match /rsvps/{id}    { allow read, create: if true; }
-       match /bookClaims/{id}{ allow read: if true;
-                               allow create: if !exists(/databases/$(db)/documents/bookClaims/$(id)); }
+     match /databases/{database}/documents {
+       // public guestbook: anyone may read & add a wish (size-capped)
+       match /wishes/{id} {
+         allow read: if true;
+         allow create: if request.resource.data.name is string
+                       && request.resource.data.msg is string
+                       && request.resource.data.msg.size() < 1000;
+       }
+       // RSVPs: guests may submit, but NOT list/read others'
+       match /rsvps/{id} { allow create: if true; allow read: if false; }
+       // book check-outs: readable (to show "taken"); first claimer wins
+       match /bookClaims/{id} {
+         allow read: if true;
+         allow create: if !exists(/databases/$(database)/documents/bookClaims/$(id));
+       }
      }
    }
 */
