@@ -136,9 +136,38 @@
   #toc-btn{font-family:"Special Elite",monospace;font-size:11px;letter-spacing:1px;background:#f3e4c0;border:1px solid var(--gold);
     color:var(--leather);border-radius:20px;padding:0 16px;height:42px;cursor:pointer;}
   .pageno{position:fixed;top:12px;right:14px;font-family:"Special Elite",monospace;color:#e7d2a3;font-size:12px;z-index:10;opacity:.8;}
+
+  /* ===== "wow" polish ===== */
+  @keyframes foil{to{background-position:-230% center}}
+  @keyframes glowpulse{0%,100%{box-shadow:0 5px 0 #9c7a2f, 0 0 0 rgba(201,162,75,0)}
+    50%{box-shadow:0 5px 0 #9c7a2f, 0 0 28px rgba(201,162,75,.8)}}
+  @keyframes shine{0%{transform:translateX(-130%) skewX(-18deg);opacity:0}
+    18%{opacity:.85}55%{opacity:0}100%{transform:translateX(360%) skewX(-18deg);opacity:0}}
+  @keyframes candle{0%,100%{opacity:.5}45%{opacity:.74}70%{opacity:.58}}
+  @keyframes bob2{0%,100%{transform:translateY(0) rotate(-1deg)}50%{transform:translateY(-9px) rotate(1deg)}}
+  /* gold-foil shimmering chapter titles */
+  h2{background:linear-gradient(100deg,var(--leather) 0 42%, #d8b14e 50%, var(--leather) 58% 100%);
+    background-size:230% auto;-webkit-background-clip:text;background-clip:text;
+    -webkit-text-fill-color:transparent;color:transparent;animation:foil 6s linear infinite;}
+  .cover h1{background:linear-gradient(100deg,#f7e9c6 0 42%, #fff3d4 50%, #f7e9c6 58% 100%);
+    background-size:230% auto;-webkit-background-clip:text;background-clip:text;
+    -webkit-text-fill-color:transparent;color:transparent;animation:foil 7s linear infinite;}
+  /* a sweep of light glides across the closed cover (twice on load) */
+  .page.cover .sheet{overflow:hidden;}
+  .page.cover .sheet .shine{position:absolute;top:-10%;bottom:-10%;left:0;width:45%;z-index:3;pointer-events:none;
+    background:linear-gradient(100deg,transparent,rgba(255,248,220,.5),transparent);
+    animation:shine 3.4s ease-in-out .5s 2;}
+  /* glowing call-to-action + breathing couple */
+  .cover .btn.gold{animation:glowpulse 1.9s ease-in-out infinite;}
+  .cover .couple{animation:bob2 3.6s ease-in-out infinite;}
+  /* candlelight vignette over the desk (behind the opaque pages) */
+  .vignette{position:fixed;inset:0;pointer-events:none;z-index:0;
+    background:radial-gradient(125% 95% at 50% 38%, rgba(255,206,128,.12), rgba(15,8,4,.62) 100%);
+    animation:candle 7s ease-in-out infinite;}
 </style>
 </head>
 <body>
+<div class="vignette"></div>
 <div id="book"></div>
 <div class="pageno" id="pageno"></div>
 <div id="nav">
@@ -188,6 +217,7 @@ const PAGES=[
 function sheet(inner,cls){ return `<div class="sheet ${cls||""}">${inner}</div>`; }
 function build(p,i){
   if(p.type==="cover") return sheet(`
+    <span class="shine"></span>
     <div class="label">A Wedding Invitation</div><div class="rule"></div>
     ${img("couple.png","couple")}
     <h1>The Story of<br/>${W.bride} <span class="amp">&amp;</span> ${W.groom}</h1>
@@ -252,11 +282,19 @@ const book=document.getElementById("book");
 PAGES.forEach((p,i)=>{ const d=document.createElement("div"); d.className="page"+(p.type==="cover"?" cover":"");
   d.dataset.i=i; d.innerHTML=build(p,i); book.appendChild(d); });
 const pageEls=[...book.children]; let cur=0;
+function revealActive(n){ const sh=pageEls[n]&&pageEls[n].querySelector(".sheet"); if(!sh)return;
+  // use TRANSITIONS (not animation) so we don't clobber the foil/bob animations on h1/h2/couple
+  [...sh.children].forEach((k,i)=>{ if(k.classList.contains("shine"))return;
+    k.style.transition="none"; k.style.opacity="0"; k.style.transform="translateY(15px)"; void k.offsetWidth;
+    k.style.transition="opacity .55s ease, transform .55s cubic-bezier(.2,.7,.3,1)";
+    k.style.transitionDelay=(70+i*85)+"ms"; k.style.opacity="1"; k.style.transform="none"; }); }
 function go(n){ n=Math.max(0,Math.min(PAGES.length-1,n));
   pageEls.forEach((el,i)=>{ el.classList.toggle("active",i===n); el.classList.toggle("leftout",i<n);
     const sh=el.querySelector(".sheet"); if(sh) sh.scrollTop=0; });
   document.getElementById("prev").disabled=n===0; document.getElementById("next").disabled=n===PAGES.length-1;
-  document.getElementById("pageno").textContent="p. "+(n+1)+" / "+PAGES.length; cur=n; }
+  document.getElementById("pageno").textContent="p. "+(n+1)+" / "+PAGES.length; cur=n;
+  setTimeout(()=>revealActive(n), 60);   // stagger the page's content in after it slides on
+}
 window.go=go;
 // contextual opening: the leather cover swings open on its left hinge → page 2 (contents)
 window.openBook=()=>go(1);

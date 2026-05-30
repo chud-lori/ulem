@@ -101,9 +101,12 @@ window.MUSIC = {
 };
 
 /* -------------------------------------------------------------------
-   FIREBASE (live RSVP + wishes + book claims). Free tier, shared by
-   all templates. Leave apiKey:"" to run without it (graceful fallback).
-   Setup steps are in firebase.js.
+   FIREBASE (live RSVP + wishes + book claims). Free tier.
+   ⚠️ Do NOT put your real key here — this file IS committed to git.
+   Put real values in  config.local.js  (git-ignored; copy it from
+   config.example.js). It loads after this file and fills these in.
+   This empty default keeps the site working (graceful fallback) when
+   config.local.js isn't present. Setup steps are in firebase.js.
    ------------------------------------------------------------------- */
 window.FIREBASE = {
   apiKey: "",
