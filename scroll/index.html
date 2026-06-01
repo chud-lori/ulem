@@ -26,7 +26,8 @@
   section{position:relative;padding:14vh 22px;min-height:100vh;display:flex;flex-direction:column;
     align-items:center;justify-content:center;text-align:center;overflow:hidden;}
   .wrap{max-width:680px;width:100%;}
-  h1{font-family:"Cormorant Garamond",serif;font-weight:600;font-size:clamp(40px,12vw,96px);line-height:1;color:var(--rose-dk);}
+  h1{font-family:"Cormorant Garamond",serif;font-weight:600;font-size:clamp(40px,12vw,96px);line-height:1;color:var(--rose-dk);
+    overflow-wrap:anywhere;max-width:100%;}
   h2{font-family:"Cormorant Garamond",serif;font-weight:600;font-size:clamp(28px,7vw,46px);color:var(--rose-dk);margin-bottom:6px;}
   .eyebrow{font-size:11px;letter-spacing:5px;text-transform:uppercase;color:var(--gold);margin-bottom:14px;font-weight:500;}
   p{font-size:clamp(15px,4vw,19px);line-height:1.85;font-weight:300;margin:10px 0;}
@@ -54,7 +55,8 @@
   #heroCouple{width:min(46vw,210px);filter:drop-shadow(0 14px 22px rgba(120,70,80,.28));z-index:2;
     position:relative;margin-bottom:6px;}
   .hero-greet{display:none;font-size:13px;letter-spacing:2px;color:var(--rose-dk);border:1px solid var(--rose);
-    border-radius:30px;padding:6px 16px;margin-bottom:22px;}
+    border-radius:30px;padding:6px 16px;margin-bottom:22px;max-width:90vw;white-space:normal;
+    overflow-wrap:anywhere;text-align:center;line-height:1.4;}
   .scrollcue{position:absolute;bottom:26px;left:50%;transform:translateX(-50%);font-size:11px;letter-spacing:3px;
     color:var(--rose-dk);text-transform:uppercase;display:flex;flex-direction:column;align-items:center;gap:6px;}
   .scrollcue .m{width:22px;height:34px;border:2px solid var(--rose-dk);border-radius:12px;position:relative;}
@@ -219,7 +221,7 @@
 <script src="../music.js" defer></script>
 <script>
 "use strict";
-const W=window.WEDDING, GUEST=new URLSearchParams(location.search).get("to");
+const W=window.WEDDING, GUEST=(new URLSearchParams(location.search).get("to")||"").trim().slice(0,40)||null;
 const esc=s=>String(s==null?"":s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
 const photoSrc=f=>`../photos/${f}`;
 const onerr=`onerror="this.onerror=null;this.src='../photos/_placeholder.png'"`;

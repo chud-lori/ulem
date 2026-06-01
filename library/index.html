@@ -186,7 +186,7 @@
 "use strict";
 /* THE LIBRARY OF US — reads window.WEDDING (../data.js), window.WB (../firebase.js),
    window.MUSIC (../music.js). Edit content in ../data.js + photos in ../photos. */
-const W=window.WEDDING, GUEST=new URLSearchParams(location.search).get("to");
+const W=window.WEDDING, GUEST=(new URLSearchParams(location.search).get("to")||"").trim().slice(0,40)||null;
 const esc=s=>String(s==null?"":s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
 const QUOTES=[
   ["Whatever our souls are made of, his and mine are the same.","Emily Brontë, <i>Wuthering Heights</i>"],

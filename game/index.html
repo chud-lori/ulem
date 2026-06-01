@@ -86,7 +86,8 @@
   #modal .row{margin-bottom:13px;} #modal .ok{color:#2c7a3f;text-align:center;font-size:11px;line-height:2;}
   /* title: guest greeting + countdown */
   #guestGreet{font-size:clamp(8px,2.4vw,11px);color:var(--rose-dk);background:#fff7;border:2px solid var(--rose-dk);
-    border-radius:20px;padding:7px 14px;line-height:1.6;display:none;}
+    border-radius:20px;padding:7px 14px;line-height:1.6;display:none;max-width:90vw;
+    white-space:normal;overflow-wrap:anywhere;text-align:center;}
   #countdown{display:flex;gap:8px;justify-content:center;flex-wrap:wrap;}
   #countdown .cd{background:var(--panel);border:2px solid var(--ink);border-radius:8px;padding:6px 9px;min-width:46px;
     box-shadow:0 3px 0 rgba(0,0,0,.12);}
@@ -623,7 +624,7 @@ function updateProgress(){
 updateProgress();
 
 /* ---------- 9b. GUEST NAME + COUNTDOWN ---------- */
-const GUEST = new URLSearchParams(location.search).get("to");
+const GUEST = (new URLSearchParams(location.search).get("to")||"").trim().slice(0,40) || null;
 (function initIntro(){
   // dynamic couple names on the cover (from data.js)
   const nm=document.getElementById("coupleNames");
