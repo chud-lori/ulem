@@ -1,0 +1,364 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+<title>Our Story — Scroll With Us</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;1,500&family=Jost:wght@300;400;500&display=swap" rel="stylesheet" />
+<style>
+  :root{ --ink:#3a3330; --rose:#d98a9e; --rose-dk:#b95f77; --gold:#c9a24b; --cream:#faf4ec; --deep:#2a2320; }
+  *{box-sizing:border-box;margin:0;padding:0;}
+  html{scroll-behavior:smooth;}
+  body{font-family:"Jost",system-ui,sans-serif;color:var(--ink);background:var(--cream);
+    -webkit-font-smoothing:antialiased;-webkit-tap-highlight-color:transparent;overflow-x:hidden;}
+  .serif{font-family:"Cormorant Garamond",serif;}
+
+  /* progress bar */
+  #prog{position:fixed;top:0;left:0;height:4px;width:0;z-index:50;
+    background:linear-gradient(90deg,var(--rose),var(--gold));box-shadow:0 0 8px rgba(201,162,75,.6);}
+  /* chapter dots */
+  #dots{position:fixed;right:14px;top:50%;transform:translateY(-50%);z-index:40;display:flex;flex-direction:column;gap:10px;}
+  #dots a{width:9px;height:9px;border-radius:50%;background:#d8c8bd;transition:.25s;display:block;}
+  #dots a.on{background:var(--rose-dk);transform:scale(1.45);}
+  @media(max-width:640px){#dots{display:none;}}
+
+  section{position:relative;padding:14vh 22px;min-height:100vh;display:flex;flex-direction:column;
+    align-items:center;justify-content:center;text-align:center;overflow:hidden;}
+  .wrap{max-width:680px;width:100%;}
+  h1{font-family:"Cormorant Garamond",serif;font-weight:600;font-size:clamp(40px,12vw,96px);line-height:1;color:var(--rose-dk);}
+  h2{font-family:"Cormorant Garamond",serif;font-weight:600;font-size:clamp(28px,7vw,46px);color:var(--rose-dk);margin-bottom:6px;}
+  .eyebrow{font-size:11px;letter-spacing:5px;text-transform:uppercase;color:var(--gold);margin-bottom:14px;font-weight:500;}
+  p{font-size:clamp(15px,4vw,19px);line-height:1.85;font-weight:300;margin:10px 0;}
+  .amp{font-style:italic;color:var(--gold);}
+  .ph{color:var(--rose-dk);}
+
+  /* reveal-on-scroll (IntersectionObserver toggles .seen) */
+  .rv{opacity:0;transform:translateY(40px);transition:opacity .9s cubic-bezier(.2,.7,.2,1),transform .9s cubic-bezier(.2,.7,.2,1);}
+  .rv.seen{opacity:1;transform:none;}
+  .rv.l{transform:translateX(-60px);} .rv.r{transform:translateX(60px);}
+  .rv.sc{transform:scale(.86);} .rv.seen.sc{transform:none;}
+  .rv.seen.l,.rv.seen.r{transform:none;}
+  /* stagger: children of .stagger.seen cascade */
+  .stagger>*{opacity:0;transform:translateY(26px);transition:opacity .7s,transform .7s;}
+  .stagger.seen>*{opacity:1;transform:none;}
+  .stagger.seen>*:nth-child(1){transition-delay:.05s}.stagger.seen>*:nth-child(2){transition-delay:.15s}
+  .stagger.seen>*:nth-child(3){transition-delay:.25s}.stagger.seen>*:nth-child(4){transition-delay:.35s}
+  .stagger.seen>*:nth-child(5){transition-delay:.45s}.stagger.seen>*:nth-child(6){transition-delay:.55s}
+
+  /* HERO with parallax layers */
+  #hero{background:linear-gradient(180deg,#f7dfe6,#faf1e6 70%);min-height:100vh;}
+  .pllx{position:absolute;left:0;right:0;will-change:transform;}
+  #heroBlob{top:-10%;height:70%;filter:blur(40px);opacity:.5;
+    background:radial-gradient(closest-side,#f3b9c8,transparent 70%);}
+  #heroCouple{width:min(46vw,210px);filter:drop-shadow(0 14px 22px rgba(120,70,80,.28));z-index:2;
+    position:relative;margin-bottom:6px;}
+  .hero-greet{display:none;font-size:13px;letter-spacing:2px;color:var(--rose-dk);border:1px solid var(--rose);
+    border-radius:30px;padding:6px 16px;margin-bottom:22px;}
+  .scrollcue{position:absolute;bottom:26px;left:50%;transform:translateX(-50%);font-size:11px;letter-spacing:3px;
+    color:var(--rose-dk);text-transform:uppercase;display:flex;flex-direction:column;align-items:center;gap:6px;}
+  .scrollcue .m{width:22px;height:34px;border:2px solid var(--rose-dk);border-radius:12px;position:relative;}
+  .scrollcue .m::after{content:"";position:absolute;left:50%;top:7px;width:3px;height:7px;background:var(--rose-dk);
+    border-radius:2px;transform:translateX(-50%);animation:wheel 1.5s ease-in-out infinite;}
+  @keyframes wheel{0%{opacity:0;top:6px}40%{opacity:1}80%{opacity:0;top:16px}}
+
+  /* COUNTDOWN roll */
+  .cd{display:flex;gap:14px;justify-content:center;flex-wrap:wrap;margin-top:10px;}
+  .cd .u{background:#fff;border-radius:14px;padding:16px 14px;min-width:80px;box-shadow:0 10px 26px rgba(150,90,100,.16);}
+  .cd .u b{display:block;font-family:"Cormorant Garamond",serif;font-size:clamp(34px,9vw,52px);color:var(--rose-dk);line-height:1;}
+  .cd .u span{font-size:10px;letter-spacing:2px;text-transform:uppercase;color:#a8978c;}
+
+  /* STORY chapters — sticky photo, scrolling text */
+  .chapter{min-height:160vh;padding:0;display:block;}
+  .chapter .sticky{position:sticky;top:0;height:100vh;display:flex;align-items:center;justify-content:center;}
+  .chapter .photo{width:min(78vw,420px);aspect-ratio:4/5;object-fit:cover;border-radius:8px;
+    box-shadow:0 24px 60px rgba(120,70,80,.32);will-change:transform;}
+  .chapter .cap{position:absolute;bottom:12vh;left:0;right:0;padding:0 22px;}
+  .chapter .cap .card{background:rgba(255,255,255,.92);backdrop-filter:blur(4px);max-width:520px;margin:0 auto;
+    border-radius:12px;padding:22px 24px;box-shadow:0 14px 40px rgba(0,0,0,.16);}
+  .chapter .num{font-family:"Cormorant Garamond",serif;font-size:clamp(60px,20vw,150px);color:#efd9c6;
+    position:absolute;top:8vh;left:50%;transform:translateX(-50%);line-height:1;z-index:0;}
+
+  /* TIMELINE */
+  .tl{position:relative;max-width:560px;margin:20px auto 0;text-align:left;}
+  .tl::before{content:"";position:absolute;left:18px;top:0;bottom:0;width:2px;background:linear-gradient(var(--rose),var(--gold));}
+  .tl .item{position:relative;padding:0 0 26px 50px;}
+  .tl .item::before{content:"";position:absolute;left:11px;top:3px;width:16px;height:16px;border-radius:50%;
+    background:#fff;border:3px solid var(--rose-dk);}
+  .tl .t{font-family:"Cormorant Garamond",serif;font-size:22px;color:var(--rose-dk);}
+
+  /* PROFILES */
+  .authors{display:flex;gap:26px;flex-wrap:wrap;justify-content:center;}
+  .author img{width:min(40vw,170px);height:min(40vw,170px);object-fit:cover;border-radius:50%;
+    border:4px solid #fff;box-shadow:0 12px 30px rgba(120,70,80,.25);}
+  .author .nm{font-family:"Cormorant Garamond",serif;font-size:24px;color:var(--rose-dk);margin-top:12px;}
+  .author .pr{font-size:13px;color:#9a8b80;}
+
+  /* cards / forms */
+  .panel{background:#fff;border-radius:16px;padding:26px 24px;box-shadow:0 16px 44px rgba(150,90,100,.14);text-align:left;}
+  .detail{display:flex;gap:14px;margin:10px 0;font-size:16px;}
+  .detail .k{font-size:11px;letter-spacing:2px;text-transform:uppercase;color:var(--gold);min-width:74px;padding-top:5px;}
+  label{display:block;font-size:11px;letter-spacing:1px;text-transform:uppercase;color:#a8978c;margin:12px 0 5px;}
+  input,select,textarea{width:100%;font-family:"Jost",sans-serif;font-size:16px;padding:12px 14px;
+    border:1.5px solid #e6d8cd;border-radius:10px;background:#fdfaf6;color:var(--ink);}
+  .btn{font-family:"Jost",sans-serif;font-weight:500;letter-spacing:1px;cursor:pointer;border:none;
+    background:var(--rose-dk);color:#fff;padding:13px 28px;border-radius:30px;font-size:15px;
+    box-shadow:0 8px 20px rgba(185,95,119,.4);transition:transform .1s;}
+  .btn:active{transform:scale(.96);} .btn.ghost{background:#fff;color:var(--rose-dk);border:1.5px solid var(--rose);box-shadow:none;}
+  .acts{display:flex;gap:12px;flex-wrap:wrap;justify-content:center;margin-top:16px;}
+  .books{display:flex;flex-direction:column;gap:10px;margin:6px 0;}
+  .bookrow{display:flex;justify-content:space-between;align-items:center;gap:10px;background:#fdfaf6;
+    border:1.5px solid #ecdfd4;border-radius:10px;padding:12px 14px;font-size:14px;flex-wrap:wrap;}
+  .claim{font-family:"Jost",sans-serif;font-size:13px;cursor:pointer;background:var(--rose-dk);color:#fff;border:none;border-radius:20px;padding:7px 14px;}
+  .taken{color:#2c7a3f;font-size:13px;font-weight:500;}
+  .wishes{display:flex;flex-direction:column;gap:10px;text-align:left;margin-top:14px;max-height:46vh;overflow:auto;}
+  .wishcard{background:#fdfaf6;border:1px solid #ecdfd4;border-left:4px solid var(--rose);border-radius:10px;padding:11px 14px;}
+  .wishcard b{color:var(--rose-dk);display:block;font-size:16px;}
+  .note{font-size:12px;color:#b6a89d;}
+  #closing{background:linear-gradient(180deg,#faf1e6,#f7dfe6);}
+  #closing img{width:min(58vw,260px);filter:drop-shadow(0 12px 18px rgba(120,70,80,.28));}
+</style>
+</head>
+<body>
+<div id="prog"></div>
+<nav id="dots"></nav>
+
+<!-- HERO -->
+<section id="hero" data-dot="Top">
+  <div id="heroBlob" class="pllx" data-speed="0.25"></div>
+  <div class="wrap">
+    <div class="hero-greet" id="greet"></div>
+    <img id="heroCouple" class="pllx" data-speed="-0.12" src="../photos/couple.png" alt="" onerror="this.style.display='none'"/>
+    <h1 class="rv" id="names">&nbsp;</h1>
+    <p class="serif rv" style="font-size:clamp(20px,5vw,30px)">are getting married</p>
+    <p class="rv" id="heroDate" style="letter-spacing:2px"></p>
+  </div>
+  <div class="scrollcue"><div class="m"></div>scroll</div>
+</section>
+
+<!-- COUNTDOWN -->
+<section data-dot="Countdown">
+  <div class="wrap">
+    <div class="eyebrow rv">Save the date</div>
+    <h2 class="rv">The Big Day Is Coming</h2>
+    <div class="cd rv" id="cd"></div>
+  </div>
+</section>
+
+<!-- story chapters injected here -->
+<div id="chapters"></div>
+
+<!-- PROFILES -->
+<section data-dot="The Couple">
+  <div class="wrap">
+    <div class="eyebrow rv">Dramatis Personæ</div>
+    <h2 class="rv">Meet the Authors</h2>
+    <div class="authors stagger rv" id="authors"></div>
+  </div>
+</section>
+
+<!-- VENUE -->
+<section data-dot="Venue">
+  <div class="wrap">
+    <div class="eyebrow rv">Where &amp; When</div>
+    <h2 class="rv">You're Invited</h2>
+    <div class="panel rv" id="venue"></div>
+  </div>
+</section>
+
+<!-- AGENDA -->
+<section data-dot="Schedule">
+  <div class="wrap">
+    <div class="eyebrow rv">The Day</div>
+    <h2 class="rv">Order of Events</h2>
+    <div class="tl stagger rv" id="agenda"></div>
+  </div>
+</section>
+
+<!-- GIFT -->
+<section data-dot="Gift">
+  <div class="wrap">
+    <div class="eyebrow rv">In lieu of gifts</div>
+    <h2 class="rv">Gift Us a Book</h2>
+    <div class="panel rv" id="gift"></div>
+  </div>
+</section>
+
+<!-- WISHES -->
+<section data-dot="Wishes">
+  <div class="wrap">
+    <div class="eyebrow rv">Leave your mark</div>
+    <h2 class="rv">Wishes &amp; Prayers</h2>
+    <div class="panel rv" id="wishes"></div>
+  </div>
+</section>
+
+<!-- RSVP -->
+<section data-dot="RSVP">
+  <div class="wrap">
+    <div class="eyebrow rv">Will you come?</div>
+    <h2 class="rv">RSVP</h2>
+    <div class="panel rv" id="rsvp"></div>
+  </div>
+</section>
+
+<!-- CLOSING -->
+<section id="closing" data-dot="The End">
+  <div class="wrap rv">
+    <img src="../photos/couple.png" alt="" onerror="this.style.display='none'"/>
+    <h1 id="closeNames" style="font-size:clamp(30px,9vw,60px)">&nbsp;</h1>
+    <p class="serif" style="font-size:clamp(18px,5vw,26px)">We can't wait to celebrate with you.</p>
+  </div>
+</section>
+
+<!-- SHARED content + keys + effects + backend + music -->
+<script src="../data.js"></script>
+<script src="../config.local.js" onerror="/* git-ignored keys; absent on showcase */"></script>
+<script src="../fx.js"></script>
+<script type="module" src="../firebase.js"></script>
+<script src="../music.js" defer></script>
+<script>
+"use strict";
+const W=window.WEDDING, GUEST=new URLSearchParams(location.search).get("to");
+const esc=s=>String(s==null?"":s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+const photoSrc=f=>`../photos/${f}`;
+const onerr=`onerror="this.onerror=null;this.src='../photos/_placeholder.png'"`;
+
+/* ---- fill content from shared data ---- */
+document.getElementById("names").innerHTML=`${W.bride}<span class="amp"> &amp; </span>${W.groom}`;
+document.getElementById("closeNames").innerHTML=`${W.bride} <span class="amp">&amp;</span> ${W.groom}`;
+document.getElementById("heroDate").textContent=W.dateLabel;
+if(GUEST){ const g=document.getElementById("greet"); g.textContent=`Dear ${GUEST}, you're invited`; g.style.display="inline-block"; }
+
+// story chapters (sticky photo + caption)
+document.getElementById("chapters").innerHTML=W.story.map((s,i)=>`
+  <section class="chapter" data-dot="${esc(s.label)}">
+    <div class="num">${String(i+1).padStart(2,"0")}</div>
+    <div class="sticky"><img class="photo rv sc" src="${photoSrc(s.photo)}" ${onerr} alt=""/></div>
+    <div class="cap"><div class="card rv">
+      <div class="eyebrow">${s.icon} ${esc(s.label)}</div>
+      <h2 style="margin-bottom:10px">${esc(s.title)}</h2>${s.html}</div></div>
+  </section>`).join("");
+
+// profiles
+document.getElementById("authors").innerHTML=`
+  <div class="author"><img src="${photoSrc('bride.jpg')}" ${onerr} alt=""/><div class="nm">${W.brideFull}</div><div class="pr">${W.brideParents}</div></div>
+  <div class="author"><img src="${photoSrc('groom.jpg')}" ${onerr} alt=""/><div class="nm">${W.groomFull}</div><div class="pr">${W.groomParents}</div></div>`;
+
+// venue
+document.getElementById("venue").innerHTML=`
+  <div class="detail"><span class="k">When</span><span>${W.dateLabel}<br/>Ceremony ${W.ceremonyTime}</span></div>
+  <div class="detail"><span class="k">Where</span><span>${W.venueName}<br/>${W.venueAddress}</span></div>
+  <div class="detail"><span class="k">Dress</span><span>${W.dress}</span></div>
+  <div class="acts"><button class="btn" id="mapBtn">📍 Open map</button><button class="btn ghost" onclick="addToCalendar()">📅 Add to calendar</button></div>`;
+document.getElementById("mapBtn").onclick=()=>window.open("https://maps.google.com/?q="+encodeURIComponent(W.mapsQuery),"_blank");
+
+// agenda timeline
+document.getElementById("agenda").innerHTML=W.agenda.map(a=>`<div class="item"><div class="t">${a.time}</div><div>${a.label}</div></div>`).join("");
+
+// gift
+(function(){ const g=W.gift;
+  const items=g.wishlist.map((b,k)=>`<div class="bookrow"><span>📖 <b>${b.title}</b>${b.author?` — <i>${b.author}</i>`:""}</span>
+    <span id="bk${k}">${b.link?`<a href="${b.link}" target="_blank">view</a> · `:""}<button class="claim" data-i="${k}">I'll send this</button></span></div>`).join("");
+  document.getElementById("gift").innerHTML=`<p style="margin-top:0">${g.note}</p><div class="books">${items}</div>
+    <div class="detail" style="margin-top:14px"><span class="k">Send to</span><span>${g.sendTo}</span></div>
+    <p class="note" id="giftNote"></p>`; })();
+
+// wishes
+document.getElementById("wishes").innerHTML=`
+  <form id="wishForm"><label>Your name</label><input name="name" required placeholder="your name"/>
+    <label>Your wish or prayer</label><textarea name="msg" rows="2" required placeholder="something from the heart…"></textarea>
+    <div class="acts"><button class="btn" type="submit">Send wish ♥</button></div></form>
+  <div class="wishes" id="wishList"><p class="note" id="wishNote">Loading wishes…</p></div>`;
+
+// rsvp
+document.getElementById("rsvp").innerHTML=`
+  <form id="rsvpForm"><label>Your name</label><input name="name" required placeholder="your name"/>
+    <label>Will you attend?</label><select name="attending"><option>Joyfully accepts 🎊</option><option>Sadly declines 💔</option></select>
+    <label>Number of guests</label><input name="guests" type="number" min="1" value="1"/>
+    <label>A note for us</label><textarea name="note" rows="2" placeholder="song request, dietary needs…"></textarea>
+    <div class="acts"><button class="btn" type="submit">Send RSVP ♥</button></div></form>
+  <p class="note" id="rsvpNote"></p>`;
+
+/* ---- build right-side chapter dots ---- */
+const sections=[...document.querySelectorAll("section[data-dot]")];
+const dotsNav=document.getElementById("dots");
+sections.forEach((sec,i)=>{ const a=document.createElement("a"); a.href="#"; a.title=sec.dataset.dot;
+  a.onclick=e=>{e.preventDefault();sec.scrollIntoView({behavior:"smooth"});}; dotsNav.appendChild(a); });
+const dotEls=[...dotsNav.children];
+
+/* ---- reveal-on-scroll (IntersectionObserver) ---- */
+const io=new IntersectionObserver((entries)=>{ entries.forEach(en=>{ if(en.isIntersecting){ en.target.classList.add("seen");
+  if(en.target.id==="cd") startCountdownRoll(); io.unobserve(en.target); } }); },{threshold:.18, rootMargin:"0px 0px -8% 0px"});
+document.querySelectorAll(".rv, .stagger").forEach(el=>io.observe(el));
+
+/* active-section dot (a second observer) */
+const ioActive=new IntersectionObserver((entries)=>{ entries.forEach(en=>{ if(en.isIntersecting){
+  const i=sections.indexOf(en.target); dotEls.forEach((d,k)=>d.classList.toggle("on",k===i)); } }); },{threshold:.5});
+sections.forEach(s=>ioActive.observe(s));
+
+/* ---- scroll-linked: progress bar + parallax (rAF throttled) ---- */
+let ticking=false;
+function onScroll(){ if(ticking)return; ticking=true; requestAnimationFrame(()=>{
+  const h=document.documentElement, max=h.scrollHeight-h.clientHeight;
+  document.getElementById("prog").style.width=(max>0?(h.scrollTop/max*100):0)+"%";
+  // hero parallax layers
+  const y=window.scrollY;
+  document.querySelectorAll("#hero .pllx").forEach(el=>{
+    const sp=parseFloat(el.dataset.speed||0); el.style.transform=`translateY(${y*sp}px)`; });
+  // gentle scrub: story photos drift as their section scrolls
+  document.querySelectorAll(".chapter").forEach(sec=>{ const img=sec.querySelector(".photo"); if(!img)return;
+    const r=sec.getBoundingClientRect(); const prog=Math.max(-1,Math.min(1,(r.top)/window.innerHeight));
+    img.style.transform=`translateY(${prog*-22}px) scale(${1.02-prog*0.04})`; });
+  ticking=false; }); }
+addEventListener("scroll",onScroll,{passive:true}); onScroll();
+
+/* ---- countdown (roll up once when in view, then live tick) ---- */
+let cdStarted=false;
+function cdParts(){ const t=new Date(W.date).getTime()-Date.now(); if(isNaN(t)||t<=0)return null;
+  return {d:Math.floor(t/864e5),h:Math.floor(t/36e5)%24,m:Math.floor(t/6e4)%60,s:Math.floor(t/1e3)%60}; }
+function renderCd(){ const c=cdParts(), box=document.getElementById("cd");
+  if(!c){ box.innerHTML=`<div class="u"><b>♥</b><span>Today!</span></div>`; return; }
+  box.innerHTML=`<div class="u"><b>${c.d}</b><span>Days</span></div><div class="u"><b>${c.h}</b><span>Hours</span></div>
+    <div class="u"><b>${c.m}</b><span>Mins</span></div><div class="u"><b>${c.s}</b><span>Secs</span></div>`; }
+function startCountdownRoll(){ if(cdStarted)return; cdStarted=true; renderCd();
+  // quick roll-up flourish on the day number
+  const c=cdParts(); if(c){ const b=document.querySelector("#cd .u b"); if(b){ let n=0; const tgt=c.d;
+    const iv=setInterval(()=>{ n+=Math.ceil(tgt/22); if(n>=tgt){n=tgt;clearInterval(iv);} b.textContent=n; },28); } } }
+setInterval(()=>{ if(cdStarted) renderCd(); },1000);
+
+/* ---- calendar ---- */
+window.addToCalendar=function(){ const d=new Date(W.date),pad=n=>String(n).padStart(2,"0");
+  const fmt=t=>t.getUTCFullYear()+pad(t.getUTCMonth()+1)+pad(t.getUTCDate())+"T"+pad(t.getUTCHours())+pad(t.getUTCMinutes())+"00Z";
+  const ics=["BEGIN:VCALENDAR","VERSION:2.0","BEGIN:VEVENT",`SUMMARY:${W.bride} & ${W.groom} Wedding`,
+    `DTSTART:${fmt(d)}`,`DTEND:${fmt(new Date(d.getTime()+5*36e5))}`,`LOCATION:${W.venueName}, ${W.venueAddress}`,
+    "DESCRIPTION:We can't wait to celebrate with you!","END:VEVENT","END:VCALENDAR"].join("\n");
+  const a=document.createElement("a"); a.href=URL.createObjectURL(new Blob([ics],{type:"text/calendar"})); a.download="our-wedding.ics"; a.click(); };
+
+/* ---- Firebase: wishes + rsvp + book claims (graceful) ---- */
+function withWB(fn){ const WB=window.WB; if(WB) fn(WB); else addEventListener("wb-ready",()=>fn(window.WB),{once:true}); }
+(function(){ const f=document.getElementById("wishForm"), list=document.getElementById("wishList"), note=document.getElementById("wishNote");
+  withWB(WB=>{ if(WB.ready) WB.watchWishes(items=>{ list.innerHTML=items.length
+        ? items.map(w=>`<div class="wishcard"><b>${esc(w.name)}</b>${esc(w.msg)}</div>`).join("")
+        : `<p class="note">Be the first to leave a wish ♥</p>`; });
+    else note.textContent="(Live wishes need Firebase — see ../firebase.js)"; });
+  f.addEventListener("submit",e=>{ e.preventDefault(); const d=new FormData(f),WB=window.WB;
+    if(WB&&WB.ready){ WB.addWish(d.get("name"),d.get("msg")).catch(()=>{}); f.reset(); }
+    else note.textContent="(Set up Firebase to share your wish.)"; }); })();
+(function(){ const f=document.getElementById("rsvpForm"), note=document.getElementById("rsvpNote");
+  f.addEventListener("submit",e=>{ e.preventDefault(); const d=new FormData(f),WB=window.WB,
+    data={name:d.get("name"),attending:d.get("attending"),guests:d.get("guests"),note:d.get("note"),to:GUEST||""};
+    if(WB&&WB.ready) WB.addRSVP(data).catch(()=>{});
+    else if(W.rsvpEmail) location.href=`mailto:${W.rsvpEmail}?subject=Wedding RSVP - ${encodeURIComponent(data.name)}&body=`+
+      encodeURIComponent(`Name: ${data.name}\nAttending: ${data.attending}\nGuests: ${data.guests}\nNote: ${data.note}`);
+    f.outerHTML=`<p style="text-align:center;font-size:20px;color:var(--rose-dk)">Thank you, ${esc(data.name)||"friend"}! ♥<br/><span class="note">Your RSVP is in.</span></p>`; }); })();
+(function(){ const note=document.getElementById("giftNote");
+  const setTaken=(i,by)=>{ const el=document.getElementById("bk"+i); if(el) el.innerHTML=`<span class="taken">✓ sent by ${esc(by)}</span>`; };
+  withWB(WB=>{ if(WB.ready){ WB.watchClaims(m=>Object.keys(m).forEach(i=>setTaken(i,(m[i]&&m[i].by)||"a guest")));
+      document.querySelectorAll(".claim").forEach(b=>b.onclick=()=>{ const i=b.dataset.i,by=GUEST||(prompt("Your name?")||"a guest");
+        WB.claimBook(i,by).then(()=>setTaken(i,by)).catch(()=>alert("Someone may have just claimed it — refresh.")); }); }
+    else { note.textContent="(Live claims need Firebase — guests can still pick one and tell you.)";
+      document.querySelectorAll(".claim").forEach(b=>b.onclick=()=>setTaken(b.dataset.i,GUEST||"you")); } }); })();
+</script>
+</body>
+</html>
