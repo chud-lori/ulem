@@ -53,10 +53,11 @@
   #heroBlob{top:-10%;height:70%;filter:blur(40px);opacity:.5;
     background:radial-gradient(closest-side,#f3b9c8,transparent 70%);}
   #heroCouple{width:min(46vw,210px);filter:drop-shadow(0 14px 22px rgba(120,70,80,.28));z-index:2;
-    position:relative;margin-bottom:6px;}
+    position:relative;margin:0 auto 6px;display:block;}
   .hero-greet{display:none;font-size:13px;letter-spacing:2px;color:var(--rose-dk);border:1px solid var(--rose);
-    border-radius:30px;padding:6px 16px;margin-bottom:22px;max-width:90vw;white-space:normal;
-    overflow-wrap:anywhere;text-align:center;line-height:1.4;}
+    border-radius:30px;padding:6px 16px;margin:0 auto 22px;max-width:90vw;white-space:normal;
+    overflow-wrap:anywhere;text-align:center;line-height:1.4;width:fit-content;}
+  .hero-greet.show{display:block;}
   .scrollcue{position:absolute;bottom:26px;left:50%;transform:translateX(-50%);font-size:11px;letter-spacing:3px;
     color:var(--rose-dk);text-transform:uppercase;display:flex;flex-direction:column;align-items:center;gap:6px;}
   .scrollcue .m{width:22px;height:34px;border:2px solid var(--rose-dk);border-radius:12px;position:relative;}
@@ -230,7 +231,7 @@ const onerr=`onerror="this.onerror=null;this.src='../photos/_placeholder.png'"`;
 document.getElementById("names").innerHTML=`${W.bride}<span class="amp"> &amp; </span>${W.groom}`;
 document.getElementById("closeNames").innerHTML=`${W.bride} <span class="amp">&amp;</span> ${W.groom}`;
 document.getElementById("heroDate").textContent=W.dateLabel;
-if(GUEST){ const g=document.getElementById("greet"); g.textContent=`Dear ${GUEST}, you're invited`; g.style.display="inline-block"; }
+if(GUEST){ const g=document.getElementById("greet"); g.textContent=`Dear ${GUEST}, you're invited`; g.classList.add("show"); }
 
 // story chapters (sticky photo + caption)
 document.getElementById("chapters").innerHTML=W.story.map((s,i)=>`
