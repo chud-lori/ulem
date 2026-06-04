@@ -172,9 +172,7 @@ const ASSET_SRC = {
   groom:"assets/groom_walk.png", bride:"assets/bride_walk.png",
   groomLpc:"assets/groom_lpc.png", brideLpc:"assets/bride_lpc.png",  // smooth hand-animated walk
   headGroom:"assets/head_groom.png", headBride:"assets/head_bride.png",  // chibi faces for lpc bodies
-  // OPTIONAL custom chibi art — drop these in to replace the pixel couple.
-  // Front-facing, transparent background. See assets/CHARACTERS_README.txt
-  groomChibi:"assets/groom.png", brideChibi:"assets/bride.png", couple:"../photos/couple.png",
+  couple:"../photos/couple.png",
 };
 const IMG = {};
 let loaded=0, total=Object.keys(ASSET_SRC).length;
@@ -189,7 +187,6 @@ function preload(done){
     im.src=ASSET_SRC[k];
   }
 }
-const haveChibi=()=> IMG.groomChibi.ok && IMG.brideChibi.ok;
 
 /* ---------- 3. CANVAS / VIEW ---------- */
 const canvas=document.getElementById("game"), ctx=canvas.getContext("2d");
@@ -254,21 +251,29 @@ const decor=[];
 
 /* ---------- 5. INPUT ---------- */
 const keys={left:false,right:false}; let wantInteract=false;
+function keyName(e){ return e.key.length===1 ? e.key.toLowerCase() : e.key; }
+function resetMoveKeys(){ keys.left=false; keys.right=false; }
 addEventListener("keydown",e=>{
-  if(["ArrowLeft","ArrowRight","ArrowUp"," ","Enter","a","d","A","D"].includes(e.key)) e.preventDefault();
-  if(e.key==="ArrowLeft"||e.key.toLowerCase()==="a") keys.left=true;
-  if(e.key==="ArrowRight"||e.key.toLowerCase()==="d") keys.right=true;
-  if(e.key===" "||e.key==="Enter"||e.key==="ArrowUp") wantInteract=true;
-  if(e.key==="Escape") closeModal();
+  const k=keyName(e);
+  if(["ArrowLeft","ArrowRight","ArrowUp"," ","Enter","a","d"].includes(k)) e.preventDefault();
+  if(k==="ArrowLeft"||k==="a") keys.left=true;
+  if(k==="ArrowRight"||k==="d") keys.right=true;
+  if(k===" "||k==="Enter"||k==="ArrowUp") wantInteract=true;
+  if(k==="Escape") closeModal();
 });
 addEventListener("keyup",e=>{
-  if(e.key==="ArrowLeft"||e.key.toLowerCase()==="a") keys.left=false;
-  if(e.key==="ArrowRight"||e.key.toLowerCase()==="d") keys.right=false;
+  const k=keyName(e);
+  if(k==="ArrowLeft"||k==="a") keys.left=false;
+  if(k==="ArrowRight"||k==="d") keys.right=false;
 });
+addEventListener("blur",resetMoveKeys);
+addEventListener("pagehide",resetMoveKeys);
+document.addEventListener("visibilitychange",()=>{ if(document.hidden) resetMoveKeys(); });
 function bindPad(id,on,off){
   const el=document.getElementById(id);
   const s=e=>{e.preventDefault();on();}, en=e=>{e.preventDefault();off&&off();};
   el.addEventListener("touchstart",s,{passive:false}); el.addEventListener("touchend",en,{passive:false});
+  el.addEventListener("touchcancel",en,{passive:false}); el.addEventListener("pointercancel",en);
   el.addEventListener("mousedown",s); el.addEventListener("mouseup",en); el.addEventListener("mouseleave",en);
 }
 bindPad("padLeft",()=>keys.left=true,()=>keys.left=false);
@@ -402,22 +407,28 @@ function roundRect(x,y,w,h,r){ ctx.beginPath(); ctx.moveTo(x+r,y); ctx.arcTo(x+w
    Two styles — flip WALK_STYLE to compare:
      "lpc"   = hand-animated pixel walk (real gait, very smooth; smaller face)
      "chibi" = the cute AI-generated chibi frames (big face; march-in-place) */
-const WALK_STYLE = "lpc";
+const WALK_STYLE = "chibi";
 // "lpc" draws a smooth pixel walking BODY and overlays the cute chibi HEAD on top
 // (big-head/chibi look = smooth gait + a real visible face). head.h = head height in
 // 64px cell units; ax/ay = per-frame head anchor (centre-x, top-y) from each LPC sheet.
 const WALK_SETS = {
-  lpc:   { th:84, bot:2, dx:15, tween:false,
+  lpc:   { th:84, bot:2, dx:15, stride:4.0, tween:false,
            groom:{key:"groomLpc", n:9, fw:64, fh:64, idle:0,
                   head:{key:"headGroom", h:24, ax:[31,32,31,30,29,29,29,30,30], ay:[14,15,14,14,14,15,14,14,14]}},
            bride:{key:"brideLpc", n:9, fw:64, fh:64, idle:0,
                   head:{key:"headBride", h:25, ax:[29,29,29,29,29,30,29,29,29], ay:[15,16,15,15,15,16,15,15,15]}} },
-  chibi: { th:80, bot:4, dx:30, tween:true,
-           groom:{key:"groom", n:10, fw:158, fh:271, idle:0},
-           bride:{key:"bride", n:8,  fw:178, fh:293, idle:0} },
+  chibi: { th:88, bot:4, dx:28, stride:4.8, tween:false,
+           groom:{key:"groom", n:8, fw:203, fh:383, idle:0, walkStart:1, walkCount:6},
+           bride:{key:"bride", n:8, fw:222, fh:377, idle:0, walkStart:1, walkCount:6} },
 };
 const SET = WALK_SETS[WALK_STYLE];
 const CHAR_TH = SET.th, CHAR_BOT = SET.bot;
+function spriteCell(img,meta){
+  const n=Math.max(1,meta.n||1);
+  const fw=Math.floor(((img&&img.naturalWidth)||meta.fw)/n);
+  const fh=(img&&img.naturalHeight)||meta.fh;
+  return {fw,fh,n};
+}
 function drawCouple(){ worldTransform();
   const cx=player.x, by=GROUND+6, dx=SET.dx;
   const walking=player.walking, flip=player.dir<0, s=player.step;
@@ -426,13 +437,15 @@ function drawCouple(){ worldTransform();
   // don't snap around when you stop. Sheets face right -> flip when heading left.
   function one(meta,px){
     const img=IMG[meta.key];
-    if(!walking){ char(img,meta,meta.idle,px,by,flip,1,0); return; }
+    const cell=spriteCell(img,meta);
+    if(!walking || cell.n<2){ char(img,meta,meta.idle,px,by,flip,1,0,cell); return; }
     const base=Math.floor(s), frac=s-base;
-    const f0=base%meta.n, f1=(base+1)%meta.n;
-    char(img,meta,f0,px,by,flip,1,0);
+    const walkStart=meta.walkStart||0, walkCount=meta.walkCount||cell.n;
+    const f0=walkStart+(base%walkCount), f1=walkStart+((base+1)%walkCount);
+    char(img,meta,f0,px,by,flip,1,0,cell);
     // chibi frames are hard-cut AI poses -> crossfade to smooth them; the LPC cycle is
     // already a real gait, so it plays straight (tweening pixel art just ghosts).
-    if(SET.tween && frac>0.02) char(img,meta,f1,px,by,flip,frac,0);
+    if(SET.tween && frac>0.02) char(img,meta,f1,px,by,flip,frac,0,cell);
   }
   if(!flip){ one(SET.groom,cx-dx); one(SET.bride,cx+dx); }
   else     { one(SET.bride,cx-dx); one(SET.groom,cx+dx); }
@@ -440,14 +453,15 @@ function drawCouple(){ worldTransform();
   if(Math.sin(now/300)>0.5){ ctx.fillStyle="#e8889c"; ctx.font="9px 'Press Start 2P',monospace";
     ctx.textAlign="center"; ctx.fillText("♥",cx,by-CHAR_TH*0.6); }
 }
-function char(img,meta,fi,cx,by,flip,alpha,yoff){
+function char(img,meta,fi,cx,by,flip,alpha,yoff,cell){
   if(!img||!img.ok)return;
-  const k=CHAR_TH/meta.fh, dw=meta.fw*k, dh=CHAR_TH;
+  cell=cell||spriteCell(img,meta);
+  const k=CHAR_TH/cell.fh, dw=cell.fw*k, dh=CHAR_TH;
   const top=by-dh+CHAR_BOT*k+(yoff||0);    // map the cell's feet baseline onto `by`
   ctx.save();
   if(alpha!=null && alpha<1) ctx.globalAlpha=alpha;
   ctx.translate(cx,0); if(flip) ctx.scale(-1,1);
-  ctx.drawImage(img, fi*meta.fw,0,meta.fw,meta.fh, -dw/2, top, dw, dh);
+  ctx.drawImage(img, fi*cell.fw,0,cell.fw,cell.fh, -dw/2, top, dw, dh);
   // overlay the chibi head (for the lpc style) so the smooth body has a visible face
   const H=meta.head, hi=H&&IMG[H.key];
   if(hi&&hi.ok){
@@ -666,12 +680,12 @@ function loop(t){
   let moved=0;
   if(started&&!modalOpen){
     const spd=0.085*dt;
-    if(keys.left&&player.x>110){ player.x-=spd; player.dir=-1; player.walking=true; moved=spd; }
-    if(keys.right&&player.x<WORLD_W-90){ player.x+=spd; player.dir=1; player.walking=true; moved=spd; }
+    const axis=(keys.right?1:0)-(keys.left?1:0);
+    if(axis<0&&player.x>110){ player.x-=spd; player.dir=-1; player.walking=true; moved=spd; }
+    else if(axis>0&&player.x<WORLD_W-90){ player.x+=spd; player.dir=1; player.walking=true; moved=spd; }
   }
-  // advance the walk cycle by DISTANCE TRAVELLED (not a timer) so legs pump in step
-  // with the ground instead of sliding. ~5 world units per sprite frame = brisk stride.
-  if(player.walking){ const prev=Math.floor(player.step); player.step+=moved/4.0;
+  // Advance the walk cycle by distance travelled so the feet stay synced to the ground.
+  if(player.walking){ const prev=Math.floor(player.step); player.step+=moved/(SET.stride||4.0);
     if(Math.floor(player.step)!==prev) footstep(); }
   // camera: tight follow, clamped (no floaty over-speed)
   const target=Math.max(0,Math.min(WORLD_W-VIEW_W, player.x-VIEW_W*0.42));
