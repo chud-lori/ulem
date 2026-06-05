@@ -52,14 +52,14 @@
 <section class="hero">
   <div class="wrap journal">
     <div class="page">
-      <div class="kicker">Interactive travel journal</div>
+      <div class="kicker" id="travelKicker">Interactive travel journal</div>
       <h1 id="names">&nbsp;</h1>
       <p class="date" id="date"></p>
-      <div class="tools"><button class="btn" onclick="openStop('story')">Open The Map</button><button class="btn alt" onclick="openStop('rsvp')">RSVP Stamp</button></div>
+      <div class="tools"><button class="btn" id="openMapBtn" onclick="openStop('story')">Open The Map</button><button class="btn alt" id="rsvpStampBtn" onclick="openStop('rsvp')">RSVP Stamp</button></div>
       <div class="passport" id="passport"></div>
     </div>
     <div class="page">
-      <div class="photo-slot"><div><div class="stamp">Postcard photo</div><strong>Your real couple photo here</strong><p>Drop your own asset in later.</p></div></div>
+      <div class="photo-slot"><div><div class="stamp" id="photoKicker">Postcard photo</div><strong id="photoTitle">Your real couple photo here</strong><p id="photoHint">Drop your own asset in later.</p></div></div>
       <div class="map" id="map"><div class="route"></div></div>
     </div>
   </div>
@@ -71,15 +71,17 @@
   <section class="panel" id="panel-wishes"></section>
   <section class="panel" id="panel-rsvp"></section>
 </main>
-<script src="../data.js"></script><script src="../config.local.js" onerror=""></script><script type="module" src="../firebase.js"></script><script src="../music.js" defer></script>
+<script src="../data.js"></script><script src="template-data.js"></script><script src="../config.local.js" onerror=""></script><script type="module" src="../firebase.js"></script><script src="../music.js" defer></script>
 <script>
 const W=window.WEDDING,GUEST=(new URLSearchParams(location.search).get("to")||"").trim().slice(0,40)||null;
+const T=window.TEMPLATE||{};
 const esc=s=>String(s==null?"":s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
 const PHOTO_FALLBACK="data:image/svg+xml;charset=UTF-8,%3Csvg%20xmlns%3D%27http%3A//www.w3.org/2000/svg%27%20viewBox%3D%270%200%20800%20600%27%3E%3Crect%20width%3D%27800%27%20height%3D%27600%27%20fill%3D%27%23fff4df%27/%3E%3Crect%20x%3D%2740%27%20y%3D%2740%27%20width%3D%27720%27%20height%3D%27520%27%20fill%3D%27%23f6ead3%27%20stroke%3D%27%23bda984%27%20stroke-dasharray%3D%2718%2014%27%20stroke-width%3D%276%27/%3E%3Ctext%20x%3D%27400%27%20y%3D%27290%27%20text-anchor%3D%27middle%27%20font-family%3D%27serif%27%20font-size%3D%2736%27%20fill%3D%27%23315f4d%27%3EPhoto%20placeholder%3C/text%3E%3C/svg%3E";
 function photoFallback(img){img.onerror=null;img.src=PHOTO_FALLBACK;}
-const stops=[["story","Story","22%","28%"],["details","Details","68%","26%"],["gift","Gift","78%","66%"],["wishes","Wishes","38%","72%"],["rsvp","RSVP","54%","48%"]];
+const stops=T.stops||[["story","Story","22%","28%"],["details","Details","68%","26%"],["gift","Gift","78%","66%"],["wishes","Wishes","38%","72%"],["rsvp","RSVP","54%","48%"]];
 const seen=new Set(JSON.parse(localStorage.getItem("travelSeen")||"[]"));
 names.innerHTML=`${W.bride}<span class="amp"> &amp; </span>${W.groom}`;date.textContent=W.dateLabel;
+if(T.labels){travelKicker.textContent=T.labels.kicker||travelKicker.textContent;openMapBtn.textContent=T.labels.openMap||openMapBtn.textContent;rsvpStampBtn.textContent=T.labels.rsvp||rsvpStampBtn.textContent;photoKicker.textContent=T.labels.photoKicker||photoKicker.textContent;photoTitle.textContent=T.labels.photoTitle||photoTitle.textContent;photoHint.textContent=T.labels.photoHint||photoHint.textContent;}
 function giftWaUrl(g){const phone=String((g&&g.whatsapp)||"").replace(/\D/g,""),text=encodeURIComponent((g&&g.whatsappText)||"Hi, I'd like to send a book as a wedding gift. Could you share the shipping address?");return phone?`https://wa.me/${phone}?text=${text}`:`https://wa.me/?text=${text}`;}
 function renderNav(){map.innerHTML=`<div class="route"></div>`+stops.map(([id,label,x,y])=>`<button class="pin ${seen.has(id)?"done":""}" style="left:${x};top:${y}" onclick="openStop('${id}')">${label}</button>`).join("");passport.innerHTML=stops.map(([id,label])=>`<div class="mark ${seen.has(id)?"on":""}">${label}</div>`).join("");}
 function openStop(id){seen.add(id);localStorage.setItem("travelSeen",JSON.stringify([...seen]));document.querySelectorAll(".panel").forEach(p=>p.classList.toggle("active",p.id==="panel-"+id));renderNav();document.getElementById("panel-"+id).scrollIntoView({behavior:"smooth",block:"start"});}

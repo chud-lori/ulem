@@ -148,7 +148,7 @@
   <p id="guestGreet"></p>
   <img id="coupleHero" alt="" />
   <h1 id="coupleNames">&nbsp;</h1>
-  <p>are getting married!<br/><br/>Walk our little route of trails, rides, books,<br/>and wedding details.</p>
+  <p id="introBody">are getting married!<br/><br/>Walk our little route of trails, rides, books,<br/>and wedding details.</p>
   <div id="countdown" aria-label="countdown"></div>
   <button class="btn" id="startBtn" disabled><span class="heartbeat">💍</span>&nbsp; <span id="startLabel">Loading…</span></button>
   <p style="opacity:.7;font-size:8px;">Arrow keys / A&nbsp;D to walk &nbsp;·&nbsp; Space to open a stop<br/>(on phone, use the buttons below)</p>
@@ -159,6 +159,7 @@
 
 <!-- SHARED content for all templates (one source of truth): defines window.WEDDING -->
 <script src="../data.js"></script>
+<script src="template-data.js"></script>
 <!-- git-ignored real keys (Firebase etc.); optional, overrides data.js defaults -->
 <script src="../config.local.js" onerror="/* absent on showcase — runs key-free */"></script>
 <!-- SHARED opening effects (petals / entrance / typewriter) -->
@@ -220,7 +221,10 @@ addEventListener("resize",resize); resize();
    This template turns it into "spots" (buildings along the street). Only
    the game cares about buildings/icons — other themes render WEDDING differently. */
 const WEDDING = window.WEDDING;
+const TEMPLATE = window.TEMPLATE || {};
 const RSVP_EMAIL = WEDDING.rsvpEmail || "";
+if(TEMPLATE.routeTag) document.getElementById("routeTag").textContent=TEMPLATE.routeTag;
+if(TEMPLATE.intro&&TEMPLATE.intro.body) document.getElementById("introBody").innerHTML=`are getting married!<br/><br/>${TEMPLATE.intro.body}`;
 const STORY_BLD = ["park","shop","park","club","apartment"]; // scene per story beat (cycles)
 const SPOTS = [
   { id:"profiles", type:"profiles", icon:"🎒", sign:"Meet Us", title:"Meet the Couple", building:"apartment" },
@@ -517,10 +521,11 @@ function updateHint(){
 const modalWrap=document.getElementById("modalWrap"), modalEl=document.getElementById("modal");
 let modalOpen=false, revealed=false;
 function showReveal(){
+  const c=TEMPLATE.completion||{};
   modalEl.innerHTML=`<button id="closeBtn" onclick="closeModal()">✕</button>
-    <span class="ico">💌</span><h2>Final Letter Unlocked</h2>
+    <span class="ico">${c.icon||"💌"}</span><h2>${c.title||"Final Letter Unlocked"}</h2>
     <div class="polaroid" style="transform:none;text-align:left;max-width:420px">
-      <p style="font-size:10px;line-height:2;margin:0">You walked every stop in our little route. Keep this date close: <span class="ph">${WEDDING.dateLabel}</span>.
+      <p style="font-size:10px;line-height:2;margin:0">${c.body||"You walked every stop in our little route. Keep this date close."}: <span class="ph">${WEDDING.dateLabel}</span>.
       Come as reader, traveler, and witness as ${WEDDING.bride} &amp; ${WEDDING.groom} begin the next chapter.</p>
     </div>
     <div class="actions"><button class="btn mini" onclick="openSpot(SPOTS.find(s=>s.id==='rsvp'))">Review RSVP</button>

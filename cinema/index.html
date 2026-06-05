@@ -11,7 +11,7 @@
   *{box-sizing:border-box;margin:0;padding:0}
   html{scroll-behavior:smooth}
   body{font-family:Inter,system-ui,sans-serif;background:#0b0908;color:var(--ink);line-height:1.55;overflow-x:hidden}
-  body::before{content:"";position:fixed;inset:0;z-index:-2;background:url("../photos/template-art/cinema-projector.jpg") center/cover no-repeat;filter:saturate(.9) brightness(.45)}
+  body::before{content:"";position:fixed;inset:0;z-index:-2;background:var(--hero-art, url("assets/projector.jpg")) center/cover no-repeat;filter:saturate(.9) brightness(.45)}
   body::after{content:"";position:fixed;inset:0;z-index:-1;pointer-events:none;background:
     linear-gradient(90deg,#070505 0 16%,transparent 38% 62%,#070505 84%),
     repeating-linear-gradient(90deg,transparent 0 34px,#ffffff16 35px 37px,transparent 38px 74px)}
@@ -84,13 +84,13 @@
 <section class="hero">
   <div class="wrap marquee">
     <div class="title">
-      <div class="kicker">Interactive premiere invitation</div>
+      <div class="kicker" id="heroKicker">Interactive premiere invitation</div>
       <h1 id="names">&nbsp;</h1>
       <p class="date" id="date"></p>
       <div class="actions"><button class="btn" onclick="pick('story')">Start Screening</button><button class="btn alt" onclick="pick('rsvp')">Reserve Seat</button></div>
     </div>
     <div class="screen">
-      <div class="photo-slot"><div><span class="mono">Couple photo placeholder</span><strong>Your Poster Here</strong><p>Use your own real couple image as the poster art.</p></div></div>
+      <div class="photo-slot"><div><span class="mono" id="posterLabel">Couple photo placeholder</span><strong id="posterTitle">Your Poster Here</strong><p id="posterHint">Use your own real couple image as the poster art.</p></div></div>
       <div class="countdown" id="countdown"></div>
     </div>
   </div>
@@ -104,17 +104,26 @@
   <section class="panel" id="panel-rsvp"></section>
   <div class="pass" id="allAccess"></div>
 </main>
-<script src="../data.js"></script><script src="../config.local.js" onerror=""></script><script type="module" src="../firebase.js"></script><script src="../music.js" defer></script>
+<script src="../data.js"></script><script src="template-data.js"></script><script src="../config.local.js" onerror=""></script><script type="module" src="../firebase.js"></script><script src="../music.js" defer></script>
 <script>
 const W=window.WEDDING,GUEST=(new URLSearchParams(location.search).get("to")||"").trim().slice(0,40)||null;
+const T=window.TEMPLATE||{};
 const esc=s=>String(s==null?"":s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
 const PHOTO_FALLBACK="data:image/svg+xml;charset=UTF-8,%3Csvg%20xmlns%3D%27http%3A//www.w3.org/2000/svg%27%20viewBox%3D%270%200%20800%20500%27%3E%3Crect%20width%3D%27800%27%20height%3D%27500%27%20fill%3D%27%23120d0b%27/%3E%3Crect%20x%3D%2732%27%20y%3D%2732%27%20width%3D%27736%27%20height%3D%27436%27%20rx%3D%2724%27%20fill%3D%27%23211816%27%20stroke%3D%27%23d8a84f%27%20stroke-dasharray%3D%2716%2014%27%20stroke-width%3D%276%27/%3E%3Ctext%20x%3D%27400%27%20y%3D%27238%27%20text-anchor%3D%27middle%27%20font-family%3D%27monospace%27%20font-size%3D%2734%27%20fill%3D%27%23f8ead0%27%3EPhoto%20placeholder%3C/text%3E%3Ctext%20x%3D%27400%27%20y%3D%27288%27%20text-anchor%3D%27middle%27%20font-family%3D%27monospace%27%20font-size%3D%2720%27%20fill%3D%27%23cdbb9c%27%3EAdd%20your%20own%20image%3C/text%3E%3C/svg%3E";
 function photoFallback(img){img.onerror=null;img.src=PHOTO_FALLBACK;}
-const stops=[["story","Featurette"],["details","Screening Info"],["gift","Book Gift"],["wishes","Audience Notes"],["rsvp","Reserve Seat"]];
+const stops=T.stops||[["story","Featurette"],["details","Screening Info"],["gift","Book Gift"],["wishes","Audience Notes"],["rsvp","Reserve Seat"]];
 const seen=new Set(JSON.parse(localStorage.getItem("cinemaSeen")||"[]"));
 let currentScene=0;
 names.innerHTML=`${W.bride}<span class="amp"> &amp; </span>${W.groom}`;date.textContent=W.dateLabel;
 introNames.innerHTML=`${W.bride}<span class="amp"> &amp; </span>${W.groom}`;introDate.textContent=W.dateLabel;
+document.documentElement.style.setProperty("--hero-art",`url("${(T.assets&&T.assets.hero)||"assets/projector.jpg"}")`);
+heroKicker.textContent=(T.intro&&T.intro.kicker)||heroKicker.textContent;
+document.querySelector(".stub h2").textContent=(T.intro&&T.intro.ticketTitle)||"Premiere Night";
+document.querySelector(".stub p").textContent=(T.intro&&T.intro.ticketHint)||"Break the ticket to enter the invitation.";
+document.querySelector(".stub .btn").textContent=(T.intro&&T.intro.enterLabel)||"Tear Ticket";
+posterLabel.textContent=(T.intro&&T.intro.posterLabel)||posterLabel.textContent;
+posterTitle.textContent=(T.intro&&T.intro.posterTitle)||posterTitle.textContent;
+posterHint.textContent=(T.intro&&T.intro.posterHint)||posterHint.textContent;
 function giftWaUrl(g){const phone=String((g&&g.whatsapp)||"").replace(/\D/g,""),text=encodeURIComponent((g&&g.whatsappText)||"Hi, I'd like to send a book as a wedding gift. Could you share the shipping address?");return phone?`https://wa.me/${phone}?text=${text}`:`https://wa.me/?text=${text}`;}
 function enterPremiere(){intro.classList.add("open");localStorage.setItem("cinemaEntered","1");setTimeout(()=>intro.classList.add("hide"),560);}
 if(localStorage.getItem("cinemaEntered")==="1") intro.classList.add("hide");
@@ -130,7 +139,7 @@ function renderScene(){const s=W.story[currentScene]||W.story[0];sceneView.inner
 function showScene(i){currentScene=Math.max(0,Math.min(W.story.length-1,i));renderScene();}
 function nextScene(){showScene((currentScene+1)%W.story.length);}
 function prevScene(){showScene((currentScene-1+W.story.length)%W.story.length);}
-function renderAllAccess(){const done=seen.size===stops.length;allAccess.classList.toggle("show",done);allAccess.innerHTML=done?`<div class="mono">All Access Pass</div><h2>Premiere Complete</h2><p>You have opened every part of the invitation. The final step is simple: keep the date, find the venue, and celebrate with ${W.bride} & ${W.groom}.</p><div class="actions"><button class="btn" onclick="pick('rsvp')">Review RSVP</button><button class="btn alt" onclick="open('https://maps.google.com/?q='+encodeURIComponent(W.mapsQuery),'_blank')">Open Map</button></div>`:"";}
+function renderAllAccess(){const done=seen.size===stops.length, f=T.finale||{};allAccess.classList.toggle("show",done);allAccess.innerHTML=done?`<div class="mono">${f.kicker||"All Access Pass"}</div><h2>${f.title||"Premiere Complete"}</h2><p>${f.body||`You have opened every part of the invitation. The final step is simple: keep the date, find the venue, and celebrate with ${W.bride} & ${W.groom}.`}</p><div class="actions"><button class="btn" onclick="pick('rsvp')">Review RSVP</button><button class="btn alt" onclick="open('https://maps.google.com/?q='+encodeURIComponent(W.mapsQuery),'_blank')">Open Map</button></div>`:"";}
 function tickCountdown(){const ms=new Date(W.date).getTime()-Date.now(),safe=Math.max(0,ms),d=Math.floor(safe/864e5),h=Math.floor(safe%864e5/36e5),m=Math.floor(safe%36e5/6e4),s=Math.floor(safe%6e4/1e3);countdown.innerHTML=[["Days",d],["Hours",h],["Mins",m],["Secs",s]].map(x=>`<div class="cd"><b>${String(x[1]).padStart(2,"0")}</b><span>${x[0]}</span></div>`).join("");}
 function withWB(fn){const WB=window.WB;if(WB)fn(WB);else addEventListener("wb-ready",()=>fn(window.WB),{once:true});}
 withWB(WB=>{const list=document.getElementById("wishList"),note=document.getElementById("wishNote");if(WB.ready)WB.watchWishes(items=>{list.innerHTML=items.length?items.map(w=>`<div class="wish"><b>${esc(w.name)}</b>${esc(w.msg)}</div>`).join(""):`<p style="color:var(--muted)">Be the first to leave a wish.</p>`});else note.textContent="Live wishes need Firebase.";});
