@@ -169,7 +169,8 @@ const ASSET_SRC = {
   shop:"assets/build_shop.png", club:"assets/build_club.png", apartment:"assets/build_apartment.png",
   tree1:"assets/tree1.png", tree2:"assets/tree2.png", tree3:"assets/tree3.png",
   bus:"assets/bus.png", barrel:"assets/barrel.png", signbus:"assets/sign_bus.png",
-  groom:"assets/groom_walk.png", bride:"assets/bride_walk.png",
+  groomHarvest:"assets/groom_walk_harvest.png", brideHarvest:"assets/bride_walk_harvest.png",
+  groomChibi:"assets/groom_walk_chibi.png", brideChibi:"assets/bride_walk_chibi.png",
   groomLpc:"assets/groom_lpc.png", brideLpc:"assets/bride_lpc.png",  // smooth hand-animated walk
   headGroom:"assets/head_groom.png", headBride:"assets/head_bride.png",  // chibi faces for lpc bodies
   couple:"../photos/couple.png",
@@ -212,7 +213,7 @@ const SPOTS = [
   { id:"profiles", type:"profiles", icon:"💑", sign:"Meet Us", title:"Meet the Couple", building:"apartment" },
   ...WEDDING.story.map((s,i)=>({ id:s.id, type:"story", icon:s.icon, sign:s.label, title:s.title,
       photo:s.photo, html:s.html, building:STORY_BLD[i%STORY_BLD.length] })),
-  { id:"venue", type:"venue", icon:"💒", sign:"The Wedding", title:"You're Invited!", photo:"venue.jpg", building:"apartment" },
+  { id:"venue", type:"venue", icon:"🕌", sign:"The Wedding", title:"You're Invited!", photo:"venue.jpg", building:"apartment" },
   { id:"reception", type:"agenda", icon:"🎉", sign:"The Party", title:"Order of the Day", building:"club" },
   { id:"gift", type:"gift", icon:"📚", sign:"Gift a Book", title:"Gift Us a Book", building:"shop" },
   { id:"guestbook", type:"guestbook", icon:"💬", sign:"Wishes", title:"Leave Us a Wish", building:"shop" },
@@ -404,10 +405,11 @@ function roundRect(x,y,w,h,r){ ctx.beginPath(); ctx.moveTo(x+r,y); ctx.arcTo(x+w
   ctx.arcTo(x+w,y+h,x,y+h,r); ctx.arcTo(x,y+h,x,y,r); ctx.arcTo(x,y,x+w,y,r); ctx.closePath(); }
 
 /* Walk-cycle sheets: one horizontal row of N cells, character facing RIGHT.
-   Two styles — flip WALK_STYLE to compare:
-     "lpc"   = hand-animated pixel walk (real gait, very smooth; smaller face)
-     "chibi" = the cute AI-generated chibi frames (big face; march-in-place) */
-const WALK_STYLE = "chibi";
+   Switch CHARACTER_SPRITE_STYLE between:
+     "harvest" = smaller pixel/farming-RPG style
+     "chibi"   = previous smoother anime side-view style */
+const CHARACTER_SPRITE_STYLE = "harvest";
+// const CHARACTER_SPRITE_STYLE = "chibi";
 // "lpc" draws a smooth pixel walking BODY and overlays the cute chibi HEAD on top
 // (big-head/chibi look = smooth gait + a real visible face). head.h = head height in
 // 64px cell units; ax/ay = per-frame head anchor (centre-x, top-y) from each LPC sheet.
@@ -417,11 +419,14 @@ const WALK_SETS = {
                   head:{key:"headGroom", h:24, ax:[31,32,31,30,29,29,29,30,30], ay:[14,15,14,14,14,15,14,14,14]}},
            bride:{key:"brideLpc", n:9, fw:64, fh:64, idle:0,
                   head:{key:"headBride", h:25, ax:[29,29,29,29,29,30,29,29,29], ay:[15,16,15,15,15,16,15,15,15]}} },
+  harvest: { th:66, bot:3, dx:20, stride:3.8, tween:false,
+           groom:{key:"groomHarvest", n:8, fw:210, fh:357, idle:0, seq:[1,2,3,4,5,6], bob:[0,-1,-2,-1,0,-1]},
+           bride:{key:"brideHarvest", n:8, fw:228, fh:416, idle:0, seq:[1,2,3,4,5,6], bob:[0,-1,-2,-1,0,-1]} },
   chibi: { th:88, bot:4, dx:28, stride:4.8, tween:false,
-           groom:{key:"groom", n:8, fw:203, fh:383, idle:0, walkStart:1, walkCount:6},
-           bride:{key:"bride", n:8, fw:222, fh:377, idle:0, walkStart:1, walkCount:6} },
+           groom:{key:"groomChibi", n:8, fw:203, fh:383, idle:0, seq:[1,2,3,4,5,6], bob:[0,-1,-2,-1,0,-1]},
+           bride:{key:"brideChibi", n:8, fw:222, fh:377, idle:0, seq:[1,2,3,4,5,6], bob:[0,-1,-2,-1,0,-1]} },
 };
-const SET = WALK_SETS[WALK_STYLE];
+const SET = WALK_SETS[CHARACTER_SPRITE_STYLE] || WALK_SETS.harvest;
 const CHAR_TH = SET.th, CHAR_BOT = SET.bot;
 function spriteCell(img,meta){
   const n=Math.max(1,meta.n||1);
@@ -440,12 +445,14 @@ function drawCouple(){ worldTransform();
     const cell=spriteCell(img,meta);
     if(!walking || cell.n<2){ char(img,meta,meta.idle,px,by,flip,1,0,cell); return; }
     const base=Math.floor(s), frac=s-base;
-    const walkStart=meta.walkStart||0, walkCount=meta.walkCount||cell.n;
-    const f0=walkStart+(base%walkCount), f1=walkStart+((base+1)%walkCount);
-    char(img,meta,f0,px,by,flip,1,0,cell);
+    const seq=meta.seq||Array.from({length:cell.n},(_,i)=>i);
+    const step=base%seq.length;
+    const f0=seq[step], f1=seq[(base+1)%seq.length];
+    const yoff=(meta.bob&&meta.bob[step])||0;
+    char(img,meta,f0,px,by,flip,1,yoff,cell);
     // chibi frames are hard-cut AI poses -> crossfade to smooth them; the LPC cycle is
     // already a real gait, so it plays straight (tweening pixel art just ghosts).
-    if(SET.tween && frac>0.02) char(img,meta,f1,px,by,flip,frac,0,cell);
+    if(SET.tween && frac>0.02) char(img,meta,f1,px,by,flip,frac,yoff,cell);
   }
   if(!flip){ one(SET.groom,cx-dx); one(SET.bride,cx+dx); }
   else     { one(SET.bride,cx-dx); one(SET.groom,cx+dx); }
