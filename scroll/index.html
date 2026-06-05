@@ -120,11 +120,18 @@
   .note{font-size:12px;color:#b6a89d;}
   #closing{background:linear-gradient(180deg,#f1ead8,#d8e6d9);}
   #closing img{width:min(58vw,260px);aspect-ratio:4/5;object-fit:cover;border:8px solid #fff8ef;border-radius:8px;box-shadow:0 14px 28px rgba(120,70,80,.2);}
+  #quickDock{position:fixed;left:50%;bottom:18px;transform:translate(-50%,120%);z-index:12;display:flex;gap:8px;
+    background:rgba(255,248,239,.92);border:1px solid var(--rose);border-radius:999px;padding:8px;box-shadow:0 14px 30px rgba(120,70,80,.22);
+    transition:transform .25s ease;}
+  #quickDock.show{transform:translate(-50%,0)}
+  #quickDock button{border:0;border-radius:999px;background:var(--rose-dk);color:#fff;padding:9px 12px;font-size:12px;cursor:pointer;}
+  #quickDock button.alt{background:#fff;color:var(--rose-dk);border:1px solid var(--rose);}
 </style>
 </head>
 <body>
 <div id="prog"></div>
 <nav id="dots"></nav>
+<div id="quickDock"><button onclick="document.getElementById('rsvp').scrollIntoView({behavior:'smooth'})">RSVP</button><button class="alt" onclick="window.open('https://maps.google.com/?q='+encodeURIComponent(W.mapsQuery),'_blank')">Map</button><button class="alt" onclick="addToCalendar()">Calendar</button></div>
 
 <!-- HERO -->
 <section id="hero" data-dot="Top">
@@ -306,6 +313,7 @@ let ticking=false;
 function onScroll(){ if(ticking)return; ticking=true; requestAnimationFrame(()=>{
   const h=document.documentElement, max=h.scrollHeight-h.clientHeight;
   document.getElementById("prog").style.width=(max>0?(h.scrollTop/max*100):0)+"%";
+  const dock=document.getElementById("quickDock"); if(dock) dock.classList.toggle("show", window.scrollY>window.innerHeight*.75);
   // hero parallax layers
   const y=window.scrollY;
   document.querySelectorAll("#hero .pllx").forEach(el=>{

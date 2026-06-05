@@ -18,13 +18,19 @@
   .hero{min-height:100svh;display:grid;place-items:center;text-align:center;padding:34px 0}
   .gate{width:min(860px,100%);border:1px solid var(--line);border-radius:260px 260px 12px 12px;background:linear-gradient(180deg,#171117e6,#09080be6);box-shadow:0 38px 100px #000,inset 0 0 70px #76152d24;padding:44px 22px 28px;position:relative;overflow:hidden}
   .gate::before{content:"";position:absolute;inset:16px;border:1px solid #ffffff12;border-radius:240px 240px 8px 8px;pointer-events:none}
+  .gate.unsealed{animation:unseal .7s ease both}
+  @keyframes unseal{50%{box-shadow:0 38px 100px #000,inset 0 0 110px #b99b6455}100%{box-shadow:0 38px 100px #000,inset 0 0 70px #76152d24}}
   .rune{font-family:Cinzel,serif;color:#c59aa4;letter-spacing:5px;text-transform:uppercase;font-size:12px}
   h1,h2{font-family:Cinzel,serif;letter-spacing:2px;text-transform:uppercase;line-height:1.05}
   h1{font-size:clamp(42px,10vw,104px);color:#fff0dd;text-shadow:0 0 26px #76152d88;margin:16px 0}
   h2{font-size:clamp(30px,7vw,66px);color:#fff0dd}
   .amp{color:#c79ba3}.sub{color:var(--muted);font-style:italic}
   .seal{width:112px;height:112px;border-radius:50%;margin:18px auto;background:radial-gradient(circle at 35% 32%,#b53852,#701428 62%,#320810);display:grid;place-items:center;border:3px solid #d0a6a6;box-shadow:0 12px 40px #000,inset 0 0 22px #210207;color:#fff0dd;font-family:Cinzel,serif;font-weight:800;letter-spacing:2px;cursor:pointer;position:relative;z-index:1}
-  .seal.open{transform:rotate(-10deg) scale(.92);opacity:.72}
+  .seal::after{content:"";position:absolute;inset:-13px;border-radius:50%;border:1px solid #d0a6a644;opacity:0;transform:scale(.8)}
+  .seal.open{animation:breakSeal .72s cubic-bezier(.2,.8,.2,1) both}
+  .seal.open::after{animation:sealRing .72s ease both}
+  @keyframes breakSeal{30%{transform:scale(1.12) rotate(4deg)}100%{transform:rotate(-14deg) scale(.9);opacity:.72}}
+  @keyframes sealRing{to{opacity:1;transform:scale(1.55)}}
   .btn{background:var(--wine);color:#fff0dd;border:1px solid #ad7180;padding:12px 18px;font-family:Cinzel,serif;text-transform:uppercase;letter-spacing:1px;cursor:pointer}
   .btn.alt{background:#151216;border-color:var(--line)}
   .archive{display:grid;grid-template-columns:320px 1fr;gap:20px;padding:46px 0 76px}
@@ -33,12 +39,13 @@
   .relics{display:grid;grid-template-columns:1fr 1fr;gap:10px}
   .relic{min-height:110px;background:linear-gradient(180deg,#1a151c,#0b090d);border:1px solid #5b4750;color:var(--ink);cursor:pointer;padding:12px;text-align:left;box-shadow:inset 0 0 22px #0008}
   .relic b{display:block;font-family:Cinzel,serif;font-size:15px;color:#e5c5ca}.relic span{display:block;color:var(--muted);font-size:14px;margin-top:4px}.relic.done{border-color:#b99b64;box-shadow:0 0 24px #b99b6422,inset 0 0 22px #0008}
-  .glyph{font-size:34px;line-height:1;margin-bottom:10px}
+  .glyph{font-size:30px;line-height:1;margin-bottom:10px}
   .panel{display:none;background:#141116ef;border:1px solid var(--line);border-radius:8px;padding:22px;box-shadow:0 24px 80px #000c}.panel.active{display:block;animation:wake .42s ease both}
   @keyframes wake{from{opacity:0;filter:blur(6px);transform:translateY(16px)}to{opacity:1;filter:none;transform:none}}
   .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:14px;margin-top:16px}.card{background:#08070a;border:1px solid #46383f;padding:16px}
   .photo-slot{border:1px dashed #6a5960;min-height:220px;display:grid;place-items:center;text-align:center;color:var(--muted);padding:18px;background:#08070abb}.photo-slot strong{display:block;font-family:Cinzel,serif;color:var(--ink);font-size:22px}
   .story img{width:100%;aspect-ratio:4/3;object-fit:cover;filter:grayscale(.18);border:1px solid #46383f;background:#211}
+  .letter{display:none;margin-top:18px;background:linear-gradient(180deg,#20191b,#0e0b0d);border:1px solid var(--gold);padding:22px;box-shadow:0 0 42px #b99b6424}.letter.show{display:block;animation:wake .42s ease both}.letter h2{font-size:36px}.letter p{font-size:20px}
   .detail{display:flex;gap:12px;margin:10px 0}.k{min-width:82px;color:#c59aa4;font-family:Cinzel,serif;font-size:12px;text-transform:uppercase;letter-spacing:1px}
   .actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:14px}label{display:block;color:var(--muted);font-family:Cinzel,serif;text-transform:uppercase;font-size:12px;letter-spacing:1px;margin:12px 0 4px}
   input,select,textarea{width:100%;background:#08070a;color:var(--ink);border:1px solid var(--line);padding:12px}.wish{background:#08070a;border-left:4px solid var(--wine);padding:10px 12px;margin:8px 0}.wish b{display:block;color:#d6b1b8}
@@ -69,6 +76,7 @@
     <section class="panel" id="panel-gift"></section>
     <section class="panel" id="panel-wishes"></section>
     <section class="panel" id="panel-rsvp"></section>
+    <section class="panel" id="panel-letter"></section>
   </div>
 </main>
 <script src="../data.js"></script><script src="../config.local.js" onerror=""></script><script type="module" src="../firebase.js"></script><script src="../music.js" defer></script>
@@ -81,16 +89,17 @@ const relicData=[["portrait","Frame","Your real photo"],["story","Book","Our sto
 const seen=new Set(JSON.parse(localStorage.getItem("gothicSeen")||"[]"));
 names.innerHTML=`${W.bride}<span class="amp"> &amp; </span>${W.groom}`;date.textContent=W.dateLabel;
 function giftWaUrl(g){const phone=String((g&&g.whatsapp)||"").replace(/\D/g,""),text=encodeURIComponent((g&&g.whatsappText)||"Hi, I'd like to send a book as a wedding gift. Could you share the shipping address?");return phone?`https://wa.me/${phone}?text=${text}`:`https://wa.me/?text=${text}`;}
-function openArchive(){seal.classList.add("open");document.getElementById("archive").scrollIntoView({behavior:"smooth"});}
-function renderRelics(){relics.innerHTML=relicData.map(([id,name,hint])=>`<button class="relic ${seen.has(id)?"done":""}" onclick="pick('${id}')"><div class="glyph">${mark(id)}</div><b>${name}</b><span>${hint}</span></button>`).join("");bar.style.width=(seen.size/relicData.length*100)+"%";}
+function openArchive(){seal.classList.add("open");document.querySelector(".gate").classList.add("unsealed");document.getElementById("archive").scrollIntoView({behavior:"smooth"});}
+function renderRelics(){const complete=seen.size>=relicData.length;relics.innerHTML=relicData.map(([id,name,hint])=>`<button class="relic ${seen.has(id)?"done":""}" onclick="pick('${id}')"><div class="glyph">${mark(id)}</div><b>${name}</b><span>${hint}</span></button>`).join("")+`<button class="relic ${complete?"done":""}" ${complete?"onclick=\"pick('letter')\"":"disabled"}><div class="glyph">LETTER</div><b>Final Letter</b><span>${complete?"Unlocked":"Collect every mark"}</span></button>`;bar.style.width=(Math.min(seen.size,relicData.length)/relicData.length*100)+"%";}
 function mark(id){return {portrait:"FRAME",story:"BOOK",details:"KEY",gift:"SEAL",wishes:"INK",rsvp:"LIGHT"}[id];}
-function pick(id){seen.add(id);localStorage.setItem("gothicSeen",JSON.stringify([...seen]));document.querySelectorAll(".panel").forEach(p=>p.classList.toggle("active",p.id==="panel-"+id));renderRelics();openArchive();}
+function pick(id){if(id!=="letter")seen.add(id);localStorage.setItem("gothicSeen",JSON.stringify([...seen]));document.querySelectorAll(".panel").forEach(p=>p.classList.toggle("active",p.id==="panel-"+id));renderRelics();openArchive();}
 document.getElementById("panel-portrait").innerHTML=`<div class="rune">Portrait chamber</div><h2>Your Photo Belongs Here</h2><div class="photo-slot"><div><strong>Couple photo placeholder</strong><p>Put your own real portrait asset here. This template uses generated object art only.</p></div></div>`;
 document.getElementById("panel-story").innerHTML=`<div class="rune">Chapters</div><h2>Our Story</h2><div class="grid story">${W.story.map(s=>`<article class="card"><img src="../photos/${s.photo}" onerror="photoFallback(this)"><div class="rune" style="margin-top:10px">${s.icon} ${s.label}</div><h2 style="font-size:30px">${s.title}</h2>${s.html}</article>`).join("")}</div>`;
 document.getElementById("panel-details").innerHTML=`<div class="rune">The appointed day</div><h2>Wedding Details</h2><div class="grid"><div class="card"><div class="detail"><span class="k">When</span><span>${W.dateLabel}<br>${W.ceremonyTime}</span></div></div><div class="card"><div class="detail"><span class="k">Where</span><span>${W.venueName}<br>${W.venueAddress}</span></div></div><div class="card"><div class="detail"><span class="k">Attire</span><span>${W.dress}</span></div></div></div><div class="actions"><button class="btn alt" onclick="open('https://maps.google.com/?q='+encodeURIComponent(W.mapsQuery),'_blank')">Map</button><button class="btn alt" onclick="addToCalendar()">Calendar</button></div>`;
 document.getElementById("panel-gift").innerHTML=`<div class="rune">In lieu of gifts</div><h2>Book Gift</h2><div class="card"><p>${W.gift.note}</p><div class="actions"><button class="btn" onclick="open(giftWaUrl(W.gift),'_blank')">Ask Shipping Address</button></div><p class="sub" style="margin-top:10px">We only share the address through WhatsApp so it stays private.</p></div>`;
 document.getElementById("panel-wishes").innerHTML=`<div class="rune">Guestbook</div><h2>Wishes</h2><form id="wishForm"><label>Your name</label><input name="name" required><label>Your wish</label><textarea name="msg" rows="3" required></textarea><div class="actions"><button class="btn">Send Wish</button></div></form><div id="wishList"><p class="sub" id="wishNote">Loading wishes...</p></div>`;
 document.getElementById("panel-rsvp").innerHTML=`<div class="rune">Reply</div><h2>RSVP</h2><form id="rsvpForm"><label>Your name</label><input name="name" required><label>Will you attend?</label><select name="attending"><option>Joyfully accepts</option><option>Sadly declines</option></select><label>Guests</label><input name="guests" type="number" min="1" value="1"><label>Note</label><textarea name="note" rows="3"></textarea><div class="actions"><button class="btn">Send RSVP</button></div></form>`;
+document.getElementById("panel-letter").innerHTML=`<div class="rune">The last page</div><h2>Letter From The Archive</h2><div class="letter show"><p>Every mark has been opened. Keep this date close: ${W.dateLabel}. Come as witness, reader, and friend as ${W.bride} &amp; ${W.groom} begin the next chapter.</p><div class="actions"><button class="btn" onclick="pick('rsvp')">Reply Again</button><button class="btn alt" onclick="open('https://maps.google.com/?q='+encodeURIComponent(W.mapsQuery),'_blank')">Find The Venue</button></div></div>`;
 function withWB(fn){const WB=window.WB;if(WB)fn(WB);else addEventListener("wb-ready",()=>fn(window.WB),{once:true})}
 withWB(WB=>{if(WB.ready)WB.watchWishes(items=>wishList.innerHTML=items.length?items.map(w=>`<div class="wish"><b>${esc(w.name)}</b>${esc(w.msg)}</div>`).join(""):`<p class="sub">Be the first to leave a wish.</p>`);else wishNote.textContent="Live wishes need Firebase."});
 document.addEventListener("submit",e=>{if(e.target.id==="wishForm"){e.preventDefault();const d=new FormData(e.target),WB=window.WB;if(WB&&WB.ready){WB.addWish(d.get("name"),d.get("msg"));e.target.reset();}} if(e.target.id==="rsvpForm"){e.preventDefault();const d=new FormData(e.target),data={name:d.get("name"),attending:d.get("attending"),guests:d.get("guests"),note:d.get("note"),to:GUEST||""},WB=window.WB;if(WB&&WB.ready)WB.addRSVP(data);e.target.outerHTML=`<div class="card"><h2 style="font-size:34px">Reply Received</h2><p>Thank you, ${esc(data.name)||"friend"}. Your RSVP is in.</p></div>`;}});

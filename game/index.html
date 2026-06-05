@@ -52,6 +52,15 @@
   #progress .dot{color:#d8cabd;} #progress .dot.on{color:var(--rose);}
   #routeTag{position:absolute;top:48px;left:50%;transform:translateX(-50%);background:rgba(58,43,38,.78);
     color:#fffaf2;border-radius:16px;padding:6px 10px;font-size:7px;white-space:nowrap;}
+  #minimap{position:absolute;left:14px;top:78px;width:min(250px,46vw);background:rgba(255,250,242,.9);
+    border:2px solid var(--ink);border-radius:10px;padding:10px 10px 8px;box-shadow:0 3px 0 rgba(0,0,0,.15);}
+  #minimap .track{position:relative;height:30px;border-bottom:3px solid #cdbb9c;margin:2px 4px 6px;}
+  #minimap .mspot{position:absolute;bottom:-8px;width:12px;height:12px;border:2px solid var(--ink);border-radius:50%;
+    background:#fff;transform:translateX(-50%);}
+  #minimap .mspot.on{background:var(--rose);}
+  #minimap .me{position:absolute;bottom:-12px;width:0;height:0;border-left:7px solid transparent;border-right:7px solid transparent;
+    border-top:12px solid var(--gold);transform:translateX(-50%);filter:drop-shadow(0 1px 0 var(--ink));}
+  #minimap .mlabel{font-size:6px;line-height:1.5;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;color:#7b665d;}
   #musicBtn{position:absolute;top:12px;right:12px;pointer-events:auto;width:46px;height:46px;border-radius:50%;
     border:3px solid var(--ink);background:var(--panel);cursor:pointer;font-size:16px;box-shadow:0 3px 0 rgba(0,0,0,.18);}
   .pad{position:absolute;bottom:24px;width:74px;height:74px;pointer-events:auto;border-radius:14px;
@@ -127,6 +136,7 @@
 <div id="hud">
   <div id="progress"></div>
   <div id="routeTag">OUR STORY · WEDDING DETAILS · RSVP</div>
+  <div id="minimap"></div>
   <button id="musicBtn" title="Music">🔇</button>
   <div id="hint"></div>
   <div class="pad" id="padLeft">◀</div>
@@ -507,12 +517,14 @@ function updateHint(){
 const modalWrap=document.getElementById("modalWrap"), modalEl=document.getElementById("modal");
 let modalOpen=false, revealed=false;
 function showReveal(){
-  const couple = IMG.couple.ok
-    ? `<img src="${ASSET_SRC.couple}" style="max-width:280px;width:100%;image-rendering:auto;margin:0 auto 12px;display:block;filter:drop-shadow(0 6px 10px rgba(0,0,0,.18))"/>`
-    : `<div style="font-size:56px;text-align:center;margin:6px 0 12px">💑</div>`;
   modalEl.innerHTML=`<button id="closeBtn" onclick="closeModal()">✕</button>
-    <span class="ico">🎊</span><h2>You found everything!</h2>${couple}
-    <p class="ok">Thank you for walking our route.<br/>We can't wait to start this next chapter with you! 💕</p>`;
+    <span class="ico">💌</span><h2>Final Letter Unlocked</h2>
+    <div class="polaroid" style="transform:none;text-align:left;max-width:420px">
+      <p style="font-size:10px;line-height:2;margin:0">You walked every stop in our little route. Keep this date close: <span class="ph">${WEDDING.dateLabel}</span>.
+      Come as reader, traveler, and witness as ${WEDDING.bride} &amp; ${WEDDING.groom} begin the next chapter.</p>
+    </div>
+    <div class="actions"><button class="btn mini" onclick="openSpot(SPOTS.find(s=>s.id==='rsvp'))">Review RSVP</button>
+      <button class="btn mini" onclick="window.open('https://maps.google.com/?q='+encodeURIComponent(WEDDING.mapsQuery),'_blank')">Open Map</button></div>`;
   modalWrap.classList.add("show"); modalOpen=true; modalEl.scrollTop=0;
   for(let i=0;i<32;i++) hearts.push({x:player.x+(Math.random()*200-100),y:GROUND-Math.random()*80,vy:-(0.4+Math.random()*0.8),a:1,s:6+Math.random()*9});
 }
@@ -636,9 +648,15 @@ window.addToCalendar=function(){
 
 /* ---------- 9. PROGRESS ---------- */
 const progEl=document.getElementById("progress");
+const miniEl=document.getElementById("minimap");
 function updateProgress(){
   const dots=SPOTS.map(s=>`<span class="dot ${visited.has(s.id)?"on":""}">●</span>`).join(" ");
   progEl.innerHTML=`Discovered ${visited.size}/${SPOTS.length} &nbsp; ${dots}`;
+  updateMinimap();
+}
+function updateMinimap(){
+  const pct=Math.max(0,Math.min(100,player.x/(WORLD_W-90)*100));
+  miniEl.innerHTML=`<div class="track">${SPOTS.map(s=>`<span class="mspot ${visited.has(s.id)?"on":""}" style="left:${Math.max(3,Math.min(97,s.x/(WORLD_W-90)*100))}%"></span>`).join("")}<span class="me" style="left:${pct}%"></span></div><div class="mlabel">${visited.size===SPOTS.length?"Final letter unlocked":"Route progress: "+visited.size+"/"+SPOTS.length}</div>`;
 }
 updateProgress();
 
@@ -699,6 +717,7 @@ function loop(t){
   for(let i=hearts.length-1;i>=0;i--){ const h=hearts[i]; h.y+=h.vy*dt/16; h.a-=0.012*dt/16; if(h.a<=0) hearts.splice(i,1); }
   if(wantInteract){ wantInteract=false; if(!modalOpen){ const s=nearestSpot(); if(s) openSpot(s); } }
   draw(); updateHint();
+  updateMinimap();
   requestAnimationFrame(loop);
 }
 

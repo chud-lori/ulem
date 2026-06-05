@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+<title>Travel Journal Wedding Invitation</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link href="https://fonts.googleapis.com/css2?family=Caveat:wght@600;700&family=Inter:wght@400;600;800&family=Special+Elite&display=swap" rel="stylesheet" />
+<style>
+  :root{--paper:#f6ead3;--ink:#2d3328;--muted:#746855;--green:#315f4d;--blue:#456c88;--rust:#b5603b;--gold:#c69745;--line:#bda984}
+  *{box-sizing:border-box;margin:0;padding:0}
+  html{scroll-behavior:smooth}
+  body{font-family:Inter,system-ui,sans-serif;background:#26362f;color:var(--ink);line-height:1.6}
+  body::before{content:"";position:fixed;inset:0;z-index:-1;background:
+    radial-gradient(circle at 15% 20%,#6f8d72,transparent 28%),
+    radial-gradient(circle at 80% 25%,#456c88,transparent 30%),
+    linear-gradient(180deg,#26362f,#6b7c56 54%,#b88955);opacity:.9}
+  button,input,select,textarea{font:inherit}
+  .wrap{width:min(1120px,calc(100% - 28px));margin:auto}
+  .hero{min-height:100svh;display:grid;align-items:center;padding:30px 0}
+  .journal{display:grid;grid-template-columns:1fr 1fr;gap:0;background:var(--paper);border:2px solid #5d4732;border-radius:10px;box-shadow:0 34px 90px #0009;overflow:hidden}
+  .page{min-height:620px;padding:30px;position:relative;background:
+    linear-gradient(90deg,#00000008 0 1px,transparent 1px 100%) 0 0/34px 34px,
+    linear-gradient(#00000006 0 1px,transparent 1px 100%) 0 0/34px 34px,var(--paper)}
+  .page:first-child{border-right:2px solid #d5c29a}
+  .kicker,.stamp{font-family:"Special Elite",monospace;text-transform:uppercase;letter-spacing:2px;font-size:12px;color:var(--rust)}
+  h1{font-family:Caveat,cursive;font-size:clamp(58px,10vw,108px);line-height:.9;color:var(--green);margin:18px 0}
+  h2{font-family:Caveat,cursive;font-size:clamp(38px,7vw,72px);line-height:1;color:var(--green)}
+  .amp{color:var(--rust)}.date{font-family:"Special Elite";color:var(--muted);font-size:16px}
+  .photo-slot{aspect-ratio:4/5;border:2px dashed var(--line);display:grid;place-items:center;text-align:center;padding:20px;color:var(--muted);background:#fff6e6;margin:auto;max-width:330px;transform:rotate(1.5deg);box-shadow:0 12px 22px #5d473233}
+  .map{position:relative;min-height:390px;margin-top:24px;border:2px solid var(--line);border-radius:8px;background:
+    radial-gradient(circle at 25% 24%,#9fc4a4 0 12%,transparent 13%),
+    radial-gradient(circle at 74% 30%,#9db8c5 0 13%,transparent 14%),
+    radial-gradient(circle at 54% 72%,#d6b179 0 16%,transparent 17%),
+    #efe1c3;overflow:hidden}
+  .route{position:absolute;inset:38px;border:3px dashed #9a7650;border-radius:48% 52% 46% 54%;transform:rotate(-8deg)}
+  .pin{position:absolute;transform:translate(-50%,-50%);background:var(--rust);color:#fff;border:2px solid #5d3425;border-radius:99px;padding:10px 12px;font-weight:800;cursor:pointer;box-shadow:0 6px 0 #5d3425}
+  .pin.done{background:var(--green);box-shadow:0 6px 0 #1f4033}.pin:active{transform:translate(-50%,-45%);box-shadow:0 2px 0 #5d3425}
+  .tools{display:flex;gap:10px;flex-wrap:wrap;margin-top:18px}.btn{border:0;background:var(--green);color:#fff;padding:12px 16px;border-radius:5px;font-weight:800;cursor:pointer;box-shadow:0 4px 0 #1f4033}.btn.alt{background:#fff4df;color:var(--ink);border:1px solid var(--line);box-shadow:0 4px 0 #c9b58d}
+  .panel{display:none;margin:28px auto 70px;background:var(--paper);border:2px solid #5d4732;border-radius:8px;padding:24px;box-shadow:0 18px 50px #0006}.panel.active{display:block;animation:show .35s ease both}
+  @keyframes show{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:none}}
+  .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:14px}.card{background:#fff7e7;border:1px solid var(--line);padding:16px;border-radius:6px}
+  .card img{width:100%;aspect-ratio:4/3;object-fit:cover;background:#efe1c3;border:1px solid var(--line)}
+  .detail{display:flex;gap:12px;margin:10px 0}.k{min-width:82px;color:var(--rust);font-weight:800;text-transform:uppercase;font-size:12px}
+  label{display:block;margin:12px 0 5px;color:var(--muted);font-size:12px;text-transform:uppercase;font-weight:800}input,select,textarea{width:100%;padding:12px;border:1px solid var(--line);background:#fffaf0;color:var(--ink)}
+  .wish{background:#fffaf0;border-left:4px solid var(--green);padding:10px 12px;margin:8px 0}.wish b{display:block;color:var(--green)}
+  .passport{margin-top:18px;display:grid;grid-template-columns:repeat(6,1fr);gap:8px}.mark{border:2px solid var(--line);min-height:54px;display:grid;place-items:center;text-align:center;font-family:"Special Elite";font-size:10px;color:#9b8a6f}.mark.on{border-color:var(--rust);color:var(--rust);transform:rotate(-4deg)}
+  @media(max-width:820px){.journal{grid-template-columns:1fr}.page:first-child{border-right:0;border-bottom:2px solid #d5c29a}.page{min-height:auto}.passport{grid-template-columns:repeat(3,1fr)}}
+</style>
+</head>
+<body>
+<section class="hero">
+  <div class="wrap journal">
+    <div class="page">
+      <div class="kicker">Interactive travel journal</div>
+      <h1 id="names">&nbsp;</h1>
+      <p class="date" id="date"></p>
+      <div class="tools"><button class="btn" onclick="openStop('story')">Open The Map</button><button class="btn alt" onclick="openStop('rsvp')">RSVP Stamp</button></div>
+      <div class="passport" id="passport"></div>
+    </div>
+    <div class="page">
+      <div class="photo-slot"><div><div class="stamp">Postcard photo</div><strong>Your real couple photo here</strong><p>Drop your own asset in later.</p></div></div>
+      <div class="map" id="map"><div class="route"></div></div>
+    </div>
+  </div>
+</section>
+<main class="wrap">
+  <section class="panel active" id="panel-story"></section>
+  <section class="panel" id="panel-details"></section>
+  <section class="panel" id="panel-gift"></section>
+  <section class="panel" id="panel-wishes"></section>
+  <section class="panel" id="panel-rsvp"></section>
+</main>
+<script src="../data.js"></script><script src="../config.local.js" onerror=""></script><script type="module" src="../firebase.js"></script><script src="../music.js" defer></script>
+<script>
+const W=window.WEDDING,GUEST=(new URLSearchParams(location.search).get("to")||"").trim().slice(0,40)||null;
+const esc=s=>String(s==null?"":s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+const PHOTO_FALLBACK="data:image/svg+xml;charset=UTF-8,%3Csvg%20xmlns%3D%27http%3A//www.w3.org/2000/svg%27%20viewBox%3D%270%200%20800%20600%27%3E%3Crect%20width%3D%27800%27%20height%3D%27600%27%20fill%3D%27%23fff4df%27/%3E%3Crect%20x%3D%2740%27%20y%3D%2740%27%20width%3D%27720%27%20height%3D%27520%27%20fill%3D%27%23f6ead3%27%20stroke%3D%27%23bda984%27%20stroke-dasharray%3D%2718%2014%27%20stroke-width%3D%276%27/%3E%3Ctext%20x%3D%27400%27%20y%3D%27290%27%20text-anchor%3D%27middle%27%20font-family%3D%27serif%27%20font-size%3D%2736%27%20fill%3D%27%23315f4d%27%3EPhoto%20placeholder%3C/text%3E%3C/svg%3E";
+function photoFallback(img){img.onerror=null;img.src=PHOTO_FALLBACK;}
+const stops=[["story","Story","22%","28%"],["details","Details","68%","26%"],["gift","Gift","78%","66%"],["wishes","Wishes","38%","72%"],["rsvp","RSVP","54%","48%"]];
+const seen=new Set(JSON.parse(localStorage.getItem("travelSeen")||"[]"));
+names.innerHTML=`${W.bride}<span class="amp"> &amp; </span>${W.groom}`;date.textContent=W.dateLabel;
+function giftWaUrl(g){const phone=String((g&&g.whatsapp)||"").replace(/\D/g,""),text=encodeURIComponent((g&&g.whatsappText)||"Hi, I'd like to send a book as a wedding gift. Could you share the shipping address?");return phone?`https://wa.me/${phone}?text=${text}`:`https://wa.me/?text=${text}`;}
+function renderNav(){map.innerHTML=`<div class="route"></div>`+stops.map(([id,label,x,y])=>`<button class="pin ${seen.has(id)?"done":""}" style="left:${x};top:${y}" onclick="openStop('${id}')">${label}</button>`).join("");passport.innerHTML=stops.map(([id,label])=>`<div class="mark ${seen.has(id)?"on":""}">${label}</div>`).join("");}
+function openStop(id){seen.add(id);localStorage.setItem("travelSeen",JSON.stringify([...seen]));document.querySelectorAll(".panel").forEach(p=>p.classList.toggle("active",p.id==="panel-"+id));renderNav();document.getElementById("panel-"+id).scrollIntoView({behavior:"smooth",block:"start"});}
+panelStory();
+document.getElementById("panel-details").innerHTML=`<div class="stamp">Coordinates</div><h2>Wedding Details</h2><div class="grid"><div class="card"><div class="detail"><span class="k">When</span><span>${W.dateLabel}<br>${W.ceremonyTime}</span></div></div><div class="card"><div class="detail"><span class="k">Where</span><span>${W.venueName}<br>${W.venueAddress}</span></div></div><div class="card"><div class="detail"><span class="k">Dress</span><span>${W.dress}</span></div></div></div><div class="tools"><button class="btn" onclick="open('https://maps.google.com/?q='+encodeURIComponent(W.mapsQuery),'_blank')">Open Map</button><button class="btn alt" onclick="addToCalendar()">Add Calendar</button></div>`;
+document.getElementById("panel-gift").innerHTML=`<div class="stamp">Book stop</div><h2>Book Gift</h2><div class="card"><p>${W.gift.note}</p><div class="tools"><button class="btn" onclick="open(giftWaUrl(W.gift),'_blank')">Ask Shipping Address</button></div><p style="color:var(--muted);margin-top:10px">We only share the address through WhatsApp so it stays private.</p></div>`;
+document.getElementById("panel-wishes").innerHTML=`<div class="stamp">Postcards</div><h2>Wishes</h2><form id="wishForm"><label>Your name</label><input name="name" required><label>Your wish</label><textarea name="msg" rows="3" required></textarea><div class="tools"><button class="btn">Send Postcard</button></div></form><div id="wishList"><p id="wishNote">Loading wishes...</p></div>`;
+document.getElementById("panel-rsvp").innerHTML=`<div class="stamp">Passport control</div><h2>RSVP Stamp</h2><form id="rsvpForm"><label>Your name</label><input name="name" required><label>Will you attend?</label><select name="attending"><option>Joyfully accepts</option><option>Sadly declines</option></select><label>Guests</label><input name="guests" type="number" min="1" value="1"><label>Note</label><textarea name="note" rows="3"></textarea><div class="tools"><button class="btn">Stamp RSVP</button></div></form>`;
+function panelStory(){document.getElementById("panel-story").innerHTML=`<div class="stamp">Trail notes</div><h2>Our Story</h2><div class="grid">${W.story.map(s=>`<article class="card"><img src="../photos/${s.photo}" onerror="photoFallback(this)"><div class="stamp" style="margin-top:10px">${s.icon} ${s.label}</div><h2 style="font-size:38px">${s.title}</h2>${s.html}</article>`).join("")}</div>`;}
+function withWB(fn){const WB=window.WB;if(WB)fn(WB);else addEventListener("wb-ready",()=>fn(window.WB),{once:true});}
+withWB(WB=>{const list=document.getElementById("wishList"),note=document.getElementById("wishNote");if(WB.ready)WB.watchWishes(items=>{list.innerHTML=items.length?items.map(w=>`<div class="wish"><b>${esc(w.name)}</b>${esc(w.msg)}</div>`).join(""):`<p>Be the first to send a postcard.</p>`});else note.textContent="Live wishes need Firebase.";});
+document.addEventListener("submit",e=>{if(e.target.id==="wishForm"){e.preventDefault();const d=new FormData(e.target),WB=window.WB;if(WB&&WB.ready){WB.addWish(d.get("name"),d.get("msg"));e.target.reset();}} if(e.target.id==="rsvpForm"){e.preventDefault();const d=new FormData(e.target),data={name:d.get("name"),attending:d.get("attending"),guests:d.get("guests"),note:d.get("note"),to:GUEST||""},WB=window.WB;if(WB&&WB.ready)WB.addRSVP(data);e.target.outerHTML=`<div class="card"><h2 style="font-size:38px">Passport Stamped</h2><p>Thank you, ${esc(data.name)||"friend"}. Your RSVP is in.</p></div>`;}});
+window.addToCalendar=function(){const d=new Date(W.date),pad=n=>String(n).padStart(2,"0"),fmt=t=>t.getUTCFullYear()+pad(t.getUTCMonth()+1)+pad(t.getUTCDate())+"T"+pad(t.getUTCHours())+pad(t.getUTCMinutes())+"00Z",end=new Date(d.getTime()+5*3600e3),ics=["BEGIN:VCALENDAR","VERSION:2.0","BEGIN:VEVENT",`SUMMARY:${W.bride} & ${W.groom} Wedding`,`DTSTART:${fmt(d)}`,`DTEND:${fmt(end)}`,`LOCATION:${W.venueName}, ${W.venueAddress}`,"END:VEVENT","END:VCALENDAR"].join("\n"),url=URL.createObjectURL(new Blob([ics],{type:"text/calendar"})),a=document.createElement("a");a.href=url;a.download="wedding.ics";a.click();URL.revokeObjectURL(url)}
+renderNav();
+</script>
+</body>
+</html>

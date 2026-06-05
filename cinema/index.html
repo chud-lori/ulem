@@ -18,6 +18,14 @@
   button,input,select,textarea{font:inherit}
   .wrap{width:min(1120px,calc(100% - 28px));margin:auto}
   .hero{min-height:100svh;display:grid;align-items:end;padding:34px 0 26px}
+  .intro{position:fixed;inset:0;z-index:20;display:grid;place-items:center;background:radial-gradient(circle at 50% 25%,#4d1612,#070505 68%);padding:22px;transition:opacity .45s ease,visibility .45s}
+  .intro.hide{opacity:0;visibility:hidden;pointer-events:none}
+  .admit{width:min(680px,100%);display:grid;grid-template-columns:1fr 1fr;filter:drop-shadow(0 28px 50px #000)}
+  .stub{min-height:250px;background:linear-gradient(135deg,#f7dfad,#c99339);color:#28150d;padding:22px;border:2px solid #7d5524;position:relative;display:grid;align-content:center}
+  .stub:first-child{border-radius:12px 0 0 12px}.stub:last-child{border-radius:0 12px 12px 0;border-left:2px dashed #7d5524}
+  .stub h2{color:#28150d;text-shadow:none}.stub .mono{color:#5b3514}
+  .intro.open .stub:first-child{animation:tearLeft .65s cubic-bezier(.2,.8,.2,1) forwards}.intro.open .stub:last-child{animation:tearRight .65s cubic-bezier(.2,.8,.2,1) forwards}
+  @keyframes tearLeft{to{transform:translateX(-42vw) rotate(-13deg);opacity:0}}@keyframes tearRight{to{transform:translateX(42vw) rotate(13deg);opacity:0}}
   .marquee{display:grid;grid-template-columns:1.1fr .9fr;gap:22px;align-items:end}
   .title{padding:20px 0}
   .kicker,.mono{font-family:"Special Elite",monospace;text-transform:uppercase;letter-spacing:3px;color:var(--gold);font-size:12px}
@@ -30,6 +38,8 @@
   .screen::before{content:"";position:absolute;inset:0;background:radial-gradient(circle at 50% 18%,#d7aa5522,transparent 34%);pointer-events:none}
   .photo-slot{border:1px dashed #8a6a3b;background:#0e0a09cc;min-height:260px;display:grid;place-items:center;text-align:center;padding:22px;color:var(--muted);position:relative;z-index:1}
   .photo-slot strong{display:block;font-family:"Bebas Neue";font-size:38px;color:var(--ink)}
+  .countdown{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-top:14px;position:relative;z-index:1}
+  .cd{background:#0d0908;border:1px solid #6f4e2a;border-radius:5px;padding:9px 6px;text-align:center}.cd b{display:block;font-family:"Bebas Neue";font-size:32px;line-height:1;color:#fff4dc}.cd span{font-size:10px;text-transform:uppercase;color:var(--muted);font-weight:800}
   .actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:16px}
   .btn{border:0;background:var(--red);color:#fff8e6;padding:13px 18px;border-radius:4px;font-weight:800;cursor:pointer;box-shadow:0 5px 0 var(--red2);text-transform:uppercase;letter-spacing:.8px}
   .btn.alt{background:#221815;border:1px solid var(--gold);box-shadow:0 5px 0 #0c0807}
@@ -40,20 +50,37 @@
   .ticket::after{content:"";position:absolute;top:8px;bottom:8px;right:22px;border-right:2px dashed #8f6b37}
   .ticket b{display:block;font-family:"Bebas Neue";font-size:26px;line-height:1}.ticket span{font-size:11px;text-transform:uppercase;font-weight:800}
   .ticket.done{background:linear-gradient(90deg,#9b1f1f,#5c1010);color:#fff4dc}.ticket.done::before{content:"STAMPED";position:absolute;right:34px;top:26px;transform:rotate(-12deg);font-family:"Special Elite";font-size:12px;border:2px solid currentColor;padding:3px}
-  .progress{height:8px;background:#271a15;border-radius:99px;overflow:hidden;margin-top:10px}.bar{height:100%;width:0;background:linear-gradient(90deg,var(--red),var(--gold));transition:width .35s}
+  .progress{height:8px;background:#271a15;border-radius:99px;overflow:hidden;margin-top:10px}.bar{height:100%;width:0;background:linear-gradient(90deg,var(--red),var(--gold));transition:width .35s}.status{display:flex;justify-content:space-between;gap:12px;margin-top:8px;color:var(--muted);font-size:12px;text-transform:uppercase;font-weight:800;letter-spacing:.8px}
   main{padding:48px 0 76px}.panel{display:none;background:#191210ee;border:1px solid var(--line);border-radius:8px;padding:22px;box-shadow:0 24px 70px #000b}.panel.active{display:block;animation:roll .38s ease both}
   @keyframes roll{from{opacity:0;transform:translateY(16px) scale(.98)}to{opacity:1;transform:none}}
   .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:14px;margin-top:16px}
   .card{background:#0d0908;border:1px solid #5a3d23;border-radius:6px;padding:16px}
+  .filmstage{display:grid;grid-template-columns:1fr 1fr;gap:18px;align-items:stretch;margin-top:16px}.scene-view{background:#090606;border:10px solid #080505;min-height:330px;display:grid;align-content:end;position:relative;overflow:hidden}.scene-view::before{content:"";position:absolute;inset:0;background:linear-gradient(transparent 0 84%,#000b);pointer-events:none}.scene-view img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;opacity:.76}.scene-copy{position:relative;padding:18px}.scene-nav{display:grid;gap:10px}.scene-btn{background:#0d0908;color:var(--ink);border:1px solid #5a3d23;border-radius:5px;text-align:left;padding:14px;cursor:pointer}.scene-btn.active{border-color:var(--gold);box-shadow:0 0 0 2px #d7aa5533}.scene-btn b{display:block;font-family:"Bebas Neue";font-size:28px;line-height:1}
   .frame img{width:100%;aspect-ratio:16/10;object-fit:cover;border:8px solid #090606;background:#211}
+  .pass{margin-top:18px;background:linear-gradient(135deg,#f8dfaa,#d4a752);color:#28150d;border-radius:8px;border:2px solid #7d5524;padding:18px;display:none}.pass.show{display:block;animation:roll .38s ease both}.pass h2{color:#28150d;text-shadow:none;font-size:42px}.pass p{font-weight:700}
   .detail{display:flex;gap:12px;margin:10px 0}.k{color:var(--gold);min-width:86px;font-weight:800;text-transform:uppercase;font-size:12px}
   label{display:block;color:var(--muted);font-size:12px;text-transform:uppercase;font-weight:800;letter-spacing:.8px;margin:12px 0 5px}
   input,select,textarea{width:100%;background:#0b0908;color:var(--ink);border:1px solid #6f4e2a;border-radius:4px;padding:12px}
   .wish{border-left:4px solid var(--gold);background:#0b0908;padding:10px 12px;margin:8px 0}.wish b{display:block;color:var(--gold)}
-  @media(max-width:760px){.marquee{grid-template-columns:1fr}.screen{min-height:320px}.ticket-row{display:flex;overflow:auto;padding-bottom:6px}.ticket{min-width:170px}main{padding-top:28px}}
+  @media(max-width:760px){.admit{grid-template-columns:1fr}.stub:first-child{border-radius:12px 12px 0 0}.stub:last-child{border-radius:0 0 12px 12px;border-left:2px solid #7d5524;border-top:2px dashed #7d5524}.marquee{grid-template-columns:1fr}.screen{min-height:320px}.countdown{grid-template-columns:repeat(2,1fr)}.ticket-row{display:flex;overflow:auto;padding-bottom:6px}.ticket{min-width:170px}main{padding-top:28px}.filmstage{grid-template-columns:1fr}.scene-view{min-height:280px}}
 </style>
 </head>
 <body>
+<div class="intro" id="intro">
+  <div class="admit">
+    <div class="stub">
+      <div class="mono">Admit Two</div>
+      <h2>Premiere Night</h2>
+      <p>Break the ticket to enter the invitation.</p>
+      <div class="actions"><button class="btn" onclick="enterPremiere()">Tear Ticket</button></div>
+    </div>
+    <div class="stub">
+      <div class="mono">One Day Only</div>
+      <h2 id="introNames">&nbsp;</h2>
+      <p id="introDate"></p>
+    </div>
+  </div>
+</div>
 <section class="hero">
   <div class="wrap marquee">
     <div class="title">
@@ -64,16 +91,18 @@
     </div>
     <div class="screen">
       <div class="photo-slot"><div><span class="mono">Couple photo placeholder</span><strong>Your Poster Here</strong><p>Use your own real couple image as the poster art.</p></div></div>
+      <div class="countdown" id="countdown"></div>
     </div>
   </div>
 </section>
-<div class="booth"><div class="wrap"><div class="ticket-row" id="tickets"></div><div class="progress"><div class="bar" id="bar"></div></div></div></div>
+<div class="booth"><div class="wrap"><div class="ticket-row" id="tickets"></div><div class="progress"><div class="bar" id="bar"></div></div><div class="status"><span id="progressText">0/5 stamped</span><span id="nowShowing">Now showing: Featurette</span></div></div></div>
 <main class="wrap">
   <section class="panel active" id="panel-story"></section>
   <section class="panel" id="panel-details"></section>
   <section class="panel" id="panel-gift"></section>
   <section class="panel" id="panel-wishes"></section>
   <section class="panel" id="panel-rsvp"></section>
+  <div class="pass" id="allAccess"></div>
 </main>
 <script src="../data.js"></script><script src="../config.local.js" onerror=""></script><script type="module" src="../firebase.js"></script><script src="../music.js" defer></script>
 <script>
@@ -83,20 +112,32 @@ const PHOTO_FALLBACK="data:image/svg+xml;charset=UTF-8,%3Csvg%20xmlns%3D%27http%
 function photoFallback(img){img.onerror=null;img.src=PHOTO_FALLBACK;}
 const stops=[["story","Featurette"],["details","Screening Info"],["gift","Book Gift"],["wishes","Audience Notes"],["rsvp","Reserve Seat"]];
 const seen=new Set(JSON.parse(localStorage.getItem("cinemaSeen")||"[]"));
+let currentScene=0;
 names.innerHTML=`${W.bride}<span class="amp"> &amp; </span>${W.groom}`;date.textContent=W.dateLabel;
+introNames.innerHTML=`${W.bride}<span class="amp"> &amp; </span>${W.groom}`;introDate.textContent=W.dateLabel;
 function giftWaUrl(g){const phone=String((g&&g.whatsapp)||"").replace(/\D/g,""),text=encodeURIComponent((g&&g.whatsappText)||"Hi, I'd like to send a book as a wedding gift. Could you share the shipping address?");return phone?`https://wa.me/${phone}?text=${text}`:`https://wa.me/?text=${text}`;}
-function renderTickets(){tickets.innerHTML=stops.map(([id,label],i)=>`<button class="ticket ${seen.has(id)?"done":""}" onclick="pick('${id}')"><span>Admit ${String(i+1).padStart(2,"0")}</span><b>${label}</b></button>`).join("");bar.style.width=(seen.size/stops.length*100)+"%";}
-function pick(id){seen.add(id);localStorage.setItem("cinemaSeen",JSON.stringify([...seen]));document.querySelectorAll(".panel").forEach(p=>p.classList.toggle("active",p.id==="panel-"+id));renderTickets();document.getElementById("panel-"+id).scrollIntoView({behavior:"smooth",block:"start"});}
+function enterPremiere(){intro.classList.add("open");localStorage.setItem("cinemaEntered","1");setTimeout(()=>intro.classList.add("hide"),560);}
+if(localStorage.getItem("cinemaEntered")==="1") intro.classList.add("hide");
+function renderTickets(){tickets.innerHTML=stops.map(([id,label],i)=>`<button class="ticket ${seen.has(id)?"done":""}" onclick="pick('${id}')"><span>Admit ${String(i+1).padStart(2,"0")}</span><b>${label}</b></button>`).join("");bar.style.width=(seen.size/stops.length*100)+"%";progressText.textContent=`${seen.size}/${stops.length} stamped`;renderAllAccess();}
+function pick(id){seen.add(id);localStorage.setItem("cinemaSeen",JSON.stringify([...seen]));document.querySelectorAll(".panel").forEach(p=>p.classList.toggle("active",p.id==="panel-"+id));const found=stops.find(s=>s[0]===id);nowShowing.textContent=`Now showing: ${found?found[1]:"Premiere"}`;renderTickets();document.getElementById("panel-"+id).scrollIntoView({behavior:"smooth",block:"start"});}
 panelStory();
 document.getElementById("panel-details").innerHTML=`<div class="mono">Now Showing</div><h2>Wedding Details</h2><div class="grid"><div class="card"><div class="detail"><span class="k">When</span><span>${W.dateLabel}<br>${W.ceremonyTime}</span></div></div><div class="card"><div class="detail"><span class="k">Where</span><span>${W.venueName}<br>${W.venueAddress}</span></div></div><div class="card"><div class="detail"><span class="k">Dress</span><span>${W.dress}</span></div></div></div><div class="actions"><button class="btn alt" onclick="open('https://maps.google.com/?q='+encodeURIComponent(W.mapsQuery),'_blank')">Open Map</button><button class="btn alt" onclick="addToCalendar()">Add Calendar</button></div>`;
-document.getElementById("panel-gift").innerHTML=`<div class="mono">In Lieu Of Gifts</div><h2>Book Gift</h2><div class="card"><p>${W.gift.note}</p><div class="actions"><button class="btn" onclick="open(giftWaUrl(W.gift),'_blank')">Ask Shipping Address</button></div><p style="color:var(--muted);margin-top:10px">We only share the address through WhatsApp so it stays private.</p></div>`;
+document.getElementById("panel-gift").innerHTML=`<div class="mono">Concession Note</div><h2>Book Gift</h2><div class="card"><p>${W.gift.note}</p><div class="actions"><button class="btn" onclick="open(giftWaUrl(W.gift),'_blank')">Ask Shipping Address</button></div><p style="color:var(--muted);margin-top:10px">We only share the address through WhatsApp so it stays private.</p></div>`;
 document.getElementById("panel-wishes").innerHTML=`<div class="mono">Audience Notes</div><h2>Guest Wishes</h2><form id="wishForm"><label>Your name</label><input name="name" required><label>Your wish</label><textarea name="msg" rows="3" required></textarea><div class="actions"><button class="btn">Send Note</button></div></form><div id="wishList"><p style="color:var(--muted)" id="wishNote">Loading wishes...</p></div>`;
 document.getElementById("panel-rsvp").innerHTML=`<div class="mono">Admission</div><h2>Reserve Your Seat</h2><form id="rsvpForm"><label>Your name</label><input name="name" required><label>Will you attend?</label><select name="attending"><option>Joyfully accepts</option><option>Sadly declines</option></select><label>Guests</label><input name="guests" type="number" min="1" value="1"><label>Note</label><textarea name="note" rows="3"></textarea><div class="actions"><button class="btn">Confirm Seat</button></div></form>`;
-function panelStory(){document.getElementById("panel-story").innerHTML=`<div class="mono">Featurette</div><h2>Our Story</h2><div class="grid">${W.story.map(s=>`<article class="card frame"><img src="../photos/${s.photo}" onerror="photoFallback(this)"><div class="mono" style="margin-top:10px">${s.icon} ${s.label}</div><h2 style="font-size:34px">${s.title}</h2>${s.html}</article>`).join("")}</div>`;}
+function panelStory(){document.getElementById("panel-story").innerHTML=`<div class="mono">Featurette</div><h2>Our Story</h2><div class="filmstage"><div class="scene-view" id="sceneView"></div><div><div class="scene-nav" id="sceneNav"></div><div class="actions"><button class="btn alt" onclick="prevScene()">Previous Scene</button><button class="btn" onclick="nextScene()">Next Scene</button></div></div></div>`;renderScene();}
+function renderScene(){const s=W.story[currentScene]||W.story[0];sceneView.innerHTML=`<img src="../photos/${s.photo}" onerror="photoFallback(this)"><div class="scene-copy"><div class="mono">Scene ${String(currentScene+1).padStart(2,"0")} · ${s.icon} ${s.label}</div><h2 style="font-size:44px">${s.title}</h2>${s.html}</div>`;sceneNav.innerHTML=W.story.map((s,i)=>`<button class="scene-btn ${i===currentScene?"active":""}" onclick="showScene(${i})"><span class="mono">Scene ${String(i+1).padStart(2,"0")}</span><b>${s.label}</b><small>${s.title}</small></button>`).join("");}
+function showScene(i){currentScene=Math.max(0,Math.min(W.story.length-1,i));renderScene();}
+function nextScene(){showScene((currentScene+1)%W.story.length);}
+function prevScene(){showScene((currentScene-1+W.story.length)%W.story.length);}
+function renderAllAccess(){const done=seen.size===stops.length;allAccess.classList.toggle("show",done);allAccess.innerHTML=done?`<div class="mono">All Access Pass</div><h2>Premiere Complete</h2><p>You have opened every part of the invitation. The final step is simple: keep the date, find the venue, and celebrate with ${W.bride} & ${W.groom}.</p><div class="actions"><button class="btn" onclick="pick('rsvp')">Review RSVP</button><button class="btn alt" onclick="open('https://maps.google.com/?q='+encodeURIComponent(W.mapsQuery),'_blank')">Open Map</button></div>`:"";}
+function tickCountdown(){const ms=new Date(W.date).getTime()-Date.now(),safe=Math.max(0,ms),d=Math.floor(safe/864e5),h=Math.floor(safe%864e5/36e5),m=Math.floor(safe%36e5/6e4),s=Math.floor(safe%6e4/1e3);countdown.innerHTML=[["Days",d],["Hours",h],["Mins",m],["Secs",s]].map(x=>`<div class="cd"><b>${String(x[1]).padStart(2,"0")}</b><span>${x[0]}</span></div>`).join("");}
 function withWB(fn){const WB=window.WB;if(WB)fn(WB);else addEventListener("wb-ready",()=>fn(window.WB),{once:true});}
 withWB(WB=>{const list=document.getElementById("wishList"),note=document.getElementById("wishNote");if(WB.ready)WB.watchWishes(items=>{list.innerHTML=items.length?items.map(w=>`<div class="wish"><b>${esc(w.name)}</b>${esc(w.msg)}</div>`).join(""):`<p style="color:var(--muted)">Be the first to leave a wish.</p>`});else note.textContent="Live wishes need Firebase.";});
 document.addEventListener("submit",e=>{if(e.target.id==="wishForm"){e.preventDefault();const d=new FormData(e.target),WB=window.WB;if(WB&&WB.ready){WB.addWish(d.get("name"),d.get("msg"));e.target.reset();}} if(e.target.id==="rsvpForm"){e.preventDefault();const d=new FormData(e.target),data={name:d.get("name"),attending:d.get("attending"),guests:d.get("guests"),note:d.get("note"),to:GUEST||""},WB=window.WB;if(WB&&WB.ready)WB.addRSVP(data);e.target.outerHTML=`<div class="card"><h2 style="font-size:36px">Seat Reserved</h2><p>Thank you, ${esc(data.name)||"friend"}. Your RSVP is in.</p></div>`;}});
 window.addToCalendar=function(){const d=new Date(W.date),pad=n=>String(n).padStart(2,"0"),fmt=t=>t.getUTCFullYear()+pad(t.getUTCMonth()+1)+pad(t.getUTCDate())+"T"+pad(t.getUTCHours())+pad(t.getUTCMinutes())+"00Z",end=new Date(d.getTime()+5*3600e3),ics=["BEGIN:VCALENDAR","VERSION:2.0","BEGIN:VEVENT",`SUMMARY:${W.bride} & ${W.groom} Wedding`,`DTSTART:${fmt(d)}`,`DTEND:${fmt(end)}`,`LOCATION:${W.venueName}, ${W.venueAddress}`,"END:VEVENT","END:VCALENDAR"].join("\n"),url=URL.createObjectURL(new Blob([ics],{type:"text/calendar"})),a=document.createElement("a");a.href=url;a.download="wedding.ics";a.click();URL.revokeObjectURL(url)}
+tickCountdown();
+setInterval(tickCountdown,1000);
 renderTickets();
 </script>
 </body>

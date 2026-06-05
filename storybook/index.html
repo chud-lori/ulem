@@ -124,11 +124,17 @@
   #dots i{width:8px;height:8px;border-radius:50%;background:#d8c3a6;transition:background .2s,transform .2s;}
   #dots i.on{background:var(--rose);transform:scale(1.4);}
   .pageno{position:fixed;top:14px;right:16px;font-family:"Caveat",cursive;color:#a88;font-size:16px;z-index:10;}
+  #stickerReward{position:fixed;right:18px;top:58px;z-index:12;background:#fff;border:2px solid var(--rose);
+    border-radius:50%;width:74px;height:74px;display:none;place-items:center;text-align:center;color:var(--rose-dk);
+    font-family:"Caveat",cursive;font-size:14px;box-shadow:0 8px 18px rgba(90,67,52,.22);transform:rotate(8deg);}
+  #stickerReward.show{display:grid;animation:sticker .42s cubic-bezier(.2,.8,.2,1) both}
+  @keyframes sticker{from{transform:scale(.2) rotate(-20deg);opacity:0}to{transform:scale(1) rotate(8deg);opacity:1}}
 </style>
 </head>
 <body>
 <div id="book"></div>
 <div class="pageno" id="pageno"></div>
+<div id="stickerReward">RSVP<br/>sticker</div>
 <div id="nav">
   <button class="navbtn" id="prev" aria-label="previous">‹</button>
   <div id="dots"></div>
@@ -283,7 +289,8 @@ function withWB(fn){ const WB=window.WB; if(WB) fn(WB); else addEventListener("w
     if(WB&&WB.ready) WB.addRSVP(data).catch(()=>{});
     else if(W.rsvpEmail) location.href=`mailto:${W.rsvpEmail}?subject=Wedding RSVP - ${encodeURIComponent(data.name)}&body=`+
       encodeURIComponent(`Name: ${data.name}\nAttending: ${data.attending}\nGuests: ${data.guests}\nNote: ${data.note}`);
-    f.style.display="none"; note.innerHTML=`<span style="font-size:20px;color:var(--rose-dk)">Thank you, ${esc(data.name)||"friend"}! 💕<br/>Your RSVP is in.</span>`; }); })();
+    f.style.display="none"; note.innerHTML=`<span style="font-size:20px;color:var(--rose-dk)">Thank you, ${esc(data.name)||"friend"}! 💕<br/>Your RSVP is in.</span>`;
+    const sticker=document.getElementById("stickerReward"); if(sticker) sticker.classList.add("show"); }); })();
 function giftWaUrl(g){
   const phone=String((g&&g.whatsapp)||"").replace(/\D/g,"");
   const text=encodeURIComponent((g&&g.whatsappText)||"Hi, I'd like to send a book as a wedding gift. Could you share the shipping address?");
