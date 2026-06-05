@@ -14,12 +14,12 @@
 
 window.WEDDING = {
   /* --- names --- */
-  bride: "Kamelia",
-  groom: "Lori", // short, shown big
-  brideFull: "[Kamelia]",
-  groomFull: "[Lori]",
-  brideParents: "Daughter of ... &amp; ...",
-  groomParents: "Son of ... &amp; ...",
+  bride: "Milena",
+  groom: "Kafka", // short, shown big
+  brideFull: "Milena Jesenská",
+  groomFull: "Franz Kafka",
+  brideParents: "Daughter of Jan Jesenský &amp; Milena Hejzlarová",
+  groomParents: "Son of Hermann Kafka &amp; Julie Löwy",
   brideIg: "",
   groomIg: "", // instagram handle, no @ (optional)
 
@@ -37,7 +37,7 @@ window.WEDDING = {
     {
       id: "cafe",
       icon: "🥾",
-      label: "Trailhead",
+      label: "Our Story",
       title: "Where Our Path Began",
       photo: "cafe.jpg",
       html: `<p>It started with a simple hello, a shared curiosity, and the kind of conversation
@@ -70,7 +70,8 @@ window.WEDDING = {
   gift: {
     note: "Your presence and prayers are more than enough for us.<br/>We don't accept cash gifts or transfers. If you'd still like to send something, we would be grateful for a <b>book you love</b> for our little home library.",
     whatsapp: "6280000000000", // use international format, e.g. 6281234567890
-    whatsappText: "Hi Lori & Kamelia, I'd like to send a book as a wedding gift. Could you share the shipping address?",
+    whatsappText:
+      "Hi Franz & Milena, I'd like to send a book as a wedding gift. Could you share the shipping address?",
   },
 
   /* --- RSVP e-mail fallback if you DON'T use Firebase ("" = none) --- */

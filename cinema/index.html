@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+<title>Cinephile Premiere Wedding Invitation</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@400;500;700;800&family=Special+Elite&display=swap" rel="stylesheet" />
+<style>
+  :root{--bg:#0b0908;--ink:#fff4dc;--muted:#c9b994;--red:#a62222;--red2:#541010;--gold:#d7aa55;--panel:#191210;--line:#6f4e2a}
+  *{box-sizing:border-box;margin:0;padding:0}
+  html{scroll-behavior:smooth}
+  body{font-family:Inter,system-ui,sans-serif;background:#0b0908;color:var(--ink);line-height:1.55;overflow-x:hidden}
+  body::before{content:"";position:fixed;inset:0;z-index:-2;background:url("../photos/template-art/cinema-projector.jpg") center/cover no-repeat;filter:saturate(.9) brightness(.45)}
+  body::after{content:"";position:fixed;inset:0;z-index:-1;pointer-events:none;background:
+    linear-gradient(90deg,#070505 0 16%,transparent 38% 62%,#070505 84%),
+    repeating-linear-gradient(90deg,transparent 0 34px,#ffffff16 35px 37px,transparent 38px 74px)}
+  button,input,select,textarea{font:inherit}
+  .wrap{width:min(1120px,calc(100% - 28px));margin:auto}
+  .hero{min-height:100svh;display:grid;align-items:end;padding:34px 0 26px}
+  .marquee{display:grid;grid-template-columns:1.1fr .9fr;gap:22px;align-items:end}
+  .title{padding:20px 0}
+  .kicker,.mono{font-family:"Special Elite",monospace;text-transform:uppercase;letter-spacing:3px;color:var(--gold);font-size:12px}
+  h1,h2{font-family:"Bebas Neue",Impact,sans-serif;letter-spacing:1px;line-height:.92;text-transform:uppercase}
+  h1{font-size:clamp(62px,14vw,150px);text-shadow:0 7px 0 #000,0 0 36px #d7aa5544}
+  h2{font-size:clamp(38px,8vw,78px)}
+  .amp{color:var(--gold)}
+  .date{font-family:"Special Elite",monospace;color:var(--muted);font-size:clamp(14px,2.8vw,20px);margin:16px 0}
+  .screen{background:linear-gradient(180deg,#261815,#100b0a);border:2px solid var(--gold);box-shadow:0 28px 80px #000c,inset 0 0 0 10px #0007;border-radius:6px;padding:20px;min-height:460px;display:grid;align-content:center;position:relative;overflow:hidden}
+  .screen::before{content:"";position:absolute;inset:0;background:radial-gradient(circle at 50% 18%,#d7aa5522,transparent 34%);pointer-events:none}
+  .photo-slot{border:1px dashed #8a6a3b;background:#0e0a09cc;min-height:260px;display:grid;place-items:center;text-align:center;padding:22px;color:var(--muted);position:relative;z-index:1}
+  .photo-slot strong{display:block;font-family:"Bebas Neue";font-size:38px;color:var(--ink)}
+  .actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:16px}
+  .btn{border:0;background:var(--red);color:#fff8e6;padding:13px 18px;border-radius:4px;font-weight:800;cursor:pointer;box-shadow:0 5px 0 var(--red2);text-transform:uppercase;letter-spacing:.8px}
+  .btn.alt{background:#221815;border:1px solid var(--gold);box-shadow:0 5px 0 #0c0807}
+  .btn:active{transform:translateY(4px);box-shadow:none}
+  .booth{position:sticky;top:0;z-index:5;background:linear-gradient(180deg,#120c0b,#120c0bdd);backdrop-filter:blur(10px);border-block:1px solid #6f4e2a;padding:12px 0}
+  .ticket-row{display:grid;grid-template-columns:repeat(5,1fr);gap:10px}
+  .ticket{position:relative;border:1px solid var(--line);background:linear-gradient(90deg,#f8dfaa,#d4a752);color:#28150d;border-radius:6px;padding:12px 10px;min-height:78px;text-align:left;cursor:pointer;box-shadow:0 10px 22px #0008}
+  .ticket::after{content:"";position:absolute;top:8px;bottom:8px;right:22px;border-right:2px dashed #8f6b37}
+  .ticket b{display:block;font-family:"Bebas Neue";font-size:26px;line-height:1}.ticket span{font-size:11px;text-transform:uppercase;font-weight:800}
+  .ticket.done{background:linear-gradient(90deg,#9b1f1f,#5c1010);color:#fff4dc}.ticket.done::before{content:"STAMPED";position:absolute;right:34px;top:26px;transform:rotate(-12deg);font-family:"Special Elite";font-size:12px;border:2px solid currentColor;padding:3px}
+  .progress{height:8px;background:#271a15;border-radius:99px;overflow:hidden;margin-top:10px}.bar{height:100%;width:0;background:linear-gradient(90deg,var(--red),var(--gold));transition:width .35s}
+  main{padding:48px 0 76px}.panel{display:none;background:#191210ee;border:1px solid var(--line);border-radius:8px;padding:22px;box-shadow:0 24px 70px #000b}.panel.active{display:block;animation:roll .38s ease both}
+  @keyframes roll{from{opacity:0;transform:translateY(16px) scale(.98)}to{opacity:1;transform:none}}
+  .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:14px;margin-top:16px}
+  .card{background:#0d0908;border:1px solid #5a3d23;border-radius:6px;padding:16px}
+  .frame img{width:100%;aspect-ratio:16/10;object-fit:cover;border:8px solid #090606;background:#211}
+  .detail{display:flex;gap:12px;margin:10px 0}.k{color:var(--gold);min-width:86px;font-weight:800;text-transform:uppercase;font-size:12px}
+  label{display:block;color:var(--muted);font-size:12px;text-transform:uppercase;font-weight:800;letter-spacing:.8px;margin:12px 0 5px}
+  input,select,textarea{width:100%;background:#0b0908;color:var(--ink);border:1px solid #6f4e2a;border-radius:4px;padding:12px}
+  .wish{border-left:4px solid var(--gold);background:#0b0908;padding:10px 12px;margin:8px 0}.wish b{display:block;color:var(--gold)}
+  @media(max-width:760px){.marquee{grid-template-columns:1fr}.screen{min-height:320px}.ticket-row{display:flex;overflow:auto;padding-bottom:6px}.ticket{min-width:170px}main{padding-top:28px}}
+</style>
+</head>
+<body>
+<section class="hero">
+  <div class="wrap marquee">
+    <div class="title">
+      <div class="kicker">Interactive premiere invitation</div>
+      <h1 id="names">&nbsp;</h1>
+      <p class="date" id="date"></p>
+      <div class="actions"><button class="btn" onclick="pick('story')">Start Screening</button><button class="btn alt" onclick="pick('rsvp')">Reserve Seat</button></div>
+    </div>
+    <div class="screen">
+      <div class="photo-slot"><div><span class="mono">Couple photo placeholder</span><strong>Your Poster Here</strong><p>Use your own real couple image as the poster art.</p></div></div>
+    </div>
+  </div>
+</section>
+<div class="booth"><div class="wrap"><div class="ticket-row" id="tickets"></div><div class="progress"><div class="bar" id="bar"></div></div></div></div>
+<main class="wrap">
+  <section class="panel active" id="panel-story"></section>
+  <section class="panel" id="panel-details"></section>
+  <section class="panel" id="panel-gift"></section>
+  <section class="panel" id="panel-wishes"></section>
+  <section class="panel" id="panel-rsvp"></section>
+</main>
+<script src="../data.js"></script><script src="../config.local.js" onerror=""></script><script type="module" src="../firebase.js"></script><script src="../music.js" defer></script>
+<script>
+const W=window.WEDDING,GUEST=(new URLSearchParams(location.search).get("to")||"").trim().slice(0,40)||null;
+const esc=s=>String(s==null?"":s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+const stops=[["story","Featurette"],["details","Screening Info"],["gift","Book Gift"],["wishes","Audience Notes"],["rsvp","Reserve Seat"]];
+const seen=new Set(JSON.parse(localStorage.getItem("cinemaSeen")||"[]"));
+names.innerHTML=`${W.bride}<span class="amp"> &amp; </span>${W.groom}`;date.textContent=W.dateLabel;
+function giftWaUrl(g){const phone=String((g&&g.whatsapp)||"").replace(/\D/g,""),text=encodeURIComponent((g&&g.whatsappText)||"Hi, I'd like to send a book as a wedding gift. Could you share the shipping address?");return phone?`https://wa.me/${phone}?text=${text}`:`https://wa.me/?text=${text}`;}
+function renderTickets(){tickets.innerHTML=stops.map(([id,label],i)=>`<button class="ticket ${seen.has(id)?"done":""}" onclick="pick('${id}')"><span>Admit ${String(i+1).padStart(2,"0")}</span><b>${label}</b></button>`).join("");bar.style.width=(seen.size/stops.length*100)+"%";}
+function pick(id){seen.add(id);localStorage.setItem("cinemaSeen",JSON.stringify([...seen]));document.querySelectorAll(".panel").forEach(p=>p.classList.toggle("active",p.id==="panel-"+id));renderTickets();document.getElementById("panel-"+id).scrollIntoView({behavior:"smooth",block:"start"});}
+panelStory();
+document.getElementById("panel-details").innerHTML=`<div class="mono">Now Showing</div><h2>Wedding Details</h2><div class="grid"><div class="card"><div class="detail"><span class="k">When</span><span>${W.dateLabel}<br>${W.ceremonyTime}</span></div></div><div class="card"><div class="detail"><span class="k">Where</span><span>${W.venueName}<br>${W.venueAddress}</span></div></div><div class="card"><div class="detail"><span class="k">Dress</span><span>${W.dress}</span></div></div></div><div class="actions"><button class="btn alt" onclick="open('https://maps.google.com/?q='+encodeURIComponent(W.mapsQuery),'_blank')">Open Map</button><button class="btn alt" onclick="addToCalendar()">Add Calendar</button></div>`;
+document.getElementById("panel-gift").innerHTML=`<div class="mono">In Lieu Of Gifts</div><h2>Book Gift</h2><div class="card"><p>${W.gift.note}</p><div class="actions"><button class="btn" onclick="open(giftWaUrl(W.gift),'_blank')">Ask Shipping Address</button></div><p style="color:var(--muted);margin-top:10px">We only share the address through WhatsApp so it stays private.</p></div>`;
+document.getElementById("panel-wishes").innerHTML=`<div class="mono">Audience Notes</div><h2>Guest Wishes</h2><form id="wishForm"><label>Your name</label><input name="name" required><label>Your wish</label><textarea name="msg" rows="3" required></textarea><div class="actions"><button class="btn">Send Note</button></div></form><div id="wishList"><p style="color:var(--muted)" id="wishNote">Loading wishes...</p></div>`;
+document.getElementById("panel-rsvp").innerHTML=`<div class="mono">Admission</div><h2>Reserve Your Seat</h2><form id="rsvpForm"><label>Your name</label><input name="name" required><label>Will you attend?</label><select name="attending"><option>Joyfully accepts</option><option>Sadly declines</option></select><label>Guests</label><input name="guests" type="number" min="1" value="1"><label>Note</label><textarea name="note" rows="3"></textarea><div class="actions"><button class="btn">Confirm Seat</button></div></form>`;
+function panelStory(){document.getElementById("panel-story").innerHTML=`<div class="mono">Featurette</div><h2>Our Story</h2><div class="grid">${W.story.map(s=>`<article class="card frame"><img src="../photos/${s.photo}" onerror="this.src='../photos/_placeholder.png'"><div class="mono" style="margin-top:10px">${s.icon} ${s.label}</div><h2 style="font-size:34px">${s.title}</h2>${s.html}</article>`).join("")}</div>`;}
+function withWB(fn){const WB=window.WB;if(WB)fn(WB);else addEventListener("wb-ready",()=>fn(window.WB),{once:true});}
+withWB(WB=>{const list=document.getElementById("wishList"),note=document.getElementById("wishNote");if(WB.ready)WB.watchWishes(items=>{list.innerHTML=items.length?items.map(w=>`<div class="wish"><b>${esc(w.name)}</b>${esc(w.msg)}</div>`).join(""):`<p style="color:var(--muted)">Be the first to leave a wish.</p>`});else note.textContent="Live wishes need Firebase.";});
+document.addEventListener("submit",e=>{if(e.target.id==="wishForm"){e.preventDefault();const d=new FormData(e.target),WB=window.WB;if(WB&&WB.ready){WB.addWish(d.get("name"),d.get("msg"));e.target.reset();}} if(e.target.id==="rsvpForm"){e.preventDefault();const d=new FormData(e.target),data={name:d.get("name"),attending:d.get("attending"),guests:d.get("guests"),note:d.get("note"),to:GUEST||""},WB=window.WB;if(WB&&WB.ready)WB.addRSVP(data);e.target.outerHTML=`<div class="card"><h2 style="font-size:36px">Seat Reserved</h2><p>Thank you, ${esc(data.name)||"friend"}. Your RSVP is in.</p></div>`;}});
+window.addToCalendar=function(){const d=new Date(W.date),pad=n=>String(n).padStart(2,"0"),fmt=t=>t.getUTCFullYear()+pad(t.getUTCMonth()+1)+pad(t.getUTCDate())+"T"+pad(t.getUTCHours())+pad(t.getUTCMinutes())+"00Z",end=new Date(d.getTime()+5*3600e3),ics=["BEGIN:VCALENDAR","VERSION:2.0","BEGIN:VEVENT",`SUMMARY:${W.bride} & ${W.groom} Wedding`,`DTSTART:${fmt(d)}`,`DTEND:${fmt(end)}`,`LOCATION:${W.venueName}, ${W.venueAddress}`,"END:VEVENT","END:VCALENDAR"].join("\n"),url=URL.createObjectURL(new Blob([ics],{type:"text/calendar"})),a=document.createElement("a");a.href=url;a.download="wedding.ics";a.click();URL.revokeObjectURL(url)}
+renderTickets();
+</script>
+</body>
+</html>

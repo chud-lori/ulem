@@ -7,11 +7,14 @@
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@500;700&family=Playfair+Display:ital,wght@0,500;0,700;1,500&display=swap" rel="stylesheet" />
 <style>
-  :root{ --ink:#3f3a35; --rose:#d27a45; --rose-dk:#8f4c2f; --gold:#4f7f8f; --paper:#f6ecd8; --tape:#9fb7c733; }
+  :root{ --ink:#4b352d; --rose:#cf6f53; --rose-dk:#8f3e32; --gold:#2f7a80; --paper:#fff4df; --tape:#9fb7c744; --sky:#b9cdd2; --leaf:#6f8a5a; }
   *{box-sizing:border-box;margin:0;padding:0;}
   html,body{height:100%;}
   body{font-family:"Playfair Display",Georgia,serif;color:var(--ink);overflow:hidden;
-    background:#d8cbb9 radial-gradient(circle at 30% 20%,#f7efe0,#c7d5d8);
+    background:
+      radial-gradient(circle at 12% 18%,#f6d9bd 0 12%,transparent 13%),
+      radial-gradient(circle at 86% 12%,#b9cdd2 0 16%,transparent 17%),
+      linear-gradient(135deg,#d6c0a2 0 22%,#b9cdd2 22% 44%,#ead7b6 44% 72%,#b7a58c 72%);
     -webkit-tap-highlight-color:transparent;}
   .hand{font-family:"Caveat",cursive;}
 
@@ -23,22 +26,33 @@
     transition:opacity .45s ease,transform .45s ease;}
   .page.active{opacity:1;transform:none;pointer-events:auto;}
   .page.leftout{opacity:0;transform:translateX(-60px) rotateY(-8deg);}
+  .page.story:nth-child(odd){align-items:flex-start;text-align:left;}
+  .page.story:nth-child(even){align-items:flex-end;text-align:left;}
+  .page.story:nth-child(odd) .card{transform:rotate(-1.5deg);}
+  .page.story:nth-child(even) .card{transform:rotate(1.5deg);}
+  .page.venue .card,.page.gift .card{max-width:600px;}
+  .page.agenda .card{background:linear-gradient(180deg,#e7f0ed,#fff1d5);}
   /* a scrapbook "card" */
-  .card{background:var(--paper);max-width:520px;width:100%;border-radius:10px;padding:24px 22px 28px;
-    box-shadow:0 14px 30px rgba(90,67,52,.22), inset 0 0 0 1px #fff8;position:relative;}
+  .card{background:
+      linear-gradient(90deg,rgba(255,255,255,.18) 1px,transparent 1px) 0 0/22px 22px,
+      linear-gradient(180deg,#fff8e8,#f3dfbd);
+    max-width:560px;width:100%;border-radius:10px;padding:26px 24px 30px;
+    box-shadow:0 18px 34px rgba(60,43,34,.28), inset 0 0 0 1px #fff8;position:relative;border:1px solid #d9bd8d;}
   .card::before{content:"";position:absolute;top:-13px;left:50%;transform:translateX(-50%) rotate(-3deg);
-    width:120px;height:26px;background:var(--tape);border:1px dashed #d8b98a55;border-radius:2px;}
+    width:126px;height:28px;background:var(--tape);border:1px dashed #6d879055;border-radius:2px;}
+  .card::after{content:"";position:absolute;right:-18px;bottom:18px;width:54px;height:54px;background:var(--leaf);
+    border-radius:50% 50% 45% 55%;opacity:.18;transform:rotate(-18deg);pointer-events:none;}
   /* ---- cover styled as a closed photo album that swings open ---- */
-  .card.album{background:linear-gradient(135deg,#d8b98a,#c39e66);
+  .card.album{background:linear-gradient(135deg,#244e54,#d6a069 58%,#8f3e32);
     box-shadow:0 16px 36px rgba(90,67,52,.4), inset 0 0 0 2px #fff5, inset 0 0 0 11px rgba(255,255,255,.16);}
   .card.album::before{display:none;}
-  .album .ribbon{position:absolute;top:0;bottom:0;right:34px;width:26px;background:var(--rose);
+  .album .ribbon{position:absolute;top:0;bottom:0;right:34px;width:26px;background:#f1d36b;
     box-shadow:0 0 8px rgba(0,0,0,.2);}
   .album .ribbon::after{content:"";position:absolute;top:50%;left:50%;width:18px;height:18px;border-radius:50%;
     background:var(--rose-dk);transform:translate(-50%,-50%);}
   .album-frame{background:#fff;padding:8px;border-radius:3px;display:inline-block;transform:rotate(-1.5deg);
     box-shadow:0 8px 16px rgba(90,67,52,.3);}
-  .album-frame img{width:min(56vw,210px);animation:none;filter:none;display:block;}
+  .album-frame img{width:min(66vw,280px);aspect-ratio:4/5;object-fit:cover;animation:none;filter:none;display:block;}
   .album-plate{background:#fbf3e3;border-radius:4px;padding:8px 14px;margin-top:14px;display:inline-block;
     box-shadow:0 4px 10px rgba(90,67,52,.2);}
   .album-plate h1{font-size:clamp(22px,6.5vw,32px);}
@@ -46,7 +60,7 @@
   .page.cover{transition:opacity .9s ease, transform .9s cubic-bezier(.4,.05,.45,1);}
   .page.cover.leftout{transform:rotateY(-150deg);opacity:0;}
   h1{font-size:clamp(28px,9vw,52px);line-height:1.05;color:var(--rose-dk);font-weight:700;}
-  h2{font-size:clamp(20px,5.5vw,30px);color:var(--rose-dk);margin-bottom:6px;}
+  h2{font-size:clamp(22px,6vw,34px);color:var(--rose-dk);margin-bottom:6px;}
   .amp{font-style:italic;color:var(--gold);}
   .sub{font-family:"Caveat",cursive;font-size:clamp(18px,5vw,24px);color:var(--ink);}
   p{font-size:clamp(13px,3.4vw,16px);line-height:1.8;margin:8px 0;}
@@ -57,10 +71,12 @@
     max-width:88%;white-space:normal;overflow-wrap:anywhere;text-align:center;line-height:1.3;}
 
   /* polaroid */
-  .polaroid{background:#fff;padding:10px 10px 16px;border-radius:3px;box-shadow:0 8px 18px rgba(90,67,52,.25);
-    display:inline-block;transform:rotate(-2.5deg);}
+  .polaroid{background:#fff;padding:10px 10px 16px;border-radius:3px;box-shadow:0 12px 22px rgba(90,67,52,.28);
+    display:inline-block;transform:rotate(-4deg);position:relative;}
+  .polaroid::before{content:"";position:absolute;left:18px;top:-14px;width:74px;height:24px;background:#efe0ad99;
+    border:1px dashed #b19b6355;transform:rotate(-8deg);}
   .polaroid img{display:block;width:min(72vw,260px);height:min(72vw,260px);object-fit:cover;background:#efe2cd;border-radius:2px;}
-  .polaroid.r{transform:rotate(2.5deg);}
+  .polaroid.r{transform:rotate(4deg);}
   .polaroid .cap{font-family:"Caveat",cursive;font-size:19px;margin-top:8px;color:#8a6d56;}
   .avatar img{width:min(40vw,150px);height:min(40vw,150px);}
 
@@ -71,7 +87,7 @@
 
   /* countdown */
   .cd{display:flex;gap:10px;justify-content:center;flex-wrap:wrap;}
-  .cd div{background:#fff;border-radius:10px;padding:10px 12px;min-width:62px;box-shadow:0 6px 12px rgba(90,67,52,.18);}
+  .cd div{background:#fff;border-radius:10px;padding:10px 12px;min-width:62px;box-shadow:0 6px 12px rgba(90,67,52,.18);border:1px solid #e4c797;}
   .cd b{display:block;font-size:clamp(22px,6vw,32px);color:var(--rose-dk);}
   .cd span{font-family:"Caveat",cursive;font-size:14px;color:#8a6d56;}
 
@@ -156,7 +172,7 @@ function build(p, i){
   if(p.type==="cover") return `<div class="card album">
       <span class="ribbon"></span>
       <p class="greet" id="greet"></p>
-      <div class="album-frame"><img id="coupleImg" src="../photos/couple.png" alt="" onerror="this.style.display='none'"/></div>
+      <div class="album-frame"><div id="coupleImg" style="width:min(74vw,300px);aspect-ratio:4/5;display:grid;place-items:center;text-align:center;padding:18px;background:#f7efe2;color:#9b6f6b;border:1px dashed #d59a91">Your couple photo here</div></div>
       <div class="album-plate"><h1>${W.bride}<span class="amp"> &amp; </span>${W.groom}</h1>
         <p class="sub">our photo album</p><p class="hand big">${W.dateLabel}</p></div>
       <div class="acts"><button class="btn" onclick="go(1)">Untie &amp; open ✿</button></div></div>`;
@@ -196,7 +212,7 @@ function build(p, i){
         <div class="acts"><button class="btn" type="submit">Send RSVP 💕</button></div></form>
       <p class="note" id="rsvpNote"></p></div>`;
   if(p.type==="closing") return `<div class="card"><h2>With love,</h2>
-      <img src="../photos/couple.png" style="width:min(60vw,240px)" onerror="this.style.display='none'"/>
+      <div style="width:min(60vw,240px);aspect-ratio:4/5;display:grid;place-items:center;margin:auto;background:#f7efe2;color:#9b6f6b;border:8px solid #fff;box-shadow:0 10px 20px rgba(90,67,52,.22)">Your couple photo here</div>
       <h1 style="font-size:clamp(24px,7vw,40px)">${W.bride} <span class="amp">&amp;</span> ${W.groom}</h1>
       <p class="hand big">Thank you for reading our story.<br/>We can't wait to celebrate with you! 💕</p></div>`;
   return `<div class="card"></div>`;
@@ -204,7 +220,7 @@ function build(p, i){
 
 /* ---- render pages ---- */
 const book=document.getElementById("book"), dotsEl=document.getElementById("dots");
-PAGES.forEach((p,i)=>{ const d=document.createElement("div"); d.className="page"; d.dataset.i=i; d.innerHTML=build(p,i); book.appendChild(d);
+PAGES.forEach((p,i)=>{ const d=document.createElement("div"); d.className=`page ${p.type}`; d.dataset.i=i; d.innerHTML=build(p,i); book.appendChild(d);
   const dot=document.createElement("i"); dotsEl.appendChild(dot); });
 const pageEls=[...book.children];
 let cur=0;

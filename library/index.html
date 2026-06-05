@@ -7,12 +7,16 @@
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;1,500&family=EB+Garamond:ital@0;1&family=Special+Elite&family=Caveat:wght@600&display=swap" rel="stylesheet" />
 <style>
-  :root{ --ink:#3a2c22; --leather:#5b2230; --leather2:#3f1722; --gold:#c9a24b; --paper:#f5ecd8;
-         --paper2:#efe3c6; --rule:#c9b48f; --stamp:#a23b34; }
+  :root{ --ink:#2f251d; --leather:#592532; --leather2:#2b1018; --gold:#d0a33f; --paper:#f7eed6;
+         --paper2:#e4d4ad; --rule:#b99c68; --stamp:#8d2d2b; --green:#1f5548; --blue:#253f5f; }
   *{box-sizing:border-box;margin:0;padding:0;}
   html,body{height:100%;}
   body{font-family:"EB Garamond",Georgia,serif;color:var(--ink);overflow:hidden;
-    background:#241712 radial-gradient(circle at 50% 0%,#3a2418,#1c110c 80%);
+    background:
+      linear-gradient(90deg,rgba(208,163,63,.08) 1px,transparent 1px) 0 0/74px 100%,
+      radial-gradient(circle at 22% 10%,#355d52 0 16%,transparent 18%),
+      radial-gradient(circle at 78% 0%,#5b2230 0 18%,transparent 22%),
+      linear-gradient(180deg,#14231f 0%,#21150f 54%,#120b08 100%);
     -webkit-tap-highlight-color:transparent;}
   .serif{font-family:"Cormorant Garamond",serif;}
   .type{font-family:"Special Elite",monospace;}
@@ -25,20 +29,24 @@
   .page.active{opacity:1;transform:none;pointer-events:auto;}
   .page.leftout{opacity:0;transform:translateX(-40px) rotateY(-10deg);}
   /* paper sheet */
-  .sheet{position:relative;width:100%;max-width:560px;max-height:84vh;overflow:auto;background:
-      linear-gradient(180deg,#f7efdc,#ece0c2);border:1px solid #d8c6a0;border-radius:4px;
-    padding:30px 26px 34px;box-shadow:0 18px 40px rgba(0,0,0,.5),inset 0 0 60px rgba(150,120,70,.18);
+  .sheet{position:relative;width:100%;max-width:580px;max-height:84vh;overflow:auto;background:
+      linear-gradient(90deg,rgba(120,80,40,.08) 1px,transparent 1px) 0 0/34px 100%,
+      linear-gradient(180deg,#fbf1d9,#e7d6aa);border:1px solid #d8c6a0;border-radius:6px;
+    padding:32px 28px 36px;box-shadow:0 22px 54px rgba(0,0,0,.62),inset 0 0 60px rgba(150,120,70,.18);
     text-align:center;}
-  .sheet::after{content:"";position:absolute;inset:0;pointer-events:none;border-radius:4px;
-    box-shadow:inset 0 0 90px rgba(120,90,50,.22);}
+  .sheet::after{content:"";position:absolute;inset:0;pointer-events:none;border-radius:6px;
+    box-shadow:inset 0 0 90px rgba(120,90,50,.2);}
+  .page:nth-child(3n) .sheet{background:linear-gradient(180deg,#eef1df,#e3d4ad);}
+  .page:nth-child(3n+1) .sheet{background:linear-gradient(180deg,#f8efd8,#e5cfa0);}
+  .page.story .sheet{text-align:left;}
 
   h1{font-family:"Cormorant Garamond",serif;font-weight:600;font-size:clamp(30px,9vw,58px);line-height:1.05;color:var(--leather);}
-  h2{font-family:"Cormorant Garamond",serif;font-weight:600;font-size:clamp(22px,6vw,34px);color:var(--leather);margin-bottom:4px;}
+  h2{font-family:"Cormorant Garamond",serif;font-weight:600;font-size:clamp(24px,6.5vw,38px);color:var(--leather);margin-bottom:4px;}
   .amp{font-style:italic;color:var(--gold);}
   p{font-size:clamp(14px,3.6vw,17px);line-height:1.85;margin:10px 0;}
   .epigraph{font-style:italic;color:#6b5640;font-size:clamp(14px,3.7vw,18px);line-height:1.7;margin:6px auto 18px;max-width:90%;}
   .epigraph cite{display:block;font-style:normal;font-size:12px;letter-spacing:.5px;color:#8a6f4e;margin-top:6px;}
-  .chapno{font-family:"Special Elite",monospace;letter-spacing:3px;font-size:12px;color:#8a6f4e;text-transform:uppercase;}
+  .chapno{font-family:"Special Elite",monospace;letter-spacing:3px;font-size:12px;color:var(--green);text-transform:uppercase;}
   .drop::first-letter{font-family:"Cormorant Garamond",serif;float:left;font-size:3.1em;line-height:.8;
     padding:6px 8px 0 0;color:var(--leather);}
   .ph{color:var(--leather);border-bottom:1px dotted #b59; }
@@ -46,7 +54,7 @@
 
   /* ---- cover (closed book that swings open) ---- */
   .page.cover{z-index:5;}                 /* keep the cover above the page it reveals */
-  .page.cover .sheet{background:linear-gradient(135deg,var(--leather),var(--leather2));border:none;
+  .page.cover .sheet{background:linear-gradient(135deg,var(--leather),var(--leather2) 58%,#14231f);border:none;
     color:#f3e4c0;box-shadow:0 24px 50px rgba(0,0,0,.6), inset 0 0 0 2px var(--gold), inset 0 0 0 12px rgba(201,162,75,.25);
     padding:26px 26px 30px;transform-origin:left center;backface-visibility:hidden;}
   /* a hint of the gilded spine on the hinge side */
@@ -57,7 +65,7 @@
   .page.cover{transition:opacity .9s ease, transform .95s cubic-bezier(.4,.05,.45,1);}
   .page.cover.leftout{transform:rotateY(-152deg);opacity:0;}
   .cover h1{color:#f7e9c6;font-size:clamp(24px,7vw,44px);}
-  .cover .couple{width:min(40vw,140px);}
+  .cover .couple{width:min(50vw,190px);}
   .cover .rule{margin:12px auto;}
   .cover p{margin:6px 0;}
   .cover .rule{height:1px;background:var(--gold);width:60%;margin:16px auto;opacity:.7;}
@@ -67,20 +75,20 @@
   .bookplate b{font-family:"Caveat",cursive;font-size:20px;color:var(--leather);}
 
   /* couple illustration */
-  .couple{width:min(56vw,220px);filter:drop-shadow(0 8px 12px rgba(0,0,0,.35));}
+  .couple{width:min(56vw,240px);aspect-ratio:4/5;object-fit:cover;border:1px solid rgba(210,178,103,.45);border-radius:4px;filter:drop-shadow(0 8px 12px rgba(0,0,0,.35));}
 
   /* table of contents */
   .toc{list-style:none;text-align:left;margin-top:6px;}
   .toc li{display:flex;align-items:baseline;gap:6px;cursor:pointer;padding:7px 2px;font-size:clamp(15px,4vw,19px);}
   .toc li:hover .t{color:var(--leather);}
-  .toc .no{font-family:"Special Elite",monospace;font-size:12px;color:#8a6f4e;min-width:26px;}
+  .toc .no{font-family:"Special Elite",monospace;font-size:12px;color:var(--green);min-width:26px;}
   .toc .t{white-space:nowrap;overflow:hidden;}
   .toc .dots{flex:1;border-bottom:1.5px dotted #b6a079;transform:translateY(-4px);}
-  .toc .pg{font-family:"Special Elite",monospace;font-size:12px;color:#8a6f4e;}
+  .toc .pg{font-family:"Special Elite",monospace;font-size:12px;color:var(--green);}
 
   /* countdown */
   .cd{display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin-top:6px;}
-  .cd div{border:1px solid var(--rule);border-radius:4px;padding:8px 12px;min-width:62px;background:#fbf3df;}
+  .cd div{border:1px solid var(--rule);border-radius:4px;padding:8px 12px;min-width:62px;background:#fbf3df;box-shadow:0 8px 18px rgba(60,40,20,.18);}
   .cd b{display:block;font-family:"Cormorant Garamond",serif;font-size:clamp(24px,6vw,34px);color:var(--leather);}
   .cd span{font-family:"Special Elite",monospace;font-size:10px;color:#8a6f4e;letter-spacing:1px;}
 
@@ -97,7 +105,7 @@
   .author .pr{font-size:13px;color:#6b5640;}
 
   /* library / catalog cards */
-  .card-lib{background:repeating-linear-gradient(#fcf6e6,#fcf6e6 27px,#e7d9b6 28px);
+  .card-lib{background:repeating-linear-gradient(#fcf6e6,#fcf6e6 27px,#d9e1d3 28px);
     border:1px solid #cdb787;border-radius:3px;padding:14px;text-align:left;box-shadow:0 6px 14px rgba(0,0,0,.2);}
   .card-lib .hd{font-family:"Special Elite",monospace;font-size:11px;letter-spacing:2px;color:var(--leather);
     border-bottom:2px solid var(--leather);padding-bottom:4px;text-transform:uppercase;margin-bottom:8px;}
@@ -219,7 +227,7 @@ function build(p,i){
   if(p.type==="cover") return sheet(`
     <span class="shine"></span>
     <div class="label">A Wedding Invitation</div><div class="rule"></div>
-    ${img("couple.png","couple")}
+    <div class="couple" style="display:grid;place-items:center;text-align:center;padding:14px;background:#f5ecd9;color:#5a4533">Your couple photo here</div>
     <h1>The Story of<br/>${W.bride} <span class="amp">&amp;</span> ${W.groom}</h1>
     <div class="rule"></div>
     <p class="serif" style="font-size:20px">${W.dateLabel}</p>
@@ -270,7 +278,7 @@ function build(p,i){
         <label>Note for the librarians</label><textarea name="note" rows="2"></textarea>
         <div class="acts"><button class="btn" type="submit">Stamp my card</button></div></form></div>
     <p class="note" id="rsvpNote"></p>`);
-  if(p.type==="closing") return sheet(`<h2 class="serif">Finis</h2>${img("couple.png","couple")}
+  if(p.type==="closing") return sheet(`<h2 class="serif">Finis</h2><div class="couple" style="display:grid;place-items:center;text-align:center;padding:14px;background:#f5ecd9;color:#5a4533;margin:auto">Your couple photo here</div>
     <h1 style="font-size:clamp(26px,7vw,42px)">${W.bride} <span class="amp">&amp;</span> ${W.groom}</h1>
     <p class="serif" style="font-size:19px">Thank you for reading our story.<br/>Come help us begin the next chapter. ❧</p>`,"");
   return sheet("");
@@ -278,7 +286,7 @@ function build(p,i){
 
 /* render + nav */
 const book=document.getElementById("book");
-PAGES.forEach((p,i)=>{ const d=document.createElement("div"); d.className="page"+(p.type==="cover"?" cover":"");
+PAGES.forEach((p,i)=>{ const d=document.createElement("div"); d.className=`page ${p.type}${p.type==="cover"?" cover":""}`;
   d.dataset.i=i; d.innerHTML=build(p,i); book.appendChild(d); });
 const pageEls=[...book.children]; let cur=0;
 function revealActive(n){ const sh=pageEls[n]&&pageEls[n].querySelector(".sheet"); if(!sh)return;

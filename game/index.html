@@ -8,7 +8,7 @@
 <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet" />
 <style>
   :root{
-    --ink:#2f3328; --rose:#5d8f55; --rose-dk:#2f5f3a; --gold:#d6a84a; --panel:#fff8e9;
+    --ink:#3a2b26; --rose:#e8889c; --rose-dk:#c75d75; --gold:#e3b04b; --panel:#fffaf2;
   }
   *{box-sizing:border-box;margin:0;padding:0;}
   html,body{height:100%;overflow:hidden;background:#f4cbbf;}
@@ -19,7 +19,7 @@
   /* loading + title */
   #titleScreen{position:fixed;inset:0;z-index:40;display:flex;flex-direction:column;align-items:center;
     justify-content:center;text-align:center;gap:24px;padding:24px;
-    background:linear-gradient(180deg,#d8e8c6 0%,#f4dfb9 58%,#b7d3a1 100%);
+    background:linear-gradient(180deg,#f3c8d2 0%,#f7ddc9 55%,#e9f1d0 100%);
     clip-path:circle(150% at 50% 56%);transition:clip-path .75s ease-in, opacity .75s ease-in;}
   /* arcade "iris-in": the title closes to a shrinking circle, revealing the town */
   #titleScreen.iris{clip-path:circle(0% at 50% 56%);opacity:0;}
@@ -116,7 +116,7 @@
   .taken{font-size:8px;color:#2c7a3f;}
   /* wishes wall */
   .wishes{margin-top:8px;display:flex;flex-direction:column;gap:8px;max-height:230px;overflow:auto;}
-  .wish{background:#f7f0dc;border:2px solid #d6c690;border-radius:8px;padding:9px 11px;font-size:9px;line-height:1.7;}
+  .wish{background:#fff6f8;border:2px solid #f3c8d2;border-radius:8px;padding:9px 11px;font-size:9px;line-height:1.7;}
   .wish b{color:var(--rose-dk);display:block;margin-bottom:2px;}
   #venueCd{margin-top:10px;font-size:9px;color:var(--rose-dk);text-align:center;}
 </style>
@@ -126,7 +126,7 @@
 
 <div id="hud">
   <div id="progress"></div>
-  <div id="routeTag">HIKING · TOURING · BOOKS</div>
+  <div id="routeTag">OUR STORY · WEDDING DETAILS · RSVP</div>
   <button id="musicBtn" title="Music">🔇</button>
   <div id="hint"></div>
   <div class="pad" id="padLeft">◀</div>
@@ -213,14 +213,14 @@ const WEDDING = window.WEDDING;
 const RSVP_EMAIL = WEDDING.rsvpEmail || "";
 const STORY_BLD = ["park","shop","park","club","apartment"]; // scene per story beat (cycles)
 const SPOTS = [
-  { id:"profiles", type:"profiles", icon:"🎒", sign:"Trailhead", title:"Meet the Couple", building:"apartment" },
+  { id:"profiles", type:"profiles", icon:"🎒", sign:"Meet Us", title:"Meet the Couple", building:"apartment" },
   ...WEDDING.story.map((s,i)=>({ id:s.id, type:"story", icon:s.icon, sign:s.label, title:s.title,
       photo:s.photo, html:s.html, building:STORY_BLD[i%STORY_BLD.length] })),
-  { id:"venue", type:"venue", icon:"📍", sign:"Basecamp", title:"You're Invited!", photo:"venue.jpg", building:"apartment" },
-  { id:"reception", type:"agenda", icon:"🔥", sign:"Campfire", title:"Order of the Day", building:"club" },
-  { id:"gift", type:"gift", icon:"📚", sign:"Book Nook", title:"Gift Us a Book", building:"shop" },
-  { id:"guestbook", type:"guestbook", icon:"📝", sign:"Trail Notes", title:"Write a Trail Note", building:"shop" },
-  { id:"rsvp", type:"rsvp", icon:"🎟️", sign:"Join Trip", title:"Will You Join Us?", building:"apartment" },
+  { id:"venue", type:"venue", icon:"📍", sign:"Wedding Details", title:"You're Invited!", photo:"venue.jpg", building:"apartment" },
+  { id:"reception", type:"agenda", icon:"🔥", sign:"Schedule", title:"Order of the Day", building:"club" },
+  { id:"gift", type:"gift", icon:"📚", sign:"Book Gift", title:"Gift Us a Book", building:"shop" },
+  { id:"guestbook", type:"guestbook", icon:"📝", sign:"Guest Wishes", title:"Write a Wish", building:"shop" },
+  { id:"rsvp", type:"rsvp", icon:"🎟️", sign:"RSVP", title:"Will You Join Us?", building:"apartment" },
 ];
 
 /* ---------- 4. WORLD ---------- */
