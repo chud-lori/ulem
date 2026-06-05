@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+<title>Editorial Wedding Invitation</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600;700&family=Inter:wght@400;500;700;800&display=swap" rel="stylesheet" />
+<style>
+  :root{--bg:#eee7dc;--ink:#111516;--muted:#6d6760;--accent:#9f6a4d;--green:#365b56;--paper:#fbf7ef;--line:#d3c7b9}
+  *{box-sizing:border-box;margin:0;padding:0}
+  html{scroll-behavior:smooth}
+  body{font-family:Inter,system-ui,sans-serif;background:var(--bg) url("assets/editorial-paper.svg") center/cover fixed;color:var(--ink);line-height:1.65}
+  button,input,select,textarea{font:inherit}
+  .wrap{width:min(1120px,calc(100% - 28px));margin:auto}
+  .hero{min-height:100svh;display:grid;grid-template-columns:1fr 1fr;align-items:end;gap:28px;padding:48px 0 32px}
+  .eyebrow{font-size:12px;text-transform:uppercase;letter-spacing:3px;font-weight:800;color:var(--accent)}
+  h1,h2{font-family:"Cormorant Garamond",serif;line-height:.96;font-weight:700}
+  h1{font-size:clamp(62px,13vw,150px);letter-spacing:-1px}
+  h2{font-size:clamp(38px,8vw,82px)}
+  .amp{color:var(--accent);font-style:italic}.date{font-size:clamp(15px,3vw,20px);color:var(--muted);margin-top:16px}
+  .cover-card{background:#111516;color:#fbf7ef;border-radius:10px;padding:22px;box-shadow:0 28px 80px #0005}
+  .photo-slot{aspect-ratio:4/5;border:1px dashed #cbbfaf;display:grid;place-items:center;text-align:center;padding:22px;color:#cbbfaf;background:#1a2021}
+  .photo-slot strong{display:block;font-family:"Cormorant Garamond";font-size:38px;color:#fff}
+  .dock{position:sticky;top:0;z-index:10;background:rgba(238,231,220,.92);backdrop-filter:blur(10px);border-block:1px solid var(--line)}
+  .dock .wrap{display:flex;gap:8px;overflow:auto;padding:10px 14px}.dock a{white-space:nowrap;text-decoration:none;color:var(--ink);border:1px solid var(--line);border-radius:999px;padding:9px 13px;font-size:13px;font-weight:800}.dock a:last-child{background:var(--accent);color:#fff;border-color:var(--accent)}
+  section{padding:76px 0}.panel{background:rgba(251,247,239,.9);border:1px solid var(--line);border-radius:10px;padding:24px;box-shadow:0 18px 50px #0001}
+  .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:16px}.card{background:#fffaf2;border:1px solid var(--line);border-radius:8px;padding:18px}
+  .story-card img{width:100%;aspect-ratio:4/3;object-fit:cover;background:#eee7dc;border-radius:6px;margin-bottom:12px}
+  .detail{display:flex;gap:14px;margin:10px 0}.k{min-width:84px;color:var(--accent);font-size:12px;text-transform:uppercase;font-weight:800;letter-spacing:1px}
+  .actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:16px}.btn{border:0;background:var(--ink);color:#fff;padding:13px 16px;border-radius:4px;font-weight:800;cursor:pointer}.btn.alt{background:#fff;color:var(--ink);border:1px solid var(--line)}
+  label{display:block;margin:12px 0 5px;color:var(--muted);font-size:12px;text-transform:uppercase;font-weight:800}input,select,textarea{width:100%;border:1px solid var(--line);background:#fff;padding:12px;color:var(--ink);border-radius:4px}
+  .wish{border-left:4px solid var(--green);background:#fff;padding:10px 12px;margin:8px 0}.wish b{display:block;color:var(--green)}
+  .floating{position:fixed;right:16px;bottom:16px;z-index:12;display:flex;gap:8px}.floating button{border:0;border-radius:999px;background:var(--accent);color:#fff;padding:12px 14px;font-weight:800;box-shadow:0 12px 24px #0002}
+  @media(max-width:800px){.hero{grid-template-columns:1fr;align-items:center;padding-top:28px}.cover-card{order:-1}.photo-slot{max-height:54vh}section{padding:54px 0}.floating{left:14px;right:14px}.floating button{flex:1}}
+</style>
+</head>
+<body>
+<section class="hero wrap">
+  <div>
+    <div class="eyebrow">The wedding of</div>
+    <h1 id="names">&nbsp;</h1>
+    <p class="date" id="date"></p>
+    <div class="actions"><button class="btn" onclick="document.getElementById('rsvp').scrollIntoView({behavior:'smooth'})">RSVP</button><button class="btn alt" onclick="document.getElementById('details').scrollIntoView({behavior:'smooth'})">Details</button></div>
+  </div>
+  <div class="cover-card"><div class="photo-slot"><div><span class="eyebrow">Real photo slot</span><strong>Your Portrait Here</strong><p>Use your own couple image, not generated people.</p></div></div></div>
+</section>
+<nav class="dock"><div class="wrap" id="nav"></div></nav>
+<main>
+  <section id="story" class="wrap"><div class="eyebrow">Story</div><h2>How The Chapter Opens</h2><div class="grid" id="storyGrid"></div></section>
+  <section id="details" class="wrap"><div class="eyebrow">Details</div><h2>The Day</h2><div class="panel" id="detailsBox"></div></section>
+  <section id="guide" class="wrap"><div class="eyebrow">Guest Guide</div><h2>Before You Come</h2><div class="grid" id="guideGrid"></div></section>
+  <section id="gift" class="wrap"><div class="eyebrow">In Lieu Of Gifts</div><h2>Book Gift</h2><div class="panel" id="giftBox"></div></section>
+  <section id="wishes" class="wrap"><div class="eyebrow">Guestbook</div><h2>Wishes</h2><div class="panel" id="wishesBox"></div></section>
+  <section id="rsvp" class="wrap"><div class="eyebrow">Reply</div><h2>RSVP</h2><div class="panel" id="rsvpBox"></div></section>
+</main>
+<div class="floating"><button onclick="document.getElementById('rsvp').scrollIntoView({behavior:'smooth'})">RSVP</button><button onclick="open('https://maps.google.com/?q='+encodeURIComponent(W.mapsQuery),'_blank')">Map</button></div>
+<script src="../data.js"></script><script src="template-data.js"></script><script src="../opener.js"></script><script src="../config.local.js" onerror=""></script><script type="module" src="../firebase.js"></script><script src="../music.js" defer></script>
+<script>
+const W=window.WEDDING,T=window.TEMPLATE||{},GUEST=(new URLSearchParams(location.search).get("to")||"").trim().slice(0,40)||null;
+const esc=s=>String(s==null?"":s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+const PHOTO_FALLBACK="data:image/svg+xml;charset=UTF-8,%3Csvg%20xmlns%3D%27http%3A//www.w3.org/2000/svg%27%20viewBox%3D%270%200%20800%20600%27%3E%3Crect%20width%3D%27800%27%20height%3D%27600%27%20fill%3D%27%23eee7dc%27/%3E%3Ctext%20x%3D%27400%27%20y%3D%27300%27%20text-anchor%3D%27middle%27%20font-family%3D%27serif%27%20font-size%3D%2738%27%20fill%3D%27%239f6a4d%27%3EPhoto%20placeholder%3C/text%3E%3C/svg%3E";
+function photoFallback(img){img.onerror=null;img.src=PHOTO_FALLBACK;}
+names.innerHTML=`${W.bride}<span class="amp"> &amp; </span>${W.groom}`;date.textContent=W.dateLabel;
+nav.innerHTML=(T.nav||[]).map(([label,id])=>`<a href="#${id}">${label}</a>`).join("");
+storyGrid.innerHTML=W.story.map(s=>`<article class="card story-card"><img src="../photos/${s.photo}" onerror="photoFallback(this)"><div class="eyebrow">${s.icon} ${s.label}</div><h2 style="font-size:34px">${s.title}</h2>${s.html}</article>`).join("");
+detailsBox.innerHTML=`<div class="grid"><div><div class="detail"><span class="k">When</span><span>${W.dateLabel}<br>${W.ceremonyTime}</span></div></div><div><div class="detail"><span class="k">Where</span><span>${W.venueName}<br>${W.venueAddress}</span></div></div><div><div class="detail"><span class="k">Dress</span><span>${W.dress}</span></div></div></div><div class="actions"><button class="btn" onclick="open('https://maps.google.com/?q='+encodeURIComponent(W.mapsQuery),'_blank')">Open Map</button><button class="btn alt" onclick="addToCalendar()">Add Calendar</button></div>`;
+guideGrid.innerHTML=(T.guide||[]).map(([h,b])=>`<article class="card"><div class="eyebrow">${h}</div><p>${b}</p></article>`).join("");
+function giftWaUrl(g){const phone=String((g&&g.whatsapp)||"").replace(/\D/g,""),text=encodeURIComponent((g&&g.whatsappText)||"Hi, I'd like to send a book as a wedding gift. Could you share the shipping address?");return phone?`https://wa.me/${phone}?text=${text}`:`https://wa.me/?text=${text}`;}
+giftBox.innerHTML=`<p>${W.gift.note}</p><div class="actions"><button class="btn" onclick="open(giftWaUrl(W.gift),'_blank')">Ask Shipping Address</button></div><p style="color:var(--muted);margin-top:10px">We only share the address through WhatsApp so it stays private.</p>`;
+wishesBox.innerHTML=`<form id="wishForm"><label>Your name</label><input name="name" required><label>Your wish</label><textarea name="msg" rows="3" required></textarea><div class="actions"><button class="btn">Send Wish</button></div></form><div id="wishList"><p id="wishNote">Loading wishes...</p></div>`;
+rsvpBox.innerHTML=`<form id="rsvpForm"><label>Your name</label><input name="name" required><label>Will you attend?</label><select name="attending"><option>Joyfully accepts</option><option>Sadly declines</option></select><label>Guests</label><input name="guests" type="number" min="1" value="1"><label>Note</label><textarea name="note" rows="3"></textarea><div class="actions"><button class="btn">Send RSVP</button></div></form>`;
+function withWB(fn){const WB=window.WB;if(WB)fn(WB);else addEventListener("wb-ready",()=>fn(window.WB),{once:true});}
+withWB(WB=>{if(WB.ready)WB.watchWishes(items=>wishList.innerHTML=items.length?items.map(w=>`<div class="wish"><b>${esc(w.name)}</b>${esc(w.msg)}</div>`).join(""):`<p>Be the first to leave a wish.</p>`);else wishNote.textContent="Live wishes need Firebase.";});
+document.addEventListener("submit",e=>{if(e.target.id==="wishForm"){e.preventDefault();const d=new FormData(e.target),WB=window.WB;if(WB&&WB.ready){WB.addWish(d.get("name"),d.get("msg"));e.target.reset();}} if(e.target.id==="rsvpForm"){e.preventDefault();const d=new FormData(e.target),data={name:d.get("name"),attending:d.get("attending"),guests:d.get("guests"),note:d.get("note"),to:GUEST||""},WB=window.WB;if(WB&&WB.ready)WB.addRSVP(data);e.target.outerHTML=`<p style="font-size:20px;color:var(--accent)">Thank you, ${esc(data.name)||"friend"}. Your RSVP is in.</p>`;}});
+window.addToCalendar=function(){const d=new Date(W.date),pad=n=>String(n).padStart(2,"0"),fmt=t=>t.getUTCFullYear()+pad(t.getUTCMonth()+1)+pad(t.getUTCDate())+"T"+pad(t.getUTCHours())+pad(t.getUTCMinutes())+"00Z",end=new Date(d.getTime()+5*3600e3),ics=["BEGIN:VCALENDAR","VERSION:2.0","BEGIN:VEVENT",`SUMMARY:${W.bride} & ${W.groom} Wedding`,`DTSTART:${fmt(d)}`,`DTEND:${fmt(end)}`,`LOCATION:${W.venueName}, ${W.venueAddress}`,"END:VEVENT","END:VCALENDAR"].join("\n"),url=URL.createObjectURL(new Blob([ics],{type:"text/calendar"})),a=document.createElement("a");a.href=url;a.download="wedding.ics";a.click();URL.revokeObjectURL(url)}
+</script>
+</body>
+</html>
