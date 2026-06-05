@@ -7,11 +7,11 @@
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@500;700&family=Playfair+Display:ital,wght@0,500;0,700;1,500&display=swap" rel="stylesheet" />
 <style>
-  :root{ --ink:#5a4334; --rose:#e8889c; --rose-dk:#c75d75; --gold:#cda33e; --paper:#fbf3e6; --tape:#f7d9a733; }
+  :root{ --ink:#3f3a35; --rose:#d27a45; --rose-dk:#8f4c2f; --gold:#4f7f8f; --paper:#f6ecd8; --tape:#9fb7c733; }
   *{box-sizing:border-box;margin:0;padding:0;}
   html,body{height:100%;}
   body{font-family:"Playfair Display",Georgia,serif;color:var(--ink);overflow:hidden;
-    background:#e9d9c3 radial-gradient(circle at 30% 20%,#fdf6ea,#e7d4ba);
+    background:#d8cbb9 radial-gradient(circle at 30% 20%,#f7efe0,#c7d5d8);
     -webkit-tap-highlight-color:transparent;}
   .hand{font-family:"Caveat",cursive;}
 
@@ -51,7 +51,7 @@
   .sub{font-family:"Caveat",cursive;font-size:clamp(18px,5vw,24px);color:var(--ink);}
   p{font-size:clamp(13px,3.4vw,16px);line-height:1.8;margin:8px 0;}
   .hand.big{font-size:clamp(20px,5.5vw,26px);line-height:1.5;}
-  .ph{color:var(--rose-dk);background:#fbe3ea;padding:0 4px;border-radius:3px;}
+  .ph{color:var(--rose-dk);background:#f4dccd;padding:0 4px;border-radius:3px;}
   .greet{font-family:"Caveat",cursive;font-size:clamp(18px,5vw,23px);color:var(--rose-dk);
     background:#fff8;border:1.5px dashed var(--rose);border-radius:30px;padding:6px 18px;display:none;
     max-width:88%;white-space:normal;overflow-wrap:anywhere;text-align:center;line-height:1.3;}
@@ -180,12 +180,9 @@ function build(p, i){
   if(p.type==="agenda") return `<div class="card"><h2>🎉 Order of the Day</h2>
       ${W.agenda.map(a=>`<div class="detail"><span class="k">${a.time}</span><span>${a.label}</span></div>`).join("")}</div>`;
   if(p.type==="gift"){ const g=W.gift;
-    const items=g.wishlist.map((b,k)=>`<div class="bookrow"><span>📖 <b>${b.title}</b>${b.author?` — <i>${b.author}</i>`:""}</span>
-      <span id="bk${k}">${b.link?`<a href="${b.link}" target="_blank">view</a> · `:""}<button class="claim" data-i="${k}">I'll send this</button></span></div>`).join("");
     return `<div class="card"><h2>📚 Gift a Book</h2><p class="hand big">${g.note}</p>
-      <div class="books">${items}</div>
-      <div class="detail"><span class="k">Send to</span><span>${g.sendTo}</span></div>
-      <p class="note" id="giftNote"></p></div>`; }
+      <div class="acts"><button class="btn" id="askAddressBtn">💬 Ask shipping address</button></div>
+      <p class="note" id="giftNote">We only share the address through WhatsApp so it stays private.</p></div>`; }
   if(p.type==="wishes") return `<div class="card"><h2>💬 Leave a Wish</h2>
       <form id="wishForm"><label>Your name</label><input name="name" required placeholder="your name"/>
         <label>Your wish / prayer</label><textarea name="msg" rows="2" required placeholder="something sweet…"></textarea>
@@ -269,14 +266,12 @@ function withWB(fn){ const WB=window.WB; if(WB) fn(WB); else addEventListener("w
     else if(W.rsvpEmail) location.href=`mailto:${W.rsvpEmail}?subject=Wedding RSVP - ${encodeURIComponent(data.name)}&body=`+
       encodeURIComponent(`Name: ${data.name}\nAttending: ${data.attending}\nGuests: ${data.guests}\nNote: ${data.note}`);
     f.style.display="none"; note.innerHTML=`<span style="font-size:20px;color:var(--rose-dk)">Thank you, ${esc(data.name)||"friend"}! 💕<br/>Your RSVP is in.</span>`; }); })();
-// book claims
-(function(){ const note=document.getElementById("giftNote"); if(!note) return;
-  const setTaken=(i,by)=>{ const el=document.getElementById("bk"+i); if(el) el.innerHTML=`<span class="taken">✓ sent by ${esc(by)}</span>`; };
-  withWB(WB=>{ if(WB.ready){ WB.watchClaims(m=>Object.keys(m).forEach(i=>setTaken(i,(m[i]&&m[i].by)||"a guest")));
-      document.querySelectorAll(".claim").forEach(b=>b.onclick=()=>{ const i=b.dataset.i, by=GUEST||(prompt("Your name?")||"a guest");
-        WB.claimBook(i,by).then(()=>setTaken(i,by)).catch(()=>alert("Someone may have just claimed it — refresh.")); }); }
-    else { note.textContent="(Live claims need Firebase — guests can still pick one and tell you.)";
-      document.querySelectorAll(".claim").forEach(b=>b.onclick=()=>setTaken(b.dataset.i,GUEST||"you")); } }); })();
+function giftWaUrl(g){
+  const phone=String((g&&g.whatsapp)||"").replace(/\D/g,"");
+  const text=encodeURIComponent((g&&g.whatsappText)||"Hi, I'd like to send a book as a wedding gift. Could you share the shipping address?");
+  return phone ? `https://wa.me/${phone}?text=${text}` : `https://wa.me/?text=${text}`;
+}
+(function(){ const btn=document.getElementById("askAddressBtn"); if(btn) btn.onclick=()=>window.open(giftWaUrl(W.gift),"_blank"); })();
 
 /* ---- deep link ?open=cover|profiles|venue|gift|wishes|rsvp|<story id> & start ---- */
 (function(){ const open=new URLSearchParams(location.search).get("open"); let idx=0;

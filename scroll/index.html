@@ -7,7 +7,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;1,500&family=Jost:wght@300;400;500&display=swap" rel="stylesheet" />
 <style>
-  :root{ --ink:#3a3330; --rose:#d98a9e; --rose-dk:#b95f77; --gold:#c9a24b; --cream:#faf4ec; --deep:#2a2320; }
+  :root{ --ink:#27332f; --rose:#2f7d68; --rose-dk:#195446; --gold:#c28b37; --cream:#f1ead8; --deep:#17231f; }
   *{box-sizing:border-box;margin:0;padding:0;}
   html{scroll-behavior:smooth;}
   body{font-family:"Jost",system-ui,sans-serif;color:var(--ink);background:var(--cream);
@@ -48,10 +48,10 @@
   .stagger.seen>*:nth-child(5){transition-delay:.45s}.stagger.seen>*:nth-child(6){transition-delay:.55s}
 
   /* HERO with parallax layers */
-  #hero{background:linear-gradient(180deg,#f7dfe6,#faf1e6 70%);min-height:100vh;}
+  #hero{background:linear-gradient(180deg,#d8e6d9,#f1ead8 70%);min-height:100vh;}
   .pllx{position:absolute;left:0;right:0;will-change:transform;}
   #heroBlob{top:-10%;height:70%;filter:blur(40px);opacity:.5;
-    background:radial-gradient(closest-side,#f3b9c8,transparent 70%);}
+    background:radial-gradient(closest-side,#9dc8b1,transparent 70%);}
   #heroCouple{width:min(46vw,210px);filter:drop-shadow(0 14px 22px rgba(120,70,80,.28));z-index:2;
     position:relative;margin:0 auto 6px;display:block;}
   .hero-greet{display:none;font-size:13px;letter-spacing:2px;color:var(--rose-dk);border:1px solid var(--rose);
@@ -118,7 +118,7 @@
   .wishcard{background:#fdfaf6;border:1px solid #ecdfd4;border-left:4px solid var(--rose);border-radius:10px;padding:11px 14px;}
   .wishcard b{color:var(--rose-dk);display:block;font-size:16px;}
   .note{font-size:12px;color:#b6a89d;}
-  #closing{background:linear-gradient(180deg,#faf1e6,#f7dfe6);}
+  #closing{background:linear-gradient(180deg,#f1ead8,#d8e6d9);}
   #closing img{width:min(58vw,260px);filter:drop-shadow(0 12px 18px rgba(120,70,80,.28));}
 </style>
 </head>
@@ -261,11 +261,10 @@ document.getElementById("agenda").innerHTML=W.agenda.map(a=>`<div class="item"><
 
 // gift
 (function(){ const g=W.gift;
-  const items=g.wishlist.map((b,k)=>`<div class="bookrow"><span>📖 <b>${b.title}</b>${b.author?` — <i>${b.author}</i>`:""}</span>
-    <span id="bk${k}">${b.link?`<a href="${b.link}" target="_blank">view</a> · `:""}<button class="claim" data-i="${k}">I'll send this</button></span></div>`).join("");
-  document.getElementById("gift").innerHTML=`<p style="margin-top:0">${g.note}</p><div class="books">${items}</div>
-    <div class="detail" style="margin-top:14px"><span class="k">Send to</span><span>${g.sendTo}</span></div>
-    <p class="note" id="giftNote"></p>`; })();
+  document.getElementById("gift").innerHTML=`<p style="margin-top:0">${g.note}</p>
+    <div class="acts" style="justify-content:flex-start"><button class="btn" id="askAddressBtn">💬 Ask shipping address</button></div>
+    <p class="note" id="giftNote">We only share the address through WhatsApp so it stays private.</p>`;
+  document.getElementById("askAddressBtn").onclick=()=>window.open(giftWaUrl(g),"_blank"); })();
 
 // wishes
 document.getElementById("wishes").innerHTML=`
@@ -355,13 +354,11 @@ function withWB(fn){ const WB=window.WB; if(WB) fn(WB); else addEventListener("w
     else if(W.rsvpEmail) location.href=`mailto:${W.rsvpEmail}?subject=Wedding RSVP - ${encodeURIComponent(data.name)}&body=`+
       encodeURIComponent(`Name: ${data.name}\nAttending: ${data.attending}\nGuests: ${data.guests}\nNote: ${data.note}`);
     f.outerHTML=`<p style="text-align:center;font-size:20px;color:var(--rose-dk)">Thank you, ${esc(data.name)||"friend"}! ♥<br/><span class="note">Your RSVP is in.</span></p>`; }); })();
-(function(){ const note=document.getElementById("giftNote");
-  const setTaken=(i,by)=>{ const el=document.getElementById("bk"+i); if(el) el.innerHTML=`<span class="taken">✓ sent by ${esc(by)}</span>`; };
-  withWB(WB=>{ if(WB.ready){ WB.watchClaims(m=>Object.keys(m).forEach(i=>setTaken(i,(m[i]&&m[i].by)||"a guest")));
-      document.querySelectorAll(".claim").forEach(b=>b.onclick=()=>{ const i=b.dataset.i,by=GUEST||(prompt("Your name?")||"a guest");
-        WB.claimBook(i,by).then(()=>setTaken(i,by)).catch(()=>alert("Someone may have just claimed it — refresh.")); }); }
-    else { note.textContent="(Live claims need Firebase — guests can still pick one and tell you.)";
-      document.querySelectorAll(".claim").forEach(b=>b.onclick=()=>setTaken(b.dataset.i,GUEST||"you")); } }); })();
+function giftWaUrl(g){
+  const phone=String((g&&g.whatsapp)||"").replace(/\D/g,"");
+  const text=encodeURIComponent((g&&g.whatsappText)||"Hi, I'd like to send a book as a wedding gift. Could you share the shipping address?");
+  return phone ? `https://wa.me/${phone}?text=${text}` : `https://wa.me/?text=${text}`;
+}
 </script>
 </body>
 </html>

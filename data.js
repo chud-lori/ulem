@@ -30,51 +30,47 @@ window.WEDDING = {
   venueName: "Solo",
   venueAddress: "Solo, Indonesia",
   mapsQuery: "[Venue Name, City]", // Google Maps search
-  dress: "[Garden formal · pastels welcome]",
+  dress: "[Outdoor smart casual · earth tones welcome]",
 
   /* --- love-story beats (add/remove freely) --- */
   story: [
     {
       id: "cafe",
-      icon: "☕",
-      label: "How We Met",
-      title: "Where It All Began",
+      icon: "🥾",
+      label: "Trailhead",
+      title: "Where Our Path Began",
       photo: "cafe.jpg",
-      html: `<p>It started at <span class="ph">[the little café on (street)]</span>, over
-            <span class="ph">[two coffees and a shared umbrella]</span>.</p>
-            <p>Neither of us knew an ordinary <span class="ph">[Tuesday]</span> would
-            become the rest of our lives. 💛</p>`,
+      html: `<p>It started with a simple hello, a shared curiosity, and the kind of conversation
+            that made the road feel shorter.</p>
+            <p>Since then, our favorite stories have been written between trail dust, long rides,
+            quiet views, and pages from books we love.</p>`,
     },
     {
       id: "proposal",
-      icon: "💍",
-      label: "The Proposal",
-      title: "The Big Question",
+      icon: "🏔️",
+      label: "Lookout",
+      title: "The View We Chose",
       photo: "proposal.jpg",
-      html: `<p>On <span class="ph">[the date]</span>, under <span class="ph">[the old oak in the park]</span>,
-            one of us got down on one knee…</p><p>and the other said <b>YES!</b> ✨</p>`,
+      html: `<p>Somewhere between planning the next trip and dreaming about the next book,
+            we realized the best journey would be the one we take together.</p>
+            <p>So here we are, ready for the next chapter.</p>`,
     },
   ],
 
   /* --- order of the day --- */
   agenda: [
     { time: "[3:30]", label: "Guests arrive" },
-    { time: "[4:00]", label: "Ceremony 💐" },
-    { time: "[5:00]", label: "Cocktails &amp; photos 📸" },
-    { time: "[6:30]", label: "Dinner &amp; speeches 🥂" },
-    { time: "[8:00]", label: "Dancing till late 🕺" },
+    { time: "[4:00]", label: "Wedding ceremony" },
+    { time: "[5:00]", label: "Photos &amp; warm greetings" },
+    { time: "[6:30]", label: "Dinner &amp; stories" },
+    { time: "[8:00]", label: "Music, laughter, and the next chapter" },
   ],
 
-  /* --- GIFT = BOOKS ONLY (no money). Guests claim a book to send you. --- */
+  /* --- GIFT = BOOKS ONLY (no money / no bank transfer). --- */
   gift: {
-    note: "No money, no flowers — we're building our home library! 📚<br/>If you'd like to bless us, send us a <b>book you love</b>. Pick one below so we don't get duplicates.",
-    sendTo: "[Your Name] · [Full shipping address] · [City, ZIP] · [Phone]",
-    wishlist: [
-      { title: "[Book title 1]", author: "[Author]", link: "" },
-      { title: "[Book title 2]", author: "[Author]", link: "" },
-      { title: "[Book title 3]", author: "[Author]", link: "" },
-      { title: "Surprise us!", author: "any book you love", link: "" },
-    ],
+    note: "Your presence and prayers are more than enough for us.<br/>We don't accept cash gifts or transfers. If you'd still like to send something, we would be grateful for a <b>book you love</b> for our little home library.",
+    whatsapp: "6280000000000", // use international format, e.g. 6281234567890
+    whatsappText: "Hi Lori & Kamelia, I'd like to send a book as a wedding gift. Could you share the shipping address?",
   },
 
   /* --- RSVP e-mail fallback if you DON'T use Firebase ("" = none) --- */

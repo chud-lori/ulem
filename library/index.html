@@ -250,13 +250,12 @@ function build(p,i){
   if(p.type==="agenda") return sheet(`<div class="chapno">Programme</div><h2>The Itinerary</h2>
     ${W.agenda.map(a=>`<div class="detail"><span class="k">${a.time}</span><span>${a.label}</span></div>`).join("")}`);
   if(p.type==="gift"){ const g=W.gift;
-    const cards=g.wishlist.map((b,k)=>`<div class="catcard"><div class="call">REG · ${String(k+1).padStart(3,"0")}</div>
-      <div class="ttl">${b.title}</div>${b.author?`<div class="au">${b.author}</div>`:""}
-      <div class="co" id="co${k}"><button class="checkout" data-i="${k}">✓ Check out &amp; send</button></div></div>`).join("");
     return sheet(`<div class="chapno">In lieu of gifts</div><h2>Our Card Catalog</h2>
-      <p>${g.note}</p><div class="catalog">${cards}</div>
-      <div class="detail"><span class="k">Return to</span><span>${g.sendTo}</span></div>
-      <p class="note" id="giftNote"></p>`); }
+      <p>${g.note}</p>
+      <div class="card-lib"><div class="hd">Book-only gift note</div>
+        <p>Please ask us for the shipping address before sending a book.</p>
+        <div class="acts"><button class="btn" id="askAddressBtn">💬 Ask shipping address</button></div></div>
+      <p class="note" id="giftNote">We only share the address through WhatsApp so it stays private.</p>`); }
   if(p.type==="wishes") return sheet(`<div class="chapno">Marginalia</div><h2>Sign the Card</h2>
     <div class="card-lib"><div class="hd">Guest Book · leave your mark</div>
       <form id="wishForm"><label>Name</label><input name="name" required/>
@@ -342,13 +341,12 @@ function withWB(fn){ const WB=window.WB; if(WB) fn(WB); else addEventListener("w
       encodeURIComponent(`Name: ${data.name}\nAttending: ${data.attending}\nGuests: ${data.guests}\nNote: ${data.note}`);
     f.parentElement.innerHTML=`<div class="hd">Library Card</div><p style="text-align:center;margin-top:10px">
       <span class="stamp">CHECKED IN ✓</span></p><p style="text-align:center">Thank you, <b>${esc(data.name)||"friend"}</b>! Your card is stamped.</p>`; }); })();
-(function(){ const note=document.getElementById("giftNote"); if(!note) return;
-  const setOut=(i,by)=>{ const el=document.getElementById("co"+i); if(el) el.innerHTML=`<span class="stamp">CHECKED OUT</span> <span class="note">by ${esc(by)}</span>`; };
-  withWB(WB=>{ if(WB.ready){ WB.watchClaims(m=>Object.keys(m).forEach(i=>setOut(i,(m[i]&&m[i].by)||"a guest")));
-      document.querySelectorAll(".checkout").forEach(b=>b.onclick=()=>{ const i=b.dataset.i,by=GUEST||(prompt("Your name?")||"a guest");
-        WB.claimBook(i,by).then(()=>setOut(i,by)).catch(()=>alert("Already checked out — refresh.")); }); }
-    else { note.textContent="(Live checkouts need Firebase — guests can still pick one and tell you.)";
-      document.querySelectorAll(".checkout").forEach(b=>b.onclick=()=>setOut(b.dataset.i,GUEST||"you")); } }); })();
+function giftWaUrl(g){
+  const phone=String((g&&g.whatsapp)||"").replace(/\D/g,"");
+  const text=encodeURIComponent((g&&g.whatsappText)||"Hi, I'd like to send a book as a wedding gift. Could you share the shipping address?");
+  return phone ? `https://wa.me/${phone}?text=${text}` : `https://wa.me/?text=${text}`;
+}
+(function(){ const btn=document.getElementById("askAddressBtn"); if(btn) btn.onclick=()=>window.open(giftWaUrl(W.gift),"_blank"); })();
 
 /* deep link + start */
 (function(){ const open=new URLSearchParams(location.search).get("open"); let idx=0;

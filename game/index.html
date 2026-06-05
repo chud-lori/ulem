@@ -8,7 +8,7 @@
 <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet" />
 <style>
   :root{
-    --ink:#3a2b26; --rose:#e8889c; --rose-dk:#c75d75; --gold:#e3b04b; --panel:#fffaf2;
+    --ink:#2f3328; --rose:#5d8f55; --rose-dk:#2f5f3a; --gold:#d6a84a; --panel:#fff8e9;
   }
   *{box-sizing:border-box;margin:0;padding:0;}
   html,body{height:100%;overflow:hidden;background:#f4cbbf;}
@@ -19,7 +19,7 @@
   /* loading + title */
   #titleScreen{position:fixed;inset:0;z-index:40;display:flex;flex-direction:column;align-items:center;
     justify-content:center;text-align:center;gap:24px;padding:24px;
-    background:linear-gradient(180deg,#f3c8d2 0%,#f7ddc9 55%,#e9f1d0 100%);
+    background:linear-gradient(180deg,#d8e8c6 0%,#f4dfb9 58%,#b7d3a1 100%);
     clip-path:circle(150% at 50% 56%);transition:clip-path .75s ease-in, opacity .75s ease-in;}
   /* arcade "iris-in": the title closes to a shrinking circle, revealing the town */
   #titleScreen.iris{clip-path:circle(0% at 50% 56%);opacity:0;}
@@ -50,6 +50,8 @@
   #progress{position:absolute;top:14px;left:50%;transform:translateX(-50%);background:rgba(255,250,242,.9);
     border:2px solid var(--ink);border-radius:20px;padding:7px 12px;font-size:9px;white-space:nowrap;}
   #progress .dot{color:#d8cabd;} #progress .dot.on{color:var(--rose);}
+  #routeTag{position:absolute;top:48px;left:50%;transform:translateX(-50%);background:rgba(58,43,38,.78);
+    color:#fffaf2;border-radius:16px;padding:6px 10px;font-size:7px;white-space:nowrap;}
   #musicBtn{position:absolute;top:12px;right:12px;pointer-events:auto;width:46px;height:46px;border-radius:50%;
     border:3px solid var(--ink);background:var(--panel);cursor:pointer;font-size:16px;box-shadow:0 3px 0 rgba(0,0,0,.18);}
   .pad{position:absolute;bottom:24px;width:74px;height:74px;pointer-events:auto;border-radius:14px;
@@ -114,7 +116,7 @@
   .taken{font-size:8px;color:#2c7a3f;}
   /* wishes wall */
   .wishes{margin-top:8px;display:flex;flex-direction:column;gap:8px;max-height:230px;overflow:auto;}
-  .wish{background:#fff6f8;border:2px solid #f3c8d2;border-radius:8px;padding:9px 11px;font-size:9px;line-height:1.7;}
+  .wish{background:#f7f0dc;border:2px solid #d6c690;border-radius:8px;padding:9px 11px;font-size:9px;line-height:1.7;}
   .wish b{color:var(--rose-dk);display:block;margin-bottom:2px;}
   #venueCd{margin-top:10px;font-size:9px;color:var(--rose-dk);text-align:center;}
 </style>
@@ -124,6 +126,7 @@
 
 <div id="hud">
   <div id="progress"></div>
+  <div id="routeTag">HIKING · TOURING · BOOKS</div>
   <button id="musicBtn" title="Music">🔇</button>
   <div id="hint"></div>
   <div class="pad" id="padLeft">◀</div>
@@ -135,10 +138,10 @@
   <p id="guestGreet"></p>
   <img id="coupleHero" alt="" />
   <h1 id="coupleNames">&nbsp;</h1>
-  <p>are getting married!<br/><br/>Take a stroll through our little town<br/>and discover our story &amp; the details.</p>
+  <p>are getting married!<br/><br/>Walk our little route of trails, rides, books,<br/>and wedding details.</p>
   <div id="countdown" aria-label="countdown"></div>
   <button class="btn" id="startBtn" disabled><span class="heartbeat">💍</span>&nbsp; <span id="startLabel">Loading…</span></button>
-  <p style="opacity:.7;font-size:8px;">Arrow keys / A&nbsp;D to walk &nbsp;·&nbsp; Space to visit<br/>(on phone, use the buttons below)</p>
+  <p style="opacity:.7;font-size:8px;">Arrow keys / A&nbsp;D to walk &nbsp;·&nbsp; Space to open a stop<br/>(on phone, use the buttons below)</p>
   <p style="opacity:.45;font-size:7px;line-height:1.8;">Art: 2D Pixel City Pack (CC-BY 4.0) · LPC characters (CC-BY-SA)</p>
 </div>
 
@@ -208,16 +211,16 @@ addEventListener("resize",resize); resize();
    the game cares about buildings/icons — other themes render WEDDING differently. */
 const WEDDING = window.WEDDING;
 const RSVP_EMAIL = WEDDING.rsvpEmail || "";
-const STORY_BLD = ["shop","park","club","shop","apartment"]; // building per story beat (cycles)
+const STORY_BLD = ["park","shop","park","club","apartment"]; // scene per story beat (cycles)
 const SPOTS = [
-  { id:"profiles", type:"profiles", icon:"💑", sign:"Meet Us", title:"Meet the Couple", building:"apartment" },
+  { id:"profiles", type:"profiles", icon:"🎒", sign:"Trailhead", title:"Meet the Couple", building:"apartment" },
   ...WEDDING.story.map((s,i)=>({ id:s.id, type:"story", icon:s.icon, sign:s.label, title:s.title,
       photo:s.photo, html:s.html, building:STORY_BLD[i%STORY_BLD.length] })),
-  { id:"venue", type:"venue", icon:"🕌", sign:"The Wedding", title:"You're Invited!", photo:"venue.jpg", building:"apartment" },
-  { id:"reception", type:"agenda", icon:"🎉", sign:"The Party", title:"Order of the Day", building:"club" },
-  { id:"gift", type:"gift", icon:"📚", sign:"Gift a Book", title:"Gift Us a Book", building:"shop" },
-  { id:"guestbook", type:"guestbook", icon:"💬", sign:"Wishes", title:"Leave Us a Wish", building:"shop" },
-  { id:"rsvp", type:"rsvp", icon:"💌", sign:"RSVP", title:"Will You Join Us?", building:"apartment" },
+  { id:"venue", type:"venue", icon:"📍", sign:"Basecamp", title:"You're Invited!", photo:"venue.jpg", building:"apartment" },
+  { id:"reception", type:"agenda", icon:"🔥", sign:"Campfire", title:"Order of the Day", building:"club" },
+  { id:"gift", type:"gift", icon:"📚", sign:"Book Nook", title:"Gift Us a Book", building:"shop" },
+  { id:"guestbook", type:"guestbook", icon:"📝", sign:"Trail Notes", title:"Write a Trail Note", building:"shop" },
+  { id:"rsvp", type:"rsvp", icon:"🎟️", sign:"Join Trip", title:"Will You Join Us?", building:"apartment" },
 ];
 
 /* ---------- 4. WORLD ---------- */
@@ -509,7 +512,7 @@ function showReveal(){
     : `<div style="font-size:56px;text-align:center;margin:6px 0 12px">💑</div>`;
   modalEl.innerHTML=`<button id="closeBtn" onclick="closeModal()">✕</button>
     <span class="ico">🎊</span><h2>You found everything!</h2>${couple}
-    <p class="ok">Thank you for strolling through our story.<br/>We can't wait to celebrate with you! 💕</p>`;
+    <p class="ok">Thank you for walking our route.<br/>We can't wait to start this next chapter with you! 💕</p>`;
   modalWrap.classList.add("show"); modalOpen=true; modalEl.scrollTop=0;
   for(let i=0;i<32;i++) hearts.push({x:player.x+(Math.random()*200-100),y:GROUND-Math.random()*80,vy:-(0.4+Math.random()*0.8),a:1,s:6+Math.random()*9});
 }
@@ -545,12 +548,9 @@ function spotBody(s){
   if(t==="agenda")
     return WEDDING.agenda.map(a=>`<div class="detail"><span class="k">${a.time}</span><span>${a.label}</span></div>`).join("");
   if(t==="gift"){ const g=WEDDING.gift;
-    const items=g.wishlist.map((b,i)=>`<div class="book">
-      <span class="bk">📖 <b>${b.title}</b>${b.author?` — <i>${b.author}</i>`:""}</span>
-      <span id="bk${i}">${b.link?`<a href="${b.link}" target="_blank">view</a> · `:""}<button class="claim" data-i="${i}">I'll send this</button></span></div>`).join("");
-    return `<p>${g.note}</p><div class="books">${items}</div>
-      <div class="detail" style="margin-top:14px"><span class="k">Send to</span><span>${g.sendTo}</span></div>
-      <p class="wb-note" id="giftNote" style="font-size:8px;opacity:.6"></p>`; }
+    return `<p>${g.note}</p>
+      <div class="actions"><button class="btn mini" id="askAddressBtn">💬 Ask shipping address</button></div>
+      <p class="wb-note" id="giftNote" style="font-size:8px;opacity:.6">We only share the address through WhatsApp so it stays private.</p>`; }
   if(t==="guestbook")
     return `<form id="wishForm">
       <div class="row"><label>Your name</label><input name="name" required placeholder="Type your name"/></div>
@@ -588,17 +588,13 @@ function initGuestbook(){
     else if(note){ note.textContent="(Set up Firebase to share your wish — see firebase.js.)"; } });
 }
 function initGift(){
-  const WB=window.WB, note=document.getElementById("giftNote");
-  const setTaken=(i,by)=>{ const el=document.getElementById("bk"+i); if(el) el.innerHTML=`<span class="taken">✓ sent by ${esc(by)}</span>`; };
-  if(WB&&WB.ready){
-    WB.watchClaims(map=>Object.keys(map).forEach(i=>setTaken(i,(map[i]&&map[i].by)||"a guest")));
-    modalEl.querySelectorAll(".claim").forEach(btn=>btn.onclick=()=>{ const i=btn.getAttribute("data-i"),
-      by=GUEST||(prompt("Your name?")||"a guest");
-      WB.claimBook(i,by).then(()=>setTaken(i,by)).catch(()=>alert("Someone may have just claimed it — refresh to see.")); });
-  } else {
-    if(note) note.textContent="(Live claims need Firebase — guests can still pick one and tell you.)";
-    modalEl.querySelectorAll(".claim").forEach(btn=>btn.onclick=()=>setTaken(btn.getAttribute("data-i"),GUEST||"you"));
-  }
+  const btn=document.getElementById("askAddressBtn"), g=WEDDING.gift||{};
+  if(btn) btn.onclick=()=>window.open(giftWaUrl(g),"_blank");
+}
+function giftWaUrl(g){
+  const phone=String((g&&g.whatsapp)||"").replace(/\D/g,"");
+  const text=encodeURIComponent((g&&g.whatsappText)||"Hi, I'd like to send a book as a wedding gift. Could you share the shipping address?");
+  return phone ? `https://wa.me/${phone}?text=${text}` : `https://wa.me/?text=${text}`;
 }
 function openSpot(s){
   visited.add(s.id); updateProgress();
