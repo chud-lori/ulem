@@ -1,0 +1,18 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 1800">
+  <defs>
+    <linearGradient id="paper" x1="0" x2="0" y1="0" y2="1">
+      <stop offset="0" stop-color="#fff8ea"/>
+      <stop offset=".55" stop-color="#f4e6c8"/>
+      <stop offset="1" stop-color="#e7d3a5"/>
+    </linearGradient>
+    <pattern id="grain" width="56" height="56" patternUnits="userSpaceOnUse">
+      <path d="M9 8h2v2H9zM33 17h2v2h-2zM21 42h2v2h-2zM49 36h2v2h-2z" fill="#9c7a3b" opacity=".18"/>
+      <circle cx="42" cy="9" r="1.4" fill="#23372f" opacity=".12"/>
+    </pattern>
+  </defs>
+  <rect width="1200" height="1800" fill="url(#paper)"/>
+  <rect width="1200" height="1800" fill="url(#grain)"/>
+  <path d="M0 0h1200v260C890 190 735 255 590 205 420 147 270 195 0 126Z" fill="#23372f" opacity=".1"/>
+  <path d="M0 1800h1200v-320c-250 88-420 22-620 88-220 72-365-20-580 65Z" fill="#23372f" opacity=".13"/>
+  <path d="M100 120C210 80 255 165 350 112M850 160c120-65 177 34 270-38M92 1650c105-74 172 35 284-42M807 1620c124-42 174 38 270-32" fill="none" stroke="#c8a45d" stroke-width="5" opacity=".2"/>
+</svg>
