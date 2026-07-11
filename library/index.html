@@ -146,9 +146,9 @@
   .pageno{position:fixed;top:12px;right:14px;font-family:"Special Elite",monospace;color:#e7d2a3;font-size:12px;z-index:10;opacity:.8;}
   #bookmarks{position:fixed;right:0;top:84px;z-index:11;display:flex;flex-direction:column;gap:8px;align-items:flex-end;}
   .bookmark{font-family:"Special Elite",monospace;font-size:10px;letter-spacing:1px;color:#f3e4c0;background:var(--leather);
-    border:1px solid var(--gold);border-right:0;border-radius:14px 0 0 14px;padding:9px 10px 9px 12px;cursor:pointer;
-    box-shadow:0 6px 16px rgba(0,0,0,.32);transform:translateX(6px);transition:transform .18s;}
-  .bookmark:hover,.bookmark.on{transform:translateX(0);background:var(--green);}
+    border:1px solid var(--gold);border-right:0;border-radius:14px 0 0 14px;padding:9px 14px 9px 12px;cursor:pointer;
+    box-shadow:0 6px 16px rgba(0,0,0,.32);transition:transform .18s;}
+  .bookmark:hover,.bookmark.on{transform:translateX(-3px);background:var(--green);}
 
   /* ===== "wow" polish ===== */
   @keyframes foil{to{background-position:-230% center}}
@@ -177,6 +177,13 @@
   .vignette{position:fixed;inset:0;pointer-events:none;z-index:0;
     background:radial-gradient(125% 95% at 50% 38%, rgba(255,206,128,.12), rgba(15,8,4,.62) 100%);
     animation:candle 7s ease-in-out infinite;}
+  /* ---- opener overlay (../opener.js) : keep the gilding readable on the maroon book ----
+     The global foil h2 above paints leather-on-leather inside the dark opener, and the
+     opener kicker inherits the maroon accent — override both with bright gold here. */
+  .wb-opener .wb-copy h2{background:linear-gradient(100deg,#e9c877 0 42%, #fff3d4 50%, #e9c877 58% 100%);
+    background-size:230% auto;-webkit-background-clip:text;background-clip:text;
+    -webkit-text-fill-color:transparent;color:transparent;animation:foil 7s linear infinite;}
+  .wb-opener .wb-copy .k{color:var(--gold);}
 </style>
 </head>
 <body>

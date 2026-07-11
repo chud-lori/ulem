@@ -28,8 +28,7 @@
   h2{font-size:clamp(38px,8vw,82px)}
   .amp{color:var(--accent);font-style:italic}.date{font-size:clamp(15px,3vw,20px);color:var(--muted);margin-top:16px}
   .cover-card{background:#111516;color:#fbf7ef;border-radius:10px;padding:22px;box-shadow:0 28px 80px #0005}
-  .photo-slot{aspect-ratio:4/5;border:1px dashed #cbbfaf;display:grid;place-items:center;text-align:center;padding:22px;color:#cbbfaf;background:#1a2021}
-  .photo-slot strong{display:block;font-family:"Cormorant Garamond";font-size:38px;color:#fff}
+  .cover-photo{display:block;width:100%;aspect-ratio:4/5;object-fit:cover;background:#1a2021;border-radius:4px}
   .dock{position:sticky;top:0;z-index:10;background:rgba(238,231,220,.92);backdrop-filter:blur(10px);border-block:1px solid var(--line)}
   .dock .wrap{display:flex;gap:8px;overflow:auto;padding:10px 14px}.dock a{white-space:nowrap;text-decoration:none;color:var(--ink);border:1px solid var(--line);border-radius:999px;padding:9px 13px;font-size:13px;font-weight:800}.dock a:last-child{background:var(--accent);color:#fff;border-color:var(--accent)}
   section{padding:76px 0}.panel{background:rgba(251,247,239,.9);border:1px solid var(--line);border-radius:10px;padding:24px;box-shadow:0 18px 50px #0001}
@@ -43,8 +42,8 @@
   .note{margin-top:12px;color:var(--accent);font-weight:700}
   label{display:block;margin:12px 0 5px;color:var(--muted);font-size:12px;text-transform:uppercase;font-weight:800}input,select,textarea{width:100%;border:1px solid var(--line);background:#fff;padding:12px;color:var(--ink);border-radius:4px}
   .wish{border-left:4px solid var(--green);background:#fff;padding:10px 12px;margin:8px 0}.wish b{display:block;color:var(--green)}
-  .floating{position:fixed;right:16px;bottom:16px;z-index:12;display:flex;gap:8px}.floating button{border:0;border-radius:999px;background:var(--accent);color:#fff;padding:12px 14px;font-weight:800;box-shadow:0 12px 24px #0002}
-  @media(max-width:800px){body{background-attachment:scroll}.hero{grid-template-columns:1fr;align-items:center;padding-top:28px}.cover-card{order:-1}.photo-slot{max-height:54vh}section{padding:54px 0}.floating{left:14px;right:14px}.floating button{flex:1}.invite-list{columns:1}}
+  .floating{position:fixed;right:16px;bottom:16px;z-index:12;display:flex;gap:8px;opacity:0;visibility:hidden;transform:translateY(10px);transition:opacity .35s ease,transform .35s ease,visibility .35s}.floating.show{opacity:1;visibility:visible;transform:none}.floating button{border:0;border-radius:999px;background:var(--accent);color:#fff;padding:12px 14px;font-weight:800;box-shadow:0 12px 24px #0002}
+  @media(max-width:800px){body{background-attachment:scroll}.hero{grid-template-columns:1fr;align-items:center;padding-top:28px}.cover-card{order:-1;padding:14px}.cover-photo{aspect-ratio:auto;height:min(36vh,320px)}section{padding:54px 0}.floating{left:14px;right:14px}.floating button{flex:1}.invite-list{columns:1}}
 </style>
 </head>
 <body>
@@ -56,7 +55,7 @@
     <div class="countdown" id="countdown"></div>
     <div class="actions"><button class="btn" onclick="document.getElementById('rsvp').scrollIntoView({behavior:'smooth'})">RSVP</button><button class="btn alt" onclick="document.getElementById('details').scrollIntoView({behavior:'smooth'})">Details</button></div>
   </div>
-  <div class="cover-card"><div class="photo-slot"><div><span class="eyebrow">Real photo slot</span><strong>Your Portrait Here</strong><p>Use your own couple image, not generated people.</p></div></div></div>
+  <div class="cover-card"><img class="cover-photo" id="coverPhoto" src="../photos/couple.png" alt="Milena &amp; Kafka" /></div>
 </section>
 <nav class="dock"><div class="wrap" id="nav"></div></nav>
 <main>
@@ -73,8 +72,9 @@
 <script>
 const W=window.WEDDING,T=window.TEMPLATE||{},PARAMS=new URLSearchParams(location.search),GUEST=(PARAMS.get("to")||"").trim().slice(0,40)||null,OPEN=(PARAMS.get("open")||"").trim()||null;
 const esc=s=>String(s==null?"":s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
-const PHOTO_FALLBACK="data:image/svg+xml;charset=UTF-8,%3Csvg%20xmlns%3D%27http%3A//www.w3.org/2000/svg%27%20viewBox%3D%270%200%20800%20600%27%3E%3Crect%20width%3D%27800%27%20height%3D%27600%27%20fill%3D%27%23eee7dc%27/%3E%3Ctext%20x%3D%27400%27%20y%3D%27300%27%20text-anchor%3D%27middle%27%20font-family%3D%27serif%27%20font-size%3D%2738%27%20fill%3D%27%239f6a4d%27%3EPhoto%20placeholder%3C/text%3E%3C/svg%3E";
+const PHOTO_FALLBACK="data:image/svg+xml;charset=UTF-8,"+encodeURIComponent("<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 800 600'><rect width='800' height='600' fill='#eee7dc'/><rect x='26' y='26' width='748' height='548' fill='none' stroke='#d3c7b9' stroke-width='2'/><rect x='40' y='40' width='720' height='520' fill='none' stroke='#d3c7b9'/><path d='M330 186h140M330 424h140' stroke='#9f6a4d' stroke-width='2'/><text x='400' y='352' text-anchor='middle' font-family='Georgia,serif' font-size='160' font-style='italic' fill='#9f6a4d'>&amp;</text></svg>");
 function photoFallback(img){img.onerror=null;img.src=PHOTO_FALLBACK;}
+(function(){const p=document.getElementById("coverPhoto");if(!p)return;if(p.complete&&p.naturalWidth===0)photoFallback(p);else p.addEventListener("error",()=>photoFallback(p),{once:true});})();
 names.innerHTML=`${W.bride}<span class="amp"> &amp; </span>${W.groom}`;date.textContent=W.dateLabel;
 nav.innerHTML=(T.nav||[]).map(([label,id])=>`<a href="#${id}">${label}</a>`).join("");
 storyGrid.innerHTML=W.story.map(s=>`<article class="card story-card" id="story-${s.id}"><img src="../photos/${s.photo}" onerror="photoFallback(this)"><div class="eyebrow">${s.icon} ${s.label}</div><h2 style="font-size:34px">${s.title}</h2>${s.html}</article>`).join("");
@@ -88,7 +88,7 @@ giftBox.innerHTML=`<p>${W.gift.note}</p><div class="actions"><button class="btn"
 wishesBox.innerHTML=`<form id="wishForm"><label>Your name</label><input name="name" required><label>Your wish</label><textarea name="msg" rows="3" required></textarea><div class="actions"><button class="btn">Send Wish</button></div></form><p class="note" id="wishStatus" hidden></p><div id="wishList"><p id="wishNote">Loading wishes...</p></div>`;
 rsvpBox.innerHTML=`<form id="rsvpForm"><label>Your name</label><input name="name" required><label>Will you attend?</label><select name="attending"><option>Joyfully accepts</option><option>Sadly declines</option></select><label>Guests</label><input name="guests" type="number" min="1" value="1"><label>Note</label><textarea name="note" rows="3"></textarea><div class="actions"><button class="btn">Send RSVP</button></div></form><p class="note" id="rsvpStatus" hidden></p>`;
 function withWB(fn){const WB=window.WB;if(WB)fn(WB);else addEventListener("wb-ready",()=>fn(window.WB),{once:true});}
-withWB(WB=>{if(WB.ready)WB.watchWishes(items=>wishList.innerHTML=items.length?items.map(w=>`<div class="wish"><b>${esc(w.name)}</b>${esc(w.msg)}</div>`).join(""):`<p>Be the first to leave a wish.</p>`);else wishNote.textContent="Live wishes need Firebase.";});
+withWB(WB=>{if(WB.ready)WB.watchWishes(items=>wishList.innerHTML=items.length?items.map(w=>`<div class="wish"><b>${esc(w.name)}</b>${esc(w.msg)}</div>`).join(""):`<p>Be the first to leave a wish.</p>`);else wishNote.textContent="Wishes will appear here once the guestbook opens — send yours above and it will reach us directly.";});
 const FAIL_MSG="We couldn't record this automatically — please WhatsApp us directly.";
 function sendVia(text,subject){const wa=String(W.rsvpWhatsapp||"").replace(/\D/g,"");if(wa){open(`https://wa.me/${wa}?text=${encodeURIComponent(text)}`,"_blank");return"whatsapp";}if(W.rsvpEmail){location.href=`mailto:${W.rsvpEmail}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(text)}`;return"email";}return null;}
 document.addEventListener("submit",e=>{
@@ -105,6 +105,9 @@ window.addToCalendar=function(){const[start,end]=calDates(),ics=["BEGIN:VCALENDA
 function tickCountdown(){const safe=Math.max(0,new Date(W.date).getTime()-Date.now()),d=Math.floor(safe/864e5),h=Math.floor(safe%864e5/36e5),m=Math.floor(safe%36e5/6e4),s=Math.floor(safe%6e4/1e3);countdown.innerHTML=[["Days",d],["Hours",h],["Mins",m],["Secs",s]].map(x=>`<div class="cd"><b>${String(x[1]).padStart(2,"0")}</b><span>${x[0]}</span></div>`).join("");}
 tickCountdown();setInterval(tickCountdown,1000);
 if(OPEN)addEventListener("load",()=>{const el=document.getElementById(OPEN)||document.getElementById("story-"+OPEN);if(el&&!el.hidden)el.scrollIntoView({behavior:"smooth",block:"start"});});
+(function(){const hero=document.querySelector(".hero"),fl=document.querySelector(".floating");if(!hero||!fl)return;
+  if(!("IntersectionObserver" in window)){fl.classList.add("show");return;}
+  new IntersectionObserver(en=>fl.classList.toggle("show",!en[0].isIntersecting),{threshold:.02}).observe(hero);})();
 </script>
 </body>
 </html>

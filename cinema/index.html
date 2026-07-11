@@ -31,14 +31,14 @@
   .admit{width:min(680px,100%);display:grid;grid-template-columns:1fr 1fr;filter:drop-shadow(0 28px 50px #000)}
   .stub{min-height:250px;background:linear-gradient(135deg,#f7dfad,#c99339);color:#28150d;padding:22px;border:2px solid #7d5524;position:relative;display:grid;align-content:center}
   .stub:first-child{border-radius:12px 0 0 12px}.stub:last-child{border-radius:0 12px 12px 0;border-left:2px dashed #7d5524}
-  .stub h2{color:#28150d;text-shadow:none}.stub .mono{color:#5b3514}
+  .stub h2{color:#28150d;text-shadow:none}.stub .mono{color:#5b3514}.stub .amp{color:var(--red)}
   .intro.open .stub:first-child{animation:tearLeft .65s cubic-bezier(.2,.8,.2,1) forwards}.intro.open .stub:last-child{animation:tearRight .65s cubic-bezier(.2,.8,.2,1) forwards}
   @keyframes tearLeft{to{transform:translateX(-42vw) rotate(-13deg);opacity:0}}@keyframes tearRight{to{transform:translateX(42vw) rotate(13deg);opacity:0}}
   .marquee{display:grid;grid-template-columns:1.1fr .9fr;gap:22px;align-items:end}
   .title{padding:20px 0}
   .kicker,.mono{font-family:"Special Elite",monospace;text-transform:uppercase;letter-spacing:3px;color:var(--gold);font-size:12px}
   h1,h2{font-family:"Bebas Neue",Impact,sans-serif;letter-spacing:1px;line-height:.92;text-transform:uppercase}
-  h1{font-size:clamp(62px,14vw,150px);text-shadow:0 7px 0 #000,0 0 36px #d7aa5544}
+  h1{font-size:clamp(62px,14vw,150px);text-shadow:0 .05em 0 #000,0 0 .24em #d7aa5544}
   h2{font-size:clamp(38px,8vw,78px)}
   .amp{color:var(--gold)}
   .date{font-family:"Special Elite",monospace;color:var(--muted);font-size:clamp(14px,2.8vw,20px);margin:16px 0}
@@ -125,8 +125,11 @@ function photoFallback(img){img.onerror=null;img.src=PHOTO_FALLBACK;}
 const stops=T.stops||[["story","Featurette"],["details","Screening Info"],["gift","Book Gift"],["wishes","Audience Notes"],["rsvp","Reserve Seat"]];
 const seen=new Set(JSON.parse(localStorage.getItem("cinemaSeen")||"[]"));
 let currentScene=0;
-names.innerHTML=`${W.bride}<span class="amp"> &amp; </span>${W.groom}`;date.textContent=W.dateLabel;
-introNames.innerHTML=`${W.bride}<span class="amp"> &amp; </span>${W.groom}`;introDate.textContent=W.dateLabel;
+/* "&nbsp;" glues the ampersand to the first name so a narrow layout breaks
+   cleanly as "Bride &" / "Groom" instead of stranding the "&" alone */
+const NAMES_HTML=`${W.bride}&nbsp;<span class="amp">&amp;</span> ${W.groom}`;
+names.innerHTML=NAMES_HTML;date.textContent=W.dateLabel;
+introNames.innerHTML=NAMES_HTML;introDate.textContent=W.dateLabel;
 document.documentElement.style.setProperty("--hero-art",`url("${(T.assets&&T.assets.hero)||"assets/projector.jpg"}")`);
 heroKicker.textContent=(T.intro&&T.intro.kicker)||heroKicker.textContent;
 document.querySelector(".stub h2").textContent=(T.intro&&T.intro.ticketTitle)||"Premiere Night";

@@ -430,11 +430,24 @@
 <script src="../music.js" defer></script>
 <script>
 "use strict";
-const W=window.WEDDING, T=window.TEMPLATE||{};
+const T=window.TEMPLATE||{};
 const params=new URLSearchParams(location.search);
 const GUEST=(params.get("to")||"").trim().slice(0,40)||null;
 const LANG=params.get("lang")==="en"?"en":"id";
 const L=(T.i18n&&T.i18n[LANG])||{};
+/* Bahasa view of the shared data: W.id overrides the English content
+   fields (see ../data.js) — used for the default ?lang=id; the English
+   secondary (?lang=en) keeps the base fields so nothing mixes. */
+function localizeWedding(w,lang){
+  if(lang!=="id"||!w) return w;
+  const o=w.id||{}, m=Object.assign({},w,o);
+  m.story=(w.story||[]).map(s=>Object.assign({},s,(o.story||[]).find(t=>t.id===s.id)||{}));
+  m.agenda=o.agenda||w.agenda;
+  m.gift=Object.assign({},w.gift,o.gift);
+  if(!o.dateLabel&&w.date){try{m.dateLabel=new Intl.DateTimeFormat("id-ID",{weekday:"long",day:"numeric",month:"long",year:"numeric",timeZone:"Asia/Jakarta"}).format(new Date(w.date));}catch(e){}}
+  return m;
+}
+const W=localizeWedding(window.WEDDING,LANG);
 const tx=o=>(o&&(o[LANG]||o.id))||"";
 document.documentElement.lang=LANG;
 const $=id=>document.getElementById(id);

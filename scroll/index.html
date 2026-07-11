@@ -93,8 +93,10 @@
   .chapter .cap{position:absolute;bottom:12vh;left:0;right:0;padding:0 22px;}
   .chapter .cap .card{background:rgba(255,255,255,.92);backdrop-filter:blur(4px);max-width:520px;margin:0 auto;
     border-radius:12px;padding:22px 24px;box-shadow:0 14px 40px rgba(0,0,0,.16);}
-  .chapter .num{font-family:"Cormorant Garamond",serif;font-size:clamp(60px,20vw,150px);color:#efd9c6;
-    position:absolute;top:8vh;left:50%;transform:translateX(-50%);line-height:1;z-index:0;}
+  /* decorative numeral sits fully above the sticky photo (photo top is
+     ≥ (100vh − photo-height)/2 ≈ 19vh, numeral ends by 3vh+12vh = 15vh) */
+  .chapter .num{font-family:"Cormorant Garamond",serif;font-size:clamp(56px,12vh,120px);color:#e3d3ae;
+    position:absolute;top:3vh;left:50%;transform:translateX(-50%);line-height:1;z-index:0;}
 
   /* TIMELINE */
   .tl{position:relative;max-width:560px;margin:20px auto 0;text-align:left;}
@@ -140,18 +142,24 @@
   .note{font-size:12px;color:#b6a89d;}
   #closing{background:linear-gradient(180deg,#f1ead8,#d8e6d9);}
   #closing img{width:min(58vw,260px);aspect-ratio:4/5;object-fit:cover;border:8px solid #fff8ef;border-radius:8px;box-shadow:0 14px 28px rgba(120,70,80,.2);background:#fff8ef;}
-  #quickDock{position:fixed;left:50%;bottom:18px;transform:translate(-50%,120%);z-index:12;display:flex;gap:8px;
+  /* fades in place (no slide) so it never travels across content */
+  #quickDock{position:fixed;left:50%;bottom:18px;transform:translate(-50%,0);z-index:12;display:flex;gap:8px;
     background:rgba(255,248,239,.92);border:1px solid var(--rose);border-radius:999px;padding:8px;box-shadow:0 14px 30px rgba(120,70,80,.22);
-    transition:transform .25s ease;}
-  #quickDock.show{transform:translate(-50%,0)}
+    opacity:0;pointer-events:none;transition:opacity .25s ease;}
+  #quickDock.show{opacity:1;pointer-events:auto}
   #quickDock button{border:0;border-radius:999px;background:var(--rose-dk);color:#fff;padding:9px 12px;font-size:12px;cursor:pointer;}
   #quickDock button.alt{background:#fff;color:var(--rose-dk);border:1px solid var(--rose);}
 </style>
 <script>
 /* photo fallback — defined in <head> so static <img onerror> works even if
-   an image errors before the main script at the end of <body> runs */
-var PHOTO_FALLBACK="data:image/svg+xml;charset=UTF-8,%3Csvg%20xmlns%3D%27http%3A//www.w3.org/2000/svg%27%20viewBox%3D%270%200%20800%20600%27%3E%3Crect%20width%3D%27800%27%20height%3D%27600%27%20fill%3D%27%23fff8ef%27/%3E%3Crect%20x%3D%2740%27%20y%3D%2740%27%20width%3D%27720%27%20height%3D%27520%27%20rx%3D%2724%27%20fill%3D%27%23f7e6dc%27%20stroke%3D%27%23e8889c%27%20stroke-dasharray%3D%2718%2014%27%20stroke-width%3D%276%27/%3E%3Ctext%20x%3D%27400%27%20y%3D%27288%27%20text-anchor%3D%27middle%27%20font-family%3D%27serif%27%20font-size%3D%2736%27%20fill%3D%27%23b85f75%27%3EPhoto%20placeholder%3C/text%3E%3Ctext%20x%3D%27400%27%20y%3D%27338%27%20text-anchor%3D%27middle%27%20font-family%3D%27serif%27%20font-size%3D%2722%27%20fill%3D%27%237b665d%27%3EAdd%20your%20own%20image%3C/text%3E%3C/svg%3E";
-function photoFallback(img){img.onerror=null;img.src=PHOTO_FALLBACK;}
+   an image errors before the main script at the end of <body> runs.
+   Chain: missing photo → shared ../photos/couple.png art → decorative
+   wording-free SVG (rings + sprigs in the theme palette). */
+var PHOTO_FALLBACK="data:image/svg+xml;charset=UTF-8,%3Csvg%20xmlns%3D%27http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%27%20viewBox%3D%270%200%20800%201000%27%3E%3Crect%20width%3D%27800%27%20height%3D%271000%27%20fill%3D%27%23f7f1e1%27%2F%3E%3Crect%20x%3D%2734%27%20y%3D%2734%27%20width%3D%27732%27%20height%3D%27932%27%20rx%3D%2718%27%20fill%3D%27%23fff8ef%27%20stroke%3D%27%23dccbaa%27%20stroke-width%3D%273%27%2F%3E%3Crect%20x%3D%2754%27%20y%3D%2754%27%20width%3D%27692%27%20height%3D%27892%27%20rx%3D%2710%27%20fill%3D%27none%27%20stroke%3D%27%23e7dabc%27%20stroke-width%3D%271.5%27%2F%3E%3Cg%20fill%3D%27none%27%20stroke-linecap%3D%27round%27%3E%3Ccircle%20cx%3D%27360%27%20cy%3D%27480%27%20r%3D%2792%27%20stroke%3D%27%232f7d68%27%20stroke-width%3D%277%27%2F%3E%3Ccircle%20cx%3D%27448%27%20cy%3D%27540%27%20r%3D%2792%27%20stroke%3D%27%23c28b37%27%20stroke-width%3D%277%27%2F%3E%3Cpath%20d%3D%27M400%20240q-70%2040-96%20118%27%20stroke%3D%27%239dc8b1%27%20stroke-width%3D%275%27%2F%3E%3Cpath%20d%3D%27M400%20240q70%2040%2096%20118%27%20stroke%3D%27%239dc8b1%27%20stroke-width%3D%275%27%2F%3E%3Cpath%20d%3D%27M352%20292q-24-4-40-24M368%20268q-22-8-32-30M338%20322q-26%200-46-16%27%20stroke%3D%27%239dc8b1%27%20stroke-width%3D%274%27%2F%3E%3Cpath%20d%3D%27M448%20292q24-4%2040-24M432%20268q22-8%2032-30M462%20322q26%200%2046-16%27%20stroke%3D%27%239dc8b1%27%20stroke-width%3D%274%27%2F%3E%3Cpath%20d%3D%27M400%20770q-64-34-88-104%27%20stroke%3D%27%239dc8b1%27%20stroke-width%3D%275%27%2F%3E%3Cpath%20d%3D%27M400%20770q64-34%2088-104%27%20stroke%3D%27%239dc8b1%27%20stroke-width%3D%275%27%2F%3E%3C%2Fg%3E%3Cpath%20d%3D%27M404%20496c-10-14-30-12-34%202-3%2011%208%2022%2034%2040%2026-18%2037-29%2034-40-4-14-24-16-34-2z%27%20fill%3D%27%23c28b37%27%2F%3E%3Cg%20fill%3D%27%23dccbaa%27%3E%3Ccircle%20cx%3D%2790%27%20cy%3D%2790%27%20r%3D%276%27%2F%3E%3Ccircle%20cx%3D%27710%27%20cy%3D%2790%27%20r%3D%276%27%2F%3E%3Ccircle%20cx%3D%2790%27%20cy%3D%27910%27%20r%3D%276%27%2F%3E%3Ccircle%20cx%3D%27710%27%20cy%3D%27910%27%20r%3D%276%27%2F%3E%3C%2Fg%3E%3C%2Fsvg%3E";
+function photoFallback(img){
+  if(img.dataset.fbk||/couple\.png(\?|$)/.test(img.src)){img.onerror=null;img.src=PHOTO_FALLBACK;return;}
+  img.dataset.fbk="1";img.src="../photos/couple.png";
+}
 </script>
 </head>
 <body>
@@ -262,9 +270,21 @@ function photoFallback(img){img.onerror=null;img.src=PHOTO_FALLBACK;}
 <script src="../music.js" defer></script>
 <script>
 "use strict";
-const W=window.WEDDING, T=window.TEMPLATE||{}, GUEST=(new URLSearchParams(location.search).get("to")||"").trim().slice(0,40)||null;
+const T=window.TEMPLATE||{}, GUEST=(new URLSearchParams(location.search).get("to")||"").trim().slice(0,40)||null;
 const LANG=T.lang==="en"?"en":"id";
 const L=(T.i18n&&T.i18n[LANG])||{};
+/* Bahasa view of the shared data: W.id overrides the English content
+   fields (see ../data.js). English (?lang=en) keeps the base fields. */
+function localizeWedding(w,lang){
+  if(lang!=="id"||!w) return w;
+  const o=w.id||{}, m=Object.assign({},w,o);
+  m.story=(w.story||[]).map(s=>Object.assign({},s,(o.story||[]).find(t=>t.id===s.id)||{}));
+  m.agenda=o.agenda||w.agenda;
+  m.gift=Object.assign({},w.gift,o.gift);
+  if(!o.dateLabel&&w.date){try{m.dateLabel=new Intl.DateTimeFormat("id-ID",{weekday:"long",day:"numeric",month:"long",year:"numeric",timeZone:"Asia/Jakarta"}).format(new Date(w.date));}catch(e){}}
+  return m;
+}
+const W=localizeWedding(window.WEDDING,LANG);
 const esc=s=>String(s==null?"":s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
 const deent=s=>String(s==null?"":s).replace(/&amp;/g,"&").replace(/&lt;/g,"<").replace(/&gt;/g,">").replace(/&quot;/g,'"').replace(/&#39;/g,"'");
 const photoSrc=f=>`../photos/${f}`;
@@ -366,12 +386,27 @@ const ioActive=new IntersectionObserver((entries)=>{ entries.forEach(en=>{ if(en
   const i=sections.indexOf(en.target); dotEls.forEach((d,k)=>d.classList.toggle("on",k===i)); } }); },{threshold:.5});
 sections.forEach(s=>ioActive.observe(s));
 
+/* ---- quick dock: only show while its landing area is free ----
+   The dock is fixed at bottom-center; hide it whenever a photo, card,
+   panel, timeline or countdown would sit underneath (no overlaps). */
+const dockEl=document.getElementById("quickDock");
+function dockAreaFree(){
+  if(!dockEl) return false;
+  const dw=dockEl.offsetWidth||280, dh=dockEl.offsetHeight||52, pad=26;
+  const top=innerHeight-18-dh-pad, bottom=innerHeight-18+pad;
+  const left=(innerWidth-dw)/2-pad, right=(innerWidth+dw)/2+pad;
+  const els=document.querySelectorAll(".chapter .photo,.cap .card,.panel,.tl,.authors,.cd,#closing img");
+  for(const el of els){ const b=el.getBoundingClientRect();
+    if(b.width&&b.bottom>top&&b.top<bottom&&b.right>left&&b.left<right) return false; }
+  return true;
+}
+
 /* ---- scroll-linked: progress bar + parallax (rAF throttled) ---- */
 let ticking=false;
 function onScroll(){ if(ticking)return; ticking=true; requestAnimationFrame(()=>{
   const h=document.documentElement, max=h.scrollHeight-h.clientHeight;
   document.getElementById("prog").style.width=(max>0?(h.scrollTop/max*100):0)+"%";
-  const dock=document.getElementById("quickDock"); if(dock) dock.classList.toggle("show", window.scrollY>window.innerHeight*.75);
+  if(dockEl) dockEl.classList.toggle("show", window.scrollY>window.innerHeight*.75 && dockAreaFree());
   // hero parallax layers
   const y=window.scrollY;
   document.querySelectorAll("#hero .pllx").forEach(el=>{
@@ -381,7 +416,10 @@ function onScroll(){ if(ticking)return; ticking=true; requestAnimationFrame(()=>
     const r=sec.getBoundingClientRect(); const prog=Math.max(-1,Math.min(1,(r.top)/window.innerHeight));
     img.style.transform=`translateY(${prog*-22}px) scale(${1.02-prog*0.04})`; });
   ticking=false; }); }
-addEventListener("scroll",onScroll,{passive:true}); onScroll();
+addEventListener("scroll",onScroll,{passive:true});
+addEventListener("resize",onScroll,{passive:true});
+/* re-check the dock after reveal transitions settle (elements move as .rv/.seen plays) */
+document.addEventListener("transitionend",onScroll,true); onScroll();
 
 /* ---- countdown (roll up once when in view, then live tick) ---- */
 let cdStarted=false;
