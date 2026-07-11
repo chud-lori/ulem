@@ -9,3 +9,6 @@ game/assets/bride_face.png
 
 # real secrets / keys — never commit (copy config.example.js → config.local.js)
 config.local.js
+
+# build output of deploy.sh (regenerate any time)
+dist/

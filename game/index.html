@@ -2,8 +2,16 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
-<title>A Stroll to Our Wedding</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>The Wedding of Milena &amp; Kafka — A Stroll to Our Wedding</title>
+<meta name="description" content="Milena &amp; Kafka are getting married — Saturday, 12 December 2026 in Solo, Indonesia. Take a stroll through our little pixel town and RSVP." />
+<meta property="og:title" content="The Wedding of Milena &amp; Kafka" />
+<meta property="og:description" content="Saturday, 12 December 2026 · Solo, Indonesia" />
+<meta property="og:image" content="https://chud-lori.github.io/ulem/photos/og-image.jpg" />
+<meta property="og:url" content="https://chud-lori.github.io/ulem/game/" />
+<meta property="og:type" content="website" />
+<meta name="twitter:card" content="summary_large_image" />
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🎮</text></svg>" />
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet" />
 <style>
@@ -13,8 +21,8 @@
   *{box-sizing:border-box;margin:0;padding:0;}
   html,body{height:100%;overflow:hidden;background:#f4cbbf;}
   body{font-family:'Press Start 2P', ui-monospace,"Courier New",monospace; color:var(--ink);
-    -webkit-font-smoothing:none; touch-action:none; user-select:none;}
-  #game{display:block;width:100vw;height:100vh;image-rendering:pixelated;}
+    -webkit-font-smoothing:none; user-select:none;}
+  #game{display:block;width:100vw;height:100vh;image-rendering:pixelated;touch-action:none;}
 
   /* loading + title */
   #titleScreen{position:fixed;inset:0;z-index:40;display:flex;flex-direction:column;align-items:center;
@@ -60,7 +68,7 @@
   #minimap .mspot.on{background:var(--rose);}
   #minimap .me{position:absolute;bottom:-12px;width:0;height:0;border-left:7px solid transparent;border-right:7px solid transparent;
     border-top:12px solid var(--gold);transform:translateX(-50%);filter:drop-shadow(0 1px 0 var(--ink));}
-  #minimap .mlabel{font-size:6px;line-height:1.5;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;color:#7b665d;}
+  #minimap .mlabel{font-size:8px;line-height:1.6;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;color:#5f4c43;}
   #musicBtn{position:absolute;top:12px;right:12px;pointer-events:auto;width:46px;height:46px;border-radius:50%;
     border:3px solid var(--ink);background:var(--panel);cursor:pointer;font-size:16px;box-shadow:0 3px 0 rgba(0,0,0,.18);}
   .pad{position:absolute;bottom:24px;width:74px;height:74px;pointer-events:auto;border-radius:14px;
@@ -114,15 +122,10 @@
   .pparents{font-size:8px;opacity:.7;line-height:1.7;}
   .pig{font-size:8px;color:var(--rose-dk);}
   .pamp{font-size:20px;color:var(--gold);}
-  /* book registry */
-  .books{display:flex;flex-direction:column;gap:8px;margin:6px 0;}
-  .book{display:flex;justify-content:space-between;align-items:center;gap:8px;background:#fff;border:2px solid var(--ink);
-    border-radius:8px;padding:9px 11px;font-size:9px;line-height:1.5;flex-wrap:wrap;}
-  .book .bk i{opacity:.7;}
-  .claim{font-family:inherit;font-size:8px;cursor:pointer;background:var(--rose);color:#fff;border:none;
-    border-radius:6px;padding:7px 9px;box-shadow:0 3px 0 var(--rose-dk);}
-  .claim:active{transform:translateY(2px);box-shadow:0 1px 0 var(--rose-dk);}
-  .taken{font-size:8px;color:#2c7a3f;}
+  /* turut mengundang (in the profiles modal) */
+  .tm{margin-top:18px;border-top:2px dashed #e8d5c0;padding-top:14px;text-align:center;}
+  .tm-h{font-size:8px;color:var(--rose-dk);letter-spacing:1px;margin-bottom:8px;}
+  .tm-i{font-size:9px;line-height:2;opacity:.85;}
   /* wishes wall */
   .wishes{margin-top:8px;display:flex;flex-direction:column;gap:8px;max-height:230px;overflow:auto;}
   .wish{background:#fff6f8;border:2px solid #f3c8d2;border-radius:8px;padding:9px 11px;font-size:9px;line-height:1.7;}
@@ -152,7 +155,7 @@
   <div id="countdown" aria-label="countdown"></div>
   <button class="btn" id="startBtn" disabled><span class="heartbeat">💍</span>&nbsp; <span id="startLabel">Loading…</span></button>
   <p style="opacity:.7;font-size:8px;">Arrow keys / A&nbsp;D to walk &nbsp;·&nbsp; Space to open a stop<br/>(on phone, use the buttons below)</p>
-  <p style="opacity:.45;font-size:7px;line-height:1.8;">Art: 2D Pixel City Pack (CC-BY 4.0) · LPC characters (CC-BY-SA)</p>
+  <p style="opacity:.45;font-size:7px;line-height:1.8;">Art: 2D Pixel City Pack (CC-BY 4.0)</p>
 </div>
 
 <div id="modalWrap"><div id="modal"></div></div>
@@ -172,21 +175,20 @@
 "use strict";
 /* ===================================================================
    A STROLL TO OUR WEDDING  ·  side-scrolling pixel invitation
-   Art: 2D Pixel City Pack (CC-BY 4.0) · LPC characters (CC-BY-SA/GPL)
+   Art: 2D Pixel City Pack (CC-BY 4.0)
    --- To personalise, edit data.js (NOT this file). ---
    This file is the game engine; WEDDING + RSVP_EMAIL are defined in data.js.
    =================================================================== */
 
-/* ---------- 2. ASSETS ---------- */
+/* ---------- 2. ASSETS ----------
+   Only assets actually drawn are listed (and downloaded) here — the walk
+   sheets match CHARACTER_SPRITE_STYLE below. */
 const ASSET_SRC = {
   sky:"assets/sky.png", skyline:"assets/skyline.png",
   shop:"assets/build_shop.png", club:"assets/build_club.png", apartment:"assets/build_apartment.png",
   tree1:"assets/tree1.png", tree2:"assets/tree2.png", tree3:"assets/tree3.png",
   bus:"assets/bus.png", barrel:"assets/barrel.png", signbus:"assets/sign_bus.png",
   groomHarvest:"assets/groom_walk_harvest.png", brideHarvest:"assets/bride_walk_harvest.png",
-  groomChibi:"assets/groom_walk_chibi.png", brideChibi:"assets/bride_walk_chibi.png",
-  groomLpc:"assets/groom_lpc.png", brideLpc:"assets/bride_lpc.png",  // smooth hand-animated walk
-  headGroom:"assets/head_groom.png", headBride:"assets/head_bride.png",  // chibi faces for lpc bodies
   couple:"../photos/couple.png",
 };
 const IMG = {};
@@ -408,6 +410,13 @@ function sign(x,y,icon,label,done){
   ctx.textAlign="center"; ctx.textBaseline="middle";
   const bob=Math.sin(now/420+x)*3;
   const w=Math.max(86,label.length*7.4+34), h=26, yy=y+bob-h;
+  // keep the hanging board readable: nudge it inside the viewport when its
+  // building is on screen (the pull fades out as the building scrolls away,
+  // so boards still enter/exit smoothly instead of popping)
+  { const lo=camera+w/2+6, hi=camera+VIEW_W-w/2-6;
+    if(hi>lo){ let shift=Math.max(lo,Math.min(hi,x))-x;
+      const t=Math.min(1,Math.abs(shift)/(w*0.6));
+      shift*=1-t*t*t; x+=shift; } }
   // ropes
   ctx.strokeStyle="#7a5a48"; ctx.lineWidth=1.4;
   ctx.beginPath(); ctx.moveTo(x-w/2+8,yy); ctx.lineTo(x-w/2+8,yy-10); ctx.moveTo(x+w/2-8,yy); ctx.lineTo(x+w/2-8,yy-10); ctx.stroke();
@@ -422,26 +431,13 @@ function roundRect(x,y,w,h,r){ ctx.beginPath(); ctx.moveTo(x+r,y); ctx.arcTo(x+w
   ctx.arcTo(x+w,y+h,x,y+h,r); ctx.arcTo(x,y+h,x,y,r); ctx.arcTo(x,y,x+w,y,r); ctx.closePath(); }
 
 /* Walk-cycle sheets: one horizontal row of N cells, character facing RIGHT.
-   Switch CHARACTER_SPRITE_STYLE between:
-     "harvest" = smaller pixel/farming-RPG style
-     "chibi"   = previous smoother anime side-view style */
+   Only the "harvest" (pixel/farming-RPG) style ships — add a new set here
+   AND its sheets to ASSET_SRC if you want an alternative look. */
 const CHARACTER_SPRITE_STYLE = "harvest";
-// const CHARACTER_SPRITE_STYLE = "chibi";
-// "lpc" draws a smooth pixel walking BODY and overlays the cute chibi HEAD on top
-// (big-head/chibi look = smooth gait + a real visible face). head.h = head height in
-// 64px cell units; ax/ay = per-frame head anchor (centre-x, top-y) from each LPC sheet.
 const WALK_SETS = {
-  lpc:   { th:84, bot:2, dx:15, stride:4.0, tween:false,
-           groom:{key:"groomLpc", n:9, fw:64, fh:64, idle:0,
-                  head:{key:"headGroom", h:24, ax:[31,32,31,30,29,29,29,30,30], ay:[14,15,14,14,14,15,14,14,14]}},
-           bride:{key:"brideLpc", n:9, fw:64, fh:64, idle:0,
-                  head:{key:"headBride", h:25, ax:[29,29,29,29,29,30,29,29,29], ay:[15,16,15,15,15,16,15,15,15]}} },
   harvest: { th:66, bot:3, dx:20, stride:3.8, tween:false,
            groom:{key:"groomHarvest", n:8, fw:210, fh:357, idle:0, seq:[1,2,3,4,5,6], bob:[0,-1,-2,-1,0,-1]},
            bride:{key:"brideHarvest", n:8, fw:228, fh:416, idle:0, seq:[1,2,3,4,5,6], bob:[0,-1,-2,-1,0,-1]} },
-  chibi: { th:88, bot:4, dx:28, stride:4.8, tween:false,
-           groom:{key:"groomChibi", n:8, fw:203, fh:383, idle:0, seq:[1,2,3,4,5,6], bob:[0,-1,-2,-1,0,-1]},
-           bride:{key:"brideChibi", n:8, fw:222, fh:377, idle:0, seq:[1,2,3,4,5,6], bob:[0,-1,-2,-1,0,-1]} },
 };
 const SET = WALK_SETS[CHARACTER_SPRITE_STYLE] || WALK_SETS.harvest;
 const CHAR_TH = SET.th, CHAR_BOT = SET.bot;
@@ -467,8 +463,7 @@ function drawCouple(){ worldTransform();
     const f0=seq[step], f1=seq[(base+1)%seq.length];
     const yoff=(meta.bob&&meta.bob[step])||0;
     char(img,meta,f0,px,by,flip,1,yoff,cell);
-    // chibi frames are hard-cut AI poses -> crossfade to smooth them; the LPC cycle is
-    // already a real gait, so it plays straight (tweening pixel art just ghosts).
+    // optional crossfade between frames (off for pixel art — tweening just ghosts)
     if(SET.tween && frac>0.02) char(img,meta,f1,px,by,flip,frac,yoff,cell);
   }
   if(!flip){ one(SET.groom,cx-dx); one(SET.bride,cx+dx); }
@@ -486,15 +481,6 @@ function char(img,meta,fi,cx,by,flip,alpha,yoff,cell){
   if(alpha!=null && alpha<1) ctx.globalAlpha=alpha;
   ctx.translate(cx,0); if(flip) ctx.scale(-1,1);
   ctx.drawImage(img, fi*cell.fw,0,cell.fw,cell.fh, -dw/2, top, dw, dh);
-  // overlay the chibi head (for the lpc style) so the smooth body has a visible face
-  const H=meta.head, hi=H&&IMG[H.key];
-  if(hi&&hi.ok){
-    const hh=H.h*k, hw=hi.naturalWidth*hh/hi.naturalHeight;
-    const ax=H.ax[fi]!=null?H.ax[fi]:H.ax[0], ay=H.ay[fi]!=null?H.ay[fi]:H.ay[0];
-    ctx.imageSmoothingEnabled=true;        // head is a smooth illustration, not pixel art
-    ctx.drawImage(hi, (-dw/2 + ax*k) - hw/2, top + (ay-2)*k, hw, hh);
-    ctx.imageSmoothingEnabled=false;
-  }
   ctx.restore();
 }
 function drawHearts(){ worldTransform(); ctx.textAlign="center";
@@ -556,14 +542,21 @@ function spotBody(s){
   if(t==="profiles"){ const W=WEDDING;
     const bride={role:"The Bride",name:W.brideFull,parents:W.brideParents,photo:"bride.jpg",ig:W.brideIg};
     const groom={role:"The Groom",name:W.groomFull,parents:W.groomParents,photo:"groom.jpg",ig:W.groomIg};
-    return `<div class="profiles">${profileCard(bride)}<div class="pamp">♥</div>${profileCard(groom)}</div>`; }
-  if(t==="venue") return photoBlock(s)+
+    const tm=(W.turutMengundang&&W.turutMengundang.length)
+      ? `<div class="tm"><div class="tm-h">— Turut Mengundang —</div>${W.turutMengundang.map(x=>`<div class="tm-i">${x}</div>`).join("")}</div>` : "";
+    return `<div class="profiles">${profileCard(bride)}<div class="pamp">♥</div>${profileCard(groom)}</div>${tm}`; }
+  if(t==="venue"){ const st=WEDDING.streaming;
+    const stRow=(st&&st.url)?`<div class="detail"><span class="k">Live</span><span>${st.label||"Watch the ceremony live"}${st.time?`<br/>${st.time}`:""}</span></div>`:"";
+    const stBtn=(st&&st.url)?`<button class="btn mini" id="streamBtn">📺 Watch Live</button>`:"";
+    return photoBlock(s)+
     `<div class="detail"><span class="k">When</span><span>${WEDDING.dateLabel}<br/>Ceremony ${WEDDING.ceremonyTime}</span></div>
      <div class="detail"><span class="k">Where</span><span>${WEDDING.venueName}<br/>${WEDDING.venueAddress}</span></div>
      <div class="detail"><span class="k">Dress</span><span>${WEDDING.dress}</span></div>
+     ${stRow}
      <div class="actions"><button class="btn mini" id="mapBtn">📍 Map</button>
-       <button class="btn mini" onclick="addToCalendar()">📅 Calendar</button></div>
-     <div id="venueCd"></div>`;
+       <button class="btn mini" onclick="addToCalendar()">📅 Save .ics</button>
+       <button class="btn mini" onclick="openGoogleCal()">🗓️ Google Cal</button>${stBtn}</div>
+     <div id="venueCd"></div>`; }
   if(t==="agenda")
     return WEDDING.agenda.map(a=>`<div class="detail"><span class="k">${a.time}</span><span>${a.label}</span></div>`).join("");
   if(t==="gift"){ const g=WEDDING.gift;
@@ -575,6 +568,7 @@ function spotBody(s){
       <div class="row"><label>Your name</label><input name="name" required placeholder="Type your name"/></div>
       <div class="row"><label>Your wish / prayer</label><textarea name="msg" rows="2" required placeholder="Write something sweet…"></textarea></div>
       <div class="actions"><button class="btn mini" type="submit">Send wish 💬</button></div></form>
+      <p id="wishStatus" style="font-size:9px;line-height:1.8;margin-top:8px;display:none"></p>
       <div id="wishList" class="wishes"><p id="wishNote" style="font-size:9px;opacity:.6">Loading wishes…</p></div>`;
   if(t==="rsvp")
     return `<form id="rsvpForm">
@@ -590,6 +584,8 @@ function afterOpen(s){
   const t=s.type||"story";
   if(t==="venue"){ const mb=document.getElementById("mapBtn");
     if(mb) mb.onclick=()=>window.open("https://maps.google.com/?q="+encodeURIComponent(WEDDING.mapsQuery),"_blank");
+    const sb=document.getElementById("streamBtn");
+    if(sb) sb.onclick=()=>window.open(WEDDING.streaming.url,"_blank");
     renderVenueCd(); }
   if(t==="rsvp"){ const f=document.getElementById("rsvpForm"); if(f) f.addEventListener("submit",submitRSVP); }
   if(t==="guestbook") initGuestbook();
@@ -598,13 +594,29 @@ function afterOpen(s){
 function renderVenueCd(){ const el=document.getElementById("venueCd"); if(el) el.textContent="⏳ "+fmtCountdown(); }
 function initGuestbook(){
   const f=document.getElementById("wishForm"), list=document.getElementById("wishList"), note=document.getElementById("wishNote"), WB=window.WB;
+  const status=document.getElementById("wishStatus");
+  const say=(msg,color)=>{ if(!status) return; status.style.display="block"; status.style.color=color||"#2c7a3f"; status.innerHTML=msg; };
   if(WB&&WB.ready){ WB.watchWishes(items=>{ if(!document.body.contains(list))return;
       list.innerHTML = items.length? items.map(w=>`<div class="wish"><b>${esc(w.name)}</b><span>${esc(w.msg)}</span></div>`).join("")
         : `<p style="font-size:9px;opacity:.6">Be the first to leave a wish 💕</p>`; }); }
-  else if(note) note.textContent="(Live wishes need Firebase — see firebase.js setup.)";
+  else if(note) note.textContent="(Wishes here go to us directly — the live wall needs Firebase.)";
   if(f) f.addEventListener("submit",e=>{ e.preventDefault(); const d=new FormData(f), name=d.get("name"), msg=d.get("msg");
-    if(WB&&WB.ready){ WB.addWish(name,msg).catch(()=>{}); f.reset(); popHearts(8); }
-    else if(note){ note.textContent="(Set up Firebase to share your wish — see firebase.js.)"; } });
+    if(WB&&WB.ready){
+      WB.addWish(name,msg).then(()=>{ f.reset(); popHearts(8); say("Your wish is on the wall 💕"); })
+        .catch(()=>say("Your wish couldn't be sent — please try again in a moment.","#c75d75"));
+    } else {
+      wishFallback(name,msg,say);
+    } });
+}
+/* No Firebase → hand the wish over via WhatsApp, then e-mail; otherwise be honest. */
+function wishFallback(name,msg,say){
+  const phone=String(WEDDING.rsvpWhatsapp||"").replace(/\D/g,"");
+  const text=`Wedding wish from ${name}:\n${msg}`;
+  if(phone){ window.open(`https://wa.me/${phone}?text=${encodeURIComponent(text)}`,"_blank");
+    say("We opened WhatsApp with your wish —<br/>press <b>Send</b> there to share it with us 💬"); return; }
+  if(RSVP_EMAIL){ location.href=`mailto:${RSVP_EMAIL}?subject=${encodeURIComponent("Wedding wish from "+name)}&body=${encodeURIComponent(text)}`;
+    say("We opened your e-mail app with your wish —<br/>press <b>Send</b> there to share it with us ✉️"); return; }
+  say("Sorry — your wish couldn't be sent from here.<br/>Please tell us directly, we'd love to hear it.","#c75d75");
 }
 function initGift(){
   const btn=document.getElementById("askAddressBtn"), g=WEDDING.gift||{};
@@ -628,16 +640,25 @@ function closeModal(){ modalWrap.classList.remove("show"); modalOpen=false;
 modalWrap.addEventListener("click",e=>{ if(e.target===modalWrap) closeModal(); });
 window.closeModal=closeModal;
 
+/* RSVP chain: Firebase → WhatsApp → e-mail → honest failure (never a fake success). */
 function submitRSVP(e){
   e.preventDefault(); const d=new FormData(e.target);
   const name=d.get("name"),att=d.get("attending"),guests=d.get("guests"),note=d.get("note"),WB=window.WB;
-  if(WB&&WB.ready){ WB.addRSVP({name,attending:att,guests,note,to:GUEST||""}).catch(()=>{}); }
-  else if(RSVP_EMAIL){ const body=`Name: ${name}%0AAttending: ${att}%0AGuests: ${guests}%0ANote: ${note}`;
-    window.location.href=`mailto:${RSVP_EMAIL}?subject=Wedding RSVP - ${encodeURIComponent(name)}&body=${body}`; }
-  modalEl.innerHTML=`<button id="closeBtn" onclick="closeModal()">✕</button>
-    <span class="ico">💖</span><h2>Thank you, ${esc(name)||"friend"}!</h2>
-    <p class="ok">Your RSVP is in.<br/>We can't wait to celebrate with you! 🥂</p>`;
-  popHearts(26);
+  const card=(icon,title,msg,color)=>{ modalEl.innerHTML=`<button id="closeBtn" onclick="closeModal()">✕</button>
+    <span class="ico">${icon}</span><h2>${title}</h2>
+    <p class="ok" ${color?`style="color:${color}"`:""}>${msg}</p>`; modalEl.scrollTop=0; };
+  const success=()=>{ card("💖",`Thank you, ${esc(name)||"friend"}!`,"Your RSVP is in.<br/>We can't wait to celebrate with you! 🥂"); popHearts(26); };
+  const fallback=()=>{
+    const text=`Wedding RSVP\nName: ${name}\nAttending: ${att}\nGuests: ${guests}\nNote: ${note||"-"}`;
+    const phone=String(WEDDING.rsvpWhatsapp||"").replace(/\D/g,"");
+    if(phone){ window.open(`https://wa.me/${phone}?text=${encodeURIComponent(text)}`,"_blank");
+      card("💬",`Almost done, ${esc(name)||"friend"}!`,"We opened WhatsApp with your RSVP —<br/>press <b>Send</b> there to deliver it."); popHearts(12); return; }
+    if(RSVP_EMAIL){ window.location.href=`mailto:${RSVP_EMAIL}?subject=${encodeURIComponent("Wedding RSVP - "+name)}&body=${encodeURIComponent(text)}`;
+      card("✉️",`Almost done, ${esc(name)||"friend"}!`,"We opened your e-mail app with your RSVP —<br/>press <b>Send</b> there to deliver it."); return; }
+    card("😔","We couldn't send your RSVP","Sorry — this invitation has no RSVP channel set up,<br/>so nothing was sent. Please contact us directly.","#c75d75");
+  };
+  if(WB&&WB.ready) WB.addRSVP({name,attending:att,guests,note,to:GUEST||""}).then(success).catch(fallback);
+  else fallback();
 }
 window.addToCalendar=function(){
   const d=new Date(WEDDING.date), pad=n=>String(n).padStart(2,"0");
@@ -649,6 +670,17 @@ window.addToCalendar=function(){
     "DESCRIPTION:We can't wait to celebrate with you!","END:VEVENT","END:VCALENDAR"].join("\n");
   const url=URL.createObjectURL(new Blob([ics],{type:"text/calendar"}));
   const a=document.createElement("a"); a.href=url; a.download="our-wedding.ics"; a.click(); URL.revokeObjectURL(url);
+};
+window.openGoogleCal=function(){
+  const d=new Date(WEDDING.date), pad=n=>String(n).padStart(2,"0");
+  const fmt=t=>t.getUTCFullYear()+pad(t.getUTCMonth()+1)+pad(t.getUTCDate())+"T"+pad(t.getUTCHours())+pad(t.getUTCMinutes())+"00Z";
+  const u=new URL("https://calendar.google.com/calendar/render");
+  u.searchParams.set("action","TEMPLATE");
+  u.searchParams.set("text",`${WEDDING.bride} & ${WEDDING.groom} Wedding`);
+  u.searchParams.set("dates",`${fmt(d)}/${fmt(new Date(d.getTime()+5*3600e3))}`);
+  u.searchParams.set("details","We can't wait to celebrate with you!");
+  u.searchParams.set("location",`${WEDDING.venueName}, ${WEDDING.venueAddress}`);
+  window.open(u.toString(),"_blank");
 };
 
 /* ---------- 9. PROGRESS ---------- */

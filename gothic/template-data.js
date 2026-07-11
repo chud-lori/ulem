@@ -13,6 +13,7 @@ window.TEMPLATE = {
     ["portrait", "Frame", "Your real photo"],
     ["story", "Book", "Our story"],
     ["details", "Key", "Details"],
+    ["programme", "Scroll", "The programme"],
     ["gift", "Seal", "Book gift"],
     ["wishes", "Ink", "Wishes"],
     ["rsvp", "Candle", "RSVP"],

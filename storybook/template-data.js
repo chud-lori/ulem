@@ -15,6 +15,5 @@ window.TEMPLATE = {
   cover: {
     subtitle: "our photo album",
     openLabel: "Untie &amp; open ✿",
-    photoPlaceholder: "Your couple photo here",
   },
 };

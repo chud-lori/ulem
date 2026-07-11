@@ -12,4 +12,26 @@
     <path d="M875 82l100-15"/>
     <path d="M545 425l115 12"/>
   </g>
+  <!-- little hand-drawn doodles inside the pinned frames, so they read as
+       intentional scrapbook sketches rather than missing photos -->
+  <g fill="none" stroke="#b98d63" stroke-width="6" stroke-linecap="round" stroke-linejoin="round" opacity=".38">
+    <g transform="rotate(-6 250 210)">
+      <circle cx="318" cy="163" r="15"/>
+      <path d="M143 262l55-68 42 50 38-46 60 64"/>
+      <path d="M190 282h120" stroke-width="4"/>
+    </g>
+    <g transform="rotate(7 935 200)">
+      <path d="M935 245c-38-30-52-52-38-70 10-13 30-10 38 6 8-16 28-19 38-6 14 18 0 40-38 70z"/>
+      <path d="M885 264h100" stroke-width="4"/>
+    </g>
+    <g transform="rotate(3 605 555)">
+      <path d="M560 632v-64"/>
+      <circle cx="560" cy="552" r="15"/><circle cx="560" cy="552" r="4"/>
+      <path d="M560 606c-16-6-26-2-34 10"/>
+      <path d="M648 632v-46"/>
+      <circle cx="648" cy="572" r="12"/><circle cx="648" cy="572" r="3"/>
+      <path d="M648 612c14-6 24-2 30 8"/>
+      <path d="M530 640h150" stroke-width="4"/>
+    </g>
+  </g>
 </svg>

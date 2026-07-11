@@ -10,6 +10,13 @@
    Drop your images there once, named:
      bride.jpg, groom.jpg, cafe.jpg, proposal.jpg, venue.jpg, couple.png
    Missing files fall back to _placeholder.png automatically.
+
+   LANGUAGE — the fields below are the English content. The optional
+   `id:{…}` block near the bottom holds Bahasa Indonesia overrides for
+   the same fields; Bahasa-first themes (keraton, premium, scroll with
+   ?lang=id — the default) use those values and fall back to the
+   English ones for anything you leave out. Delete the whole `id`
+   block to serve identical content in every language.
    =================================================================== */
 
 window.WEDDING = {
@@ -29,8 +36,8 @@ window.WEDDING = {
   ceremonyTime: "4:00 PM",
   venueName: "Solo",
   venueAddress: "Solo, Indonesia",
-  mapsQuery: "[Venue Name, City]", // Google Maps search
-  dress: "[Outdoor smart casual · earth tones welcome]",
+  mapsQuery: "Solo, Indonesia", // Google Maps search (venue name + city works best)
+  dress: "Outdoor smart casual · earth tones welcome",
 
   /* --- love-story beats (add/remove freely) --- */
   story: [
@@ -59,12 +66,27 @@ window.WEDDING = {
 
   /* --- order of the day --- */
   agenda: [
-    { time: "[3:30]", label: "Guests arrive" },
-    { time: "[4:00]", label: "Wedding ceremony" },
-    { time: "[5:00]", label: "Photos &amp; warm greetings" },
-    { time: "[6:30]", label: "Dinner &amp; stories" },
-    { time: "[8:00]", label: "Music, laughter, and the next chapter" },
+    { time: "3:30 PM", label: "Guests arrive" },
+    { time: "4:00 PM", label: "Wedding ceremony" },
+    { time: "5:00 PM", label: "Photos &amp; warm greetings" },
+    { time: "6:30 PM", label: "Dinner &amp; stories" },
+    { time: "8:00 PM", label: "Music, laughter, and the next chapter" },
   ],
+
+  /* --- turut mengundang (extended family who also invite) ---
+     Rendered by themes only when non-empty. Plain strings. */
+  turutMengundang: [
+    // "Keluarga Besar Jesenský — Praha",
+    // "Keluarga Besar Kafka — Wien",
+  ],
+
+  /* --- live streaming (for guests who can't attend) ---
+     Rendered by themes only when url is set. --- */
+  streaming: {
+    url: "", // e.g. YouTube Live / Zoom / Google Meet link
+    label: "Watch the ceremony live",
+    time: "", // optional, e.g. "4:00 PM WIB"
+  },
 
   /* --- GIFT = BOOKS ONLY (no money / no bank transfer). --- */
   gift: {
@@ -74,8 +96,67 @@ window.WEDDING = {
       "Hi Franz & Milena, I'd like to send a book as a wedding gift. Could you share the shipping address?",
   },
 
-  /* --- RSVP e-mail fallback if you DON'T use Firebase ("" = none) --- */
+  /* --- RSVP fallbacks if you DON'T use Firebase ---
+     Themes try Firebase first; without it they offer WhatsApp, then
+     e-mail. With neither set, forms show an honest "couldn't send —
+     contact us directly" message instead of a fake success. --- */
+  rsvpWhatsapp: "", // international format, e.g. "6281234567890"
   rsvpEmail: "",
+
+  /* --- absolute site URL, used for og:image / share links.
+     Showcase = GitHub Pages; switch to your domain for production. --- */
+  siteUrl: "https://chud-lori.github.io/ulem",
+
+  /* --- BAHASA INDONESIA CONTENT (optional overrides) -----------------
+     Same shapes as the English fields above. Themes rendering in
+     Bahasa Indonesia read these first and fall back to the English
+     values for anything missing:
+       · scalar fields (dateLabel, ceremonyTime, dress, *Parents)
+         simply replace their English counterpart;
+       · story[] items are matched to the English ones by `id` and
+         merged (icon/photo stay shared, label/title/html translated);
+       · agenda[] replaces the whole English agenda when present;
+       · gift{} is merged key-by-key.
+     If `dateLabel` is omitted, themes derive it from `date` via
+     Intl.DateTimeFormat("id-ID"). Times use 24-hour WIB format. --- */
+  id: {
+    dateLabel: "Sabtu, 12 Desember 2026",
+    ceremonyTime: "16.00 WIB",
+    brideParents: "Putri dari Bapak Jan Jesenský &amp; Ibu Milena Hejzlarová",
+    groomParents: "Putra dari Bapak Hermann Kafka &amp; Ibu Julie Löwy",
+    dress: "Rapi santai untuk acara luar ruang · warna-warna alam dipersilakan",
+    story: [
+      {
+        id: "cafe",
+        label: "Kisah Kami",
+        title: "Awal Perjalanan Kami",
+        html: `<p>Semua berawal dari sapaan sederhana, rasa ingin tahu yang sama, dan obrolan
+              yang membuat perjalanan terasa lebih singkat.</p>
+              <p>Sejak saat itu, kisah-kisah favorit kami tertulis di antara debu jalur pendakian,
+              perjalanan panjang, pemandangan yang teduh, dan halaman buku-buku kesayangan kami.</p>`,
+      },
+      {
+        id: "proposal",
+        label: "Puncak Bukit",
+        title: "Pemandangan yang Kami Pilih",
+        html: `<p>Di antara rencana perjalanan berikutnya dan mimpi tentang buku berikutnya,
+              kami menyadari bahwa perjalanan terbaik adalah perjalanan yang kami tempuh bersama.</p>
+              <p>Maka di sinilah kami, siap melangkah ke babak yang baru.</p>`,
+      },
+    ],
+    agenda: [
+      { time: "15.30", label: "Tamu tiba" },
+      { time: "16.00", label: "Akad nikah" },
+      { time: "17.00", label: "Foto bersama &amp; ramah tamah" },
+      { time: "18.30", label: "Makan malam &amp; berbagi cerita" },
+      { time: "20.00", label: "Musik, tawa, dan babak yang baru" },
+    ],
+    gift: {
+      note: "Kehadiran dan doa restu Anda sudah lebih dari cukup bagi kami.<br/>Kami tidak menerima hadiah uang maupun transfer. Namun jika Bapak/Ibu/Saudara/i berkenan memberikan sesuatu, kami akan sangat berbahagia menerima <b>buku yang Anda cintai</b> untuk perpustakaan kecil di rumah kami.",
+      whatsappText:
+        "Halo Franz & Milena, saya ingin mengirimkan buku sebagai hadiah pernikahan. Boleh minta alamat pengirimannya?",
+    },
+  },
 };
 
 /* -------------------------------------------------------------------

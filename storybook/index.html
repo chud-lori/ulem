@@ -2,8 +2,16 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
-<title>Our Story — A Wedding Scrapbook</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>The Wedding of Milena &amp; Kafka — A Wedding Scrapbook</title>
+<meta name="description" content="Milena &amp; Kafka are getting married — Saturday, 12 December 2026 in Solo, Indonesia. Flip through our scrapbook of memories and RSVP." />
+<meta property="og:title" content="The Wedding of Milena &amp; Kafka" />
+<meta property="og:description" content="Saturday, 12 December 2026 · Solo, Indonesia" />
+<meta property="og:image" content="https://chud-lori.github.io/ulem/photos/og-image.jpg" />
+<meta property="og:url" content="https://chud-lori.github.io/ulem/storybook/" />
+<meta property="og:type" content="website" />
+<meta name="twitter:card" content="summary_large_image" />
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>📖</text></svg>" />
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@500;700&family=Playfair+Display:ital,wght@0,500;0,700;1,500&display=swap" rel="stylesheet" />
 <style>
@@ -81,11 +89,6 @@
   .polaroid .cap{font-family:"Caveat",cursive;font-size:19px;margin-top:8px;color:#8a6d56;}
   .avatar img{width:min(40vw,150px);height:min(40vw,150px);}
 
-  /* couple cover image */
-  #coupleImg{width:min(74vw,300px);filter:drop-shadow(0 10px 14px rgba(90,67,52,.25));
-    animation:bob 3.2s ease-in-out infinite;}
-  @keyframes bob{0%,100%{transform:translateY(0) rotate(-1deg)}50%{transform:translateY(-9px) rotate(1deg)}}
-
   /* countdown */
   .cd{display:flex;gap:10px;justify-content:center;flex-wrap:wrap;}
   .cd div{background:#fff;border-radius:10px;padding:10px 12px;min-width:62px;box-shadow:0 6px 12px rgba(90,67,52,.18);border:1px solid #e4c797;}
@@ -105,12 +108,6 @@
   label{display:block;font-family:"Caveat",cursive;font-size:18px;text-align:left;margin:10px 0 4px;color:#8a6d56;}
   input,select,textarea{width:100%;font-family:"Playfair Display",serif;font-size:14px;padding:10px 12px;
     border:2px solid #e6d3bd;border-radius:8px;background:#fffdf8;color:var(--ink);}
-  .books{display:flex;flex-direction:column;gap:8px;margin:10px 0;text-align:left;}
-  .bookrow{display:flex;justify-content:space-between;align-items:center;gap:8px;background:#fffdf8;
-    border:2px solid #e6d3bd;border-radius:8px;padding:9px 12px;font-size:14px;flex-wrap:wrap;}
-  .claim{font-family:"Caveat",cursive;font-size:16px;cursor:pointer;background:var(--rose);color:#fff;border:none;
-    border-radius:20px;padding:5px 14px;}
-  .taken{color:#2c7a3f;font-family:"Caveat",cursive;font-size:16px;}
   .wishes{display:flex;flex-direction:column;gap:9px;text-align:left;max-height:42vh;overflow:auto;margin-top:10px;width:100%;}
   .wish{background:#fffdf8;border:1.5px solid #f0ddc4;border-left:4px solid var(--rose);border-radius:8px;padding:9px 12px;}
   .wish b{font-family:"Caveat",cursive;font-size:18px;color:var(--rose-dk);display:block;}
@@ -160,8 +157,29 @@ const W = window.WEDDING;
 const T = window.TEMPLATE || {};
 const GUEST = (new URLSearchParams(location.search).get("to")||"").trim().slice(0,40) || null;
 const esc = s => String(s==null?"":s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
-const PHOTO_FALLBACK="data:image/svg+xml;charset=UTF-8,%3Csvg%20xmlns%3D%27http%3A//www.w3.org/2000/svg%27%20viewBox%3D%270%200%20800%20600%27%3E%3Crect%20width%3D%27800%27%20height%3D%27600%27%20fill%3D%27%23f7efe2%27/%3E%3Crect%20x%3D%2740%27%20y%3D%2740%27%20width%3D%27720%27%20height%3D%27520%27%20rx%3D%2722%27%20fill%3D%27%23fffaf2%27%20stroke%3D%27%23d59a91%27%20stroke-dasharray%3D%2718%2014%27%20stroke-width%3D%276%27/%3E%3Ctext%20x%3D%27400%27%20y%3D%27288%27%20text-anchor%3D%27middle%27%20font-family%3D%27serif%27%20font-size%3D%2736%27%20fill%3D%27%239b6f6b%27%3EPhoto%20placeholder%3C/text%3E%3Ctext%20x%3D%27400%27%20y%3D%27338%27%20text-anchor%3D%27middle%27%20font-family%3D%27serif%27%20font-size%3D%2722%27%20fill%3D%27%237c6b60%27%3EAdd%20your%20own%20image%3C/text%3E%3C/svg%3E";
+const PHOTO_FALLBACK="data:image/svg+xml;charset=UTF-8,"+encodeURIComponent("<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 800 600'><rect width='800' height='600' fill='#f7efe2'/><rect x='40' y='40' width='720' height='520' rx='22' fill='#fffaf2' stroke='#d59a91' stroke-dasharray='18 14' stroke-width='6'/><path d='M400 424c-96-74-132-128-96-172 26-32 76-24 96 16 20-40 70-48 96-16 36 44 0 98-96 172z' fill='none' stroke='#cf6f53' stroke-width='10' stroke-linejoin='round'/><g fill='none' stroke='#86a89a' stroke-width='6' stroke-linecap='round'><path d='M148 486c22-12 40-10 56 6'/><path d='M596 114c22-12 40-10 56 6'/></g></svg>");
 function photoFallback(img){img.onerror=null;img.src=PHOTO_FALLBACK;}
+/* dress the opener's album cover: swap its bare white rectangle for a real
+   polaroid — couple photo, washi tape, and a handwritten caption. */
+(function(){
+  const album=document.querySelector(".wb-opener .wb-album"); if(!album) return;
+  const st=document.createElement("style");
+  st.textContent=`
+    .wb-opener .wb-album::after{content:none;display:none;}
+    .wb-album-pol{position:absolute;right:18px;top:14px;width:104px;padding:5px 5px 16px;background:#fff;
+      transform:rotate(7deg);box-shadow:0 5px 12px rgba(90,67,52,.35),0 0 0 1px #d8c3a6;z-index:1;}
+    .wb-album-pol::before{content:"";position:absolute;left:50%;top:-9px;width:54px;height:15px;
+      transform:translateX(-50%) rotate(-6deg);background:#9fb7c766;border:1px dashed #6d879066;}
+    .wb-album-pol img{display:block;width:100%;aspect-ratio:5/4;object-fit:cover;background:#efe2cd;}
+    .wb-album-pol .cap{position:absolute;left:0;right:0;bottom:0;height:16px;font-family:Caveat,cursive;
+      font-size:13px;line-height:16px;color:#8a6d56;text-align:center;}`;
+  document.head.appendChild(st);
+  const pol=document.createElement("div"); pol.className="wb-album-pol";
+  const img=document.createElement("img"); img.src="../photos/couple.png"; img.alt="";
+  img.addEventListener("error",()=>photoFallback(img),{once:true});
+  const cap=document.createElement("div"); cap.className="cap"; cap.textContent=`${W.bride} & ${W.groom}`;
+  pol.append(img,cap); album.appendChild(pol);
+})();
 const photo = (file,cls,cap) =>
   `<div class="polaroid ${cls||""}"><img src="../photos/${file}" onerror="photoFallback(this)"/>${cap?`<div class="cap">${cap}</div>`:""}</div>`;
 { const sticker=document.getElementById("stickerReward"); if(sticker&&T.sticker&&T.sticker.label) sticker.innerHTML=T.sticker.label; }
@@ -171,6 +189,7 @@ const PAGES = [
   { type:"cover" },
   { type:"countdown" },
   { type:"profiles" },
+  ...((W.turutMengundang&&W.turutMengundang.length) ? [{ type:"tm" }] : []),
   ...W.story.map(s => ({ type:"story", s })),
   { type:"venue" },
   { type:"agenda" },
@@ -185,7 +204,7 @@ function build(p, i){
   if(p.type==="cover") return `<div class="card album">
       <span class="ribbon"></span>
       <p class="greet" id="greet"></p>
-      <div class="album-frame"><div id="coupleImg" style="width:min(74vw,300px);aspect-ratio:4/5;display:grid;place-items:center;text-align:center;padding:18px;background:#f7efe2;color:#9b6f6b;border:1px dashed #d59a91">Your couple photo here</div></div>
+      <div class="album-frame"><img src="../photos/couple.png" onerror="photoFallback(this)" alt="${W.bride} &amp; ${W.groom}"/></div>
       <div class="album-plate"><h1>${W.bride}<span class="amp"> &amp; </span>${W.groom}</h1>
         <p class="sub">our photo album</p><p class="hand big">${W.dateLabel}</p></div>
       <div class="acts"><button class="btn" onclick="go(1)">Untie &amp; open ✿</button></div></div>`;
@@ -197,15 +216,22 @@ function build(p, i){
         <div>${photo("bride.jpg","avatar")}<p class="hand big">${W.brideFull}</p><p class="note">${W.brideParents}</p></div>
         <div>${photo("groom.jpg","avatar r")}<p class="hand big">${W.groomFull}</p><p class="note">${W.groomParents}</p></div>
       </div></div>`;
+  if(p.type==="tm") return `<div class="card"><h2>🤍 Turut Mengundang</h2>
+      <p class="sub">together with our families</p>
+      ${W.turutMengundang.map(x=>`<p class="hand big" style="margin:6px 0">${x}</p>`).join("")}</div>`;
   if(p.type==="story"){ const s=p.s; return `<div class="card"><h2>${s.icon} ${s.title}</h2>
       ${photo(s.photo, i%2?"r":"", s.label)}<div class="hand big" style="margin-top:12px">${s.html}</div></div>`; }
-  if(p.type==="venue") return `<div class="card"><h2>💒 You're Invited</h2>
+  if(p.type==="venue"){ const st=W.streaming;
+    return `<div class="card"><h2>💒 You're Invited</h2>
       <div class="detail"><span class="k">When</span><span>${W.dateLabel}<br/>Ceremony ${W.ceremonyTime}</span></div>
       <div class="detail"><span class="k">Where</span><span>${W.venueName}<br/>${W.venueAddress}</span></div>
       <div class="detail"><span class="k">Dress</span><span>${W.dress}</span></div>
+      ${(st&&st.url)?`<div class="detail"><span class="k">Live</span><span>${st.label||"Watch the ceremony live"}${st.time?`<br/>${st.time}`:""}</span></div>`:""}
       <p class="hand" id="venueCd" style="font-size:18px;color:var(--rose-dk)"></p>
       <div class="acts"><button class="btn" id="mapBtn">📍 Map</button>
-        <button class="btn ghost" onclick="addToCalendar()">📅 Calendar</button></div></div>`;
+        <button class="btn ghost" onclick="addToCalendar()">📅 Save .ics</button>
+        <button class="btn ghost" onclick="openGoogleCal()">🗓️ Google Cal</button>
+        ${(st&&st.url)?`<button class="btn" id="streamBtn">📺 Watch Live</button>`:""}</div></div>`; }
   if(p.type==="agenda") return `<div class="card"><h2>🎉 Order of the Day</h2>
       ${W.agenda.map(a=>`<div class="detail"><span class="k">${a.time}</span><span>${a.label}</span></div>`).join("")}</div>`;
   if(p.type==="gift"){ const g=W.gift;
@@ -216,6 +242,7 @@ function build(p, i){
       <form id="wishForm"><label>Your name</label><input name="name" required placeholder="your name"/>
         <label>Your wish / prayer</label><textarea name="msg" rows="2" required placeholder="something sweet…"></textarea>
         <div class="acts"><button class="btn" type="submit">Send wish ✿</button></div></form>
+      <p class="note" id="wishStatus"></p>
       <div class="wishes" id="wishList"><p class="note" id="wishNote">Loading wishes…</p></div></div>`;
   if(p.type==="rsvp") return `<div class="card"><h2>💌 Will You Join Us?</h2>
       <form id="rsvpForm"><label>Your name</label><input name="name" required placeholder="your name"/>
@@ -225,7 +252,8 @@ function build(p, i){
         <div class="acts"><button class="btn" type="submit">Send RSVP 💕</button></div></form>
       <p class="note" id="rsvpNote"></p></div>`;
   if(p.type==="closing") return `<div class="card"><h2>With love,</h2>
-      <div style="width:min(60vw,240px);aspect-ratio:4/5;display:grid;place-items:center;margin:auto;background:#f7efe2;color:#9b6f6b;border:8px solid #fff;box-shadow:0 10px 20px rgba(90,67,52,.22)">Your couple photo here</div>
+      <img src="../photos/couple.png" onerror="photoFallback(this)" alt="${W.bride} &amp; ${W.groom}"
+        style="width:min(60vw,240px);aspect-ratio:4/5;object-fit:cover;display:block;margin:auto;background:#f7efe2;border:8px solid #fff;box-shadow:0 10px 20px rgba(90,67,52,.22)"/>
       <h1 style="font-size:clamp(24px,7vw,40px)">${W.bride} <span class="amp">&amp;</span> ${W.groom}</h1>
       <p class="hand big">Thank you for reading our story.<br/>We can't wait to celebrate with you! 💕</p></div>`;
   return `<div class="card"></div>`;
@@ -273,29 +301,60 @@ window.addToCalendar=function(){ const d=new Date(W.date), pad=n=>String(n).padS
     "DESCRIPTION:We can't wait to celebrate with you!","END:VEVENT","END:VCALENDAR"].join("\n");
   const a=document.createElement("a"); a.href=URL.createObjectURL(new Blob([ics],{type:"text/calendar"}));
   a.download="our-wedding.ics"; a.click(); };
-{ const mb=document.getElementById("mapBtn"); if(mb) mb.onclick=()=>window.open("https://maps.google.com/?q="+encodeURIComponent(W.mapsQuery),"_blank"); }
+window.openGoogleCal=function(){ const d=new Date(W.date), pad=n=>String(n).padStart(2,"0");
+  const fmt=t=>t.getUTCFullYear()+pad(t.getUTCMonth()+1)+pad(t.getUTCDate())+"T"+pad(t.getUTCHours())+pad(t.getUTCMinutes())+"00Z";
+  const u=new URL("https://calendar.google.com/calendar/render");
+  u.searchParams.set("action","TEMPLATE");
+  u.searchParams.set("text",`${W.bride} & ${W.groom} Wedding`);
+  u.searchParams.set("dates",`${fmt(d)}/${fmt(new Date(d.getTime()+5*36e5))}`);
+  u.searchParams.set("details","We can't wait to celebrate with you!");
+  u.searchParams.set("location",`${W.venueName}, ${W.venueAddress}`);
+  window.open(u.toString(),"_blank"); };
+{ const mb=document.getElementById("mapBtn"); if(mb) mb.onclick=()=>window.open("https://maps.google.com/?q="+encodeURIComponent(W.mapsQuery),"_blank");
+  const sb=document.getElementById("streamBtn"); if(sb) sb.onclick=()=>window.open(W.streaming.url,"_blank"); }
 
 /* ---- Firebase: wishes + rsvp + book claims (graceful without config) ---- */
 function withWB(fn){ const WB=window.WB; if(WB) fn(WB); else addEventListener("wb-ready",()=>fn(window.WB),{once:true}); }
+/* no-Firebase hand-off: WhatsApp → e-mail → honest failure (never a fake success) */
+function directSend(subject,text){
+  const phone=String(W.rsvpWhatsapp||"").replace(/\D/g,"");
+  if(phone){ window.open(`https://wa.me/${phone}?text=${encodeURIComponent(text)}`,"_blank"); return "whatsapp"; }
+  if(W.rsvpEmail){ location.href=`mailto:${W.rsvpEmail}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(text)}`; return "email"; }
+  return null;
+}
 // wishes
 (function(){ const f=document.getElementById("wishForm"); if(!f) return;
   const list=document.getElementById("wishList"), note=document.getElementById("wishNote");
   withWB(WB=>{ if(WB.ready){ WB.watchWishes(items=>{ list.innerHTML = items.length
         ? items.map(w=>`<div class="wish"><b>${esc(w.name)}</b>${esc(w.msg)}</div>`).join("")
         : `<p class="note">Be the first to leave a wish 💕</p>`; }); }
-    else note.textContent="(Live wishes need Firebase — see ../firebase.js)"; });
+    else note.textContent="(Wishes here go to us directly — the live wall needs Firebase.)"; });
+  const status=document.getElementById("wishStatus");
   f.addEventListener("submit",e=>{ e.preventDefault(); const d=new FormData(f), WB=window.WB;
-    if(WB&&WB.ready){ WB.addWish(d.get("name"),d.get("msg")).catch(()=>{}); f.reset(); }
-    else note.textContent="(Set up Firebase to share your wish.)"; }); })();
-// rsvp
+    if(WB&&WB.ready){
+      WB.addWish(d.get("name"),d.get("msg")).then(()=>{ f.reset(); status.textContent="Your wish is on the wall 💕"; })
+        .catch(()=>{ status.textContent="Your wish couldn't be sent — please try again in a moment."; });
+    } else {
+      const via=directSend(`Wedding wish from ${d.get("name")}`,`Wedding wish from ${d.get("name")}:\n${d.get("msg")}`);
+      status.textContent = via==="whatsapp" ? "We opened WhatsApp with your wish — press Send there to share it 💬"
+        : via==="email" ? "We opened your e-mail app with your wish — press Send there to share it ✉️"
+        : "Sorry — your wish couldn't be sent from here. Please tell us directly, we'd love to hear it.";
+    } }); })();
+// rsvp: Firebase → WhatsApp → e-mail → honest failure
 (function(){ const f=document.getElementById("rsvpForm"); if(!f) return; const note=document.getElementById("rsvpNote");
   f.addEventListener("submit",e=>{ e.preventDefault(); const d=new FormData(f), WB=window.WB,
     data={name:d.get("name"),attending:d.get("attending"),guests:d.get("guests"),note:d.get("note"),to:GUEST||""};
-    if(WB&&WB.ready) WB.addRSVP(data).catch(()=>{});
-    else if(W.rsvpEmail) location.href=`mailto:${W.rsvpEmail}?subject=Wedding RSVP - ${encodeURIComponent(data.name)}&body=`+
-      encodeURIComponent(`Name: ${data.name}\nAttending: ${data.attending}\nGuests: ${data.guests}\nNote: ${data.note}`);
-    f.style.display="none"; note.innerHTML=`<span style="font-size:20px;color:var(--rose-dk)">Thank you, ${esc(data.name)||"friend"}! 💕<br/>Your RSVP is in.</span>`;
-    const sticker=document.getElementById("stickerReward"); if(sticker) sticker.classList.add("show"); }); })();
+    const success=()=>{ f.style.display="none";
+      note.innerHTML=`<span style="font-size:20px;color:var(--rose-dk)">Thank you, ${esc(data.name)||"friend"}! 💕<br/>Your RSVP is in.</span>`;
+      const sticker=document.getElementById("stickerReward"); if(sticker) sticker.classList.add("show"); };
+    const fallback=()=>{
+      const via=directSend(`Wedding RSVP - ${data.name}`,
+        `Wedding RSVP\nName: ${data.name}\nAttending: ${data.attending}\nGuests: ${data.guests}\nNote: ${data.note||"-"}`);
+      if(via){ f.style.display="none";
+        note.innerHTML=`<span style="font-size:18px;color:var(--rose-dk)">Almost done, ${esc(data.name)||"friend"}! We opened ${via==="whatsapp"?"WhatsApp":"your e-mail app"} with your RSVP — press <b>Send</b> there to deliver it. 💌</span>`; }
+      else note.innerHTML=`<span style="color:var(--rose-dk)">Sorry — we couldn't send your RSVP: no RSVP channel is set up yet, so nothing was sent. Please contact us directly. 🙏</span>`; };
+    if(WB&&WB.ready) WB.addRSVP(data).then(success).catch(fallback);
+    else fallback(); }); })();
 function giftWaUrl(g){
   const phone=String((g&&g.whatsapp)||"").replace(/\D/g,"");
   const text=encodeURIComponent((g&&g.whatsappText)||"Hi, I'd like to send a book as a wedding gift. Could you share the shipping address?");
@@ -308,6 +367,11 @@ function giftWaUrl(g){
   if(open){ const k=PAGES.findIndex(p=>p.type===open||(p.s&&p.s.id===open)); if(k>=0) idx=k; }
   go(idx);
 })();
+/* Opening the opener overlay counts as opening the album too — land straight on
+   page 1 (the cover stays reachable by paging back). */
+document.addEventListener("click",e=>{
+  if(e.target.closest(".wb-open-btn")) setTimeout(()=>{ if(cur===0) go(1); },560);
+},true);
 // ambient drifting petals
 if(window.FX) FX.particles({ chars:["✿","❀","✽","♥"], color:"#e8889c", count:13, z:0, min:11, var:18 });
 </script>

@@ -1,43 +1,281 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="id">
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>Wedding Invitation Templates</title>
+<meta name="robots" content="noindex" />
+<title>Undangan Pernikahan Digital — Pilih Tema</title>
+<meta property="og:title" content="Undangan Pernikahan Digital — Pilih Tema" />
+<meta property="og:type" content="website" />
+<meta property="og:url" content="https://chud-lori.github.io/ulem/" />
+<meta property="og:image" content="https://chud-lori.github.io/ulem/photos/og-image.jpg" />
+<link rel="icon" href="data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%20100%20100'%3E%3Ctext%20y='.9em'%20font-size='90'%3E%F0%9F%92%8C%3C/text%3E%3C/svg%3E" />
 <link rel="preconnect" href="https://fonts.googleapis.com" />
-<link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600&family=Plus+Jakarta+Sans:wght@400;500&display=swap" rel="stylesheet" />
 <style>
+  :root{
+    --bg:#FAF7F2;
+    --surface:#FFFFFF;
+    --surface-alt:#F1EAE0;
+    --ink:#2B2A26;
+    --muted:#7A736A;
+    --gold:#9C7B4F;
+    --gold-deep:#7E6238;
+    --hairline:#E4DCCF;
+  }
   *{box-sizing:border-box;margin:0;padding:0;}
-  html,body{height:100%;}
-  body{font-family:'Press Start 2P',ui-monospace,monospace;color:#f7edd8;
-    background:linear-gradient(180deg,#1f2f2b 0%,#405c48 58%,#c08a42 100%);
-    display:flex;flex-direction:column;align-items:center;justify-content:center;
-    gap:28px;text-align:center;padding:24px;line-height:1.8;}
-  h1{font-size:clamp(14px,4vw,26px);color:#f1c66a;text-shadow:2px 2px 0 #1f2f2b;}
-  p{font-size:clamp(8px,2.4vw,11px);opacity:.8;}
-  .templates{display:flex;flex-wrap:wrap;gap:18px;justify-content:center;}
-  a.card{display:block;text-decoration:none;color:#fff;background:#2f6f55;
-    border-radius:12px;padding:20px 26px;font-size:clamp(9px,2.6vw,13px);
-    box-shadow:0 5px 0 #1c4435;transition:transform .05s,box-shadow .05s;}
-  a.card:active{transform:translateY(4px);box-shadow:0 1px 0 #1c4435;}
-  small{opacity:.5;font-size:7px;}
+  html{background:var(--bg);color-scheme:light only;}
+  html,body{min-height:100svh;}
+  body{
+    background:var(--bg);
+    color:var(--ink);
+    font-family:'Plus Jakarta Sans',system-ui,-apple-system,sans-serif;
+    font-size:16px;line-height:1.6;
+    overflow-x:hidden;
+    -webkit-font-smoothing:antialiased;
+  }
+  .wrap{max-width:1200px;margin:0 auto;padding-left:24px;padding-right:24px;}
+
+  /* ---------- Hero ---------- */
+  .hero{padding-top:84px;padding-bottom:40px;text-align:center;}
+  .hero .ornament{display:block;margin:0 auto 26px;color:var(--gold);}
+  .eyebrow{
+    font-size:12px;font-weight:500;letter-spacing:.12em;text-transform:uppercase;
+    color:var(--muted);
+  }
+  h1{
+    font-family:'Fraunces',Georgia,serif;font-weight:550;
+    font-size:clamp(40px,5.4vw,62px);line-height:1.08;letter-spacing:-.01em;
+    margin:18px auto 16px;max-width:16ch;
+  }
+  .sub{color:var(--muted);max-width:52ch;margin:0 auto;}
+  .peek{
+    display:inline-block;margin-top:28px;
+    font-size:14px;font-weight:500;letter-spacing:.04em;
+    color:var(--gold);text-decoration:none;
+    border-bottom:1px solid transparent;
+    transition:color .2s,border-color .2s;
+  }
+  .peek:hover{color:var(--gold-deep);border-color:currentColor;}
+
+  /* ---------- Divider ---------- */
+  .divider{display:flex;align-items:center;justify-content:center;gap:10px;padding:36px 0;}
+  .divider::before,.divider::after{content:"";width:48px;height:1px;background:var(--gold);}
+  .divider i{width:5px;height:5px;background:var(--gold);transform:rotate(45deg);}
+
+  /* ---------- Filter chips ---------- */
+  .filters{display:flex;flex-wrap:wrap;justify-content:center;gap:8px;margin:0 0 36px;}
+  .filters button{
+    appearance:none;background:transparent;border:1px solid var(--hairline);
+    border-radius:999px;padding:6px 14px;cursor:pointer;
+    font-family:inherit;font-size:11px;font-weight:500;
+    letter-spacing:.1em;text-transform:uppercase;color:var(--muted);
+    transition:color .2s,border-color .2s,background .2s;
+  }
+  .filters button:hover{color:var(--ink);border-color:var(--gold);}
+  .filters button[aria-pressed="true"]{
+    background:var(--ink);border-color:var(--ink);color:var(--bg);
+  }
+
+  /* ---------- Gallery ---------- */
+  .grid{display:grid;grid-template-columns:repeat(3,1fr);gap:24px;padding-bottom:24px;}
+  @media (max-width:1023px){.grid{grid-template-columns:repeat(2,1fr);}}
+  @media (max-width:599px){.grid{grid-template-columns:1fr;}}
+  .card{
+    display:block;text-decoration:none;color:inherit;
+    background:var(--surface);border:1px solid var(--hairline);border-radius:10px;
+    overflow:hidden;
+    box-shadow:0 1px 2px rgba(43,42,38,.06);
+    transition:box-shadow .3s ease-out,border-color .3s ease-out;
+  }
+  .card:hover{
+    box-shadow:0 1px 2px rgba(43,42,38,.06),0 8px 24px rgba(43,42,38,.08);
+    border-color:#D8CDBB;
+  }
+  .card.is-hidden{display:none;}
+  .thumb{
+    position:relative;aspect-ratio:4/5;overflow:hidden;
+    background:var(--surface-alt);border-bottom:1px solid var(--hairline);
+  }
+  .thumb img{
+    width:100%;height:100%;object-fit:cover;display:block;
+    transition:transform .3s ease-out;
+  }
+  .card:hover .thumb img{transform:scale(1.03);}
+  .thumb .scrim{
+    position:absolute;inset:0;display:flex;align-items:center;justify-content:center;
+    background:rgba(43,42,38,.34);opacity:0;transition:opacity .3s ease-out;
+  }
+  .card:hover .scrim{opacity:1;}
+  .scrim span{
+    color:#FAF7F2;font-size:12px;font-weight:500;
+    letter-spacing:.14em;text-transform:uppercase;
+    border:1px solid rgba(250,247,242,.55);padding:9px 18px;
+  }
+  .card-body{padding:18px 20px 20px;}
+  .card-body h2{
+    font-family:'Fraunces',Georgia,serif;font-weight:550;
+    font-size:20px;line-height:1.25;letter-spacing:.002em;
+  }
+  .card-body p{font-size:13px;color:var(--muted);margin-top:5px;line-height:1.55;}
+  .card-meta{display:flex;align-items:center;justify-content:space-between;margin-top:14px;}
+  .chip{
+    font-size:11px;font-weight:500;letter-spacing:.1em;text-transform:uppercase;
+    color:var(--muted);border:1px solid var(--hairline);border-radius:999px;
+    padding:3px 10px;
+  }
+  .num{
+    font-family:'Fraunces',Georgia,serif;font-size:13px;color:var(--gold);
+    letter-spacing:.06em;
+  }
+
+  /* ---------- Footer ---------- */
+  footer{padding:8px 0 48px;text-align:center;}
+  footer p{font-size:13px;color:var(--muted);}
+  footer a{color:var(--gold);text-decoration:none;border-bottom:1px solid transparent;transition:color .2s,border-color .2s;}
+  footer a:hover{color:var(--gold-deep);border-color:currentColor;}
+
+  @media (max-width:599px){
+    .hero{padding-top:64px;padding-bottom:32px;}
+    .wrap{padding-left:20px;padding-right:20px;}
+  }
 </style>
 </head>
 <body>
-  <h1>💌 Wedding Invitations</h1>
-  <p>Choose a template:</p>
-  <div class="templates">
-    <a class="card" href="game/">🥾 Interactive Story Route</a>
-    <a class="card" href="cinema/">🎬 Cinephile Premiere</a>
-    <a class="card" href="gothic/">🕯️ Gothic Invitation</a>
-    <a class="card" href="travel/">🧭 Travel Journal</a>
-    <a class="card" href="premium/">💐 Premium Interactive</a>
-    <a class="card" href="editorial/">📰 Editorial Cover</a>
-    <a class="card" href="storybook/">📖 Our Story Scrapbook</a>
-    <a class="card" href="library/">📚 The Library of Us</a>
-    <a class="card" href="scroll/">🌸 The Long Scroll</a>
-    <!-- Add more templates here, e.g. <a class="card" href="garden/">🌸 Garden</a> -->
-  </div>
-  <small>interactive templates powered by shared data.js</small>
+
+  <header class="hero wrap">
+    <svg class="ornament" width="96" height="26" viewBox="0 0 96 26" fill="none" aria-hidden="true">
+      <g stroke="currentColor" stroke-width="1" stroke-linecap="round">
+        <path d="M6 20 C 22 20 38 16 48 5 C 58 16 74 20 90 20"/>
+        <path d="M23 18.4 C 21.5 13.5 18 10.5 13 9.5 C 14.5 14.5 18 17.5 23 18.4 Z"/>
+        <path d="M36 14.6 C 35.5 9.6 33 6 28.5 4.5 C 29 9.5 31.5 13 36 14.6 Z"/>
+        <path d="M73 18.4 C 74.5 13.5 78 10.5 83 9.5 C 81.5 14.5 78 17.5 73 18.4 Z"/>
+        <path d="M60 14.6 C 60.5 9.6 63 6 67.5 4.5 C 67 9.5 64.5 13 60 14.6 Z"/>
+      </g>
+    </svg>
+    <p class="eyebrow">Undangan Pernikahan Digital</p>
+    <h1>Undangan yang terasa seperti kalian.</h1>
+    <p class="sub">Sepuluh tema dengan karakter berbeda — pilih satu, buka pratinjaunya, dan bayangkan nama kalian di sana.</p>
+    <a class="peek" href="#tema">Lihat tema ↓</a>
+  </header>
+
+  <div class="divider" role="presentation"><i></i></div>
+
+  <main class="wrap" id="tema">
+    <div class="filters" role="group" aria-label="Filter kategori tema">
+      <button type="button" data-filter="all" aria-pressed="true">Semua</button>
+      <button type="button" data-filter="klasik" aria-pressed="false">Klasik</button>
+      <button type="button" data-filter="modern" aria-pressed="false">Modern</button>
+      <button type="button" data-filter="tradisional" aria-pressed="false">Tradisional</button>
+      <button type="button" data-filter="playful" aria-pressed="false">Playful</button>
+      <button type="button" data-filter="unik" aria-pressed="false">Unik</button>
+    </div>
+
+    <div class="grid">
+      <a class="card" href="premium/" data-cat="klasik">
+        <div class="thumb"><img src="assets/previews/premium.jpg" alt="Pratinjau tema Emerald &amp; Gold" width="640" height="800" loading="eager" /><div class="scrim"><span>Lihat Preview</span></div></div>
+        <div class="card-body">
+          <h2>Emerald &amp; Gold</h2>
+          <p>Zamrud gelap dan emas, terasa mewah sejak sampul.</p>
+          <div class="card-meta"><span class="chip">Klasik</span><span class="num">№ 01</span></div>
+        </div>
+      </a>
+      <a class="card" href="editorial/" data-cat="modern">
+        <div class="thumb"><img src="assets/previews/editorial.jpg" alt="Pratinjau tema The Editorial" width="640" height="800" loading="eager" /><div class="scrim"><span>Lihat Preview</span></div></div>
+        <div class="card-body">
+          <h2>The Editorial</h2>
+          <p>Sampul majalah modern yang tenang dan rapi.</p>
+          <div class="card-meta"><span class="chip">Modern</span><span class="num">№ 02</span></div>
+        </div>
+      </a>
+      <a class="card" href="keraton/" data-cat="tradisional">
+        <div class="thumb"><img src="assets/previews/keraton.jpg" alt="Pratinjau tema Keraton" width="640" height="800" loading="eager" /><div class="scrim"><span>Lihat Preview</span></div></div>
+        <div class="card-body">
+          <h2>Keraton</h2>
+          <p>Keanggunan Jawa dengan ornamen batik keraton.</p>
+          <div class="card-meta"><span class="chip">Tradisional</span><span class="num">№ 03</span></div>
+        </div>
+      </a>
+      <a class="card" href="library/" data-cat="klasik">
+        <div class="thumb"><img src="assets/previews/library.jpg" alt="Pratinjau tema Library of Us" width="640" height="800" loading="lazy" /><div class="scrim"><span>Lihat Preview</span></div></div>
+        <div class="card-body">
+          <h2>Library of Us</h2>
+          <p>Kisah kalian dijilid rapi seperti buku tua.</p>
+          <div class="card-meta"><span class="chip">Klasik</span><span class="num">№ 04</span></div>
+        </div>
+      </a>
+      <a class="card" href="scroll/" data-cat="tradisional">
+        <div class="thumb"><img src="assets/previews/scroll.jpg" alt="Pratinjau tema Sepucuk Undangan" width="640" height="800" loading="lazy" /><div class="scrim"><span>Lihat Preview</span></div></div>
+        <div class="card-body">
+          <h2>Sepucuk Undangan</h2>
+          <p>Gulungan panjang yang dibuka perlahan-lahan.</p>
+          <div class="card-meta"><span class="chip">Tradisional</span><span class="num">№ 05</span></div>
+        </div>
+      </a>
+      <a class="card" href="gothic/" data-cat="unik">
+        <div class="thumb"><img src="assets/previews/gothic.jpg" alt="Pratinjau tema The Sealed Gate" width="640" height="800" loading="lazy" /><div class="scrim"><span>Lihat Preview</span></div></div>
+        <div class="card-body">
+          <h2>The Sealed Gate</h2>
+          <p>Gerbang tersegel — gelap, khidmat, dan romantis.</p>
+          <div class="card-meta"><span class="chip">Unik</span><span class="num">№ 06</span></div>
+        </div>
+      </a>
+      <a class="card" href="cinema/" data-cat="unik">
+        <div class="thumb"><img src="assets/previews/cinema.jpg" alt="Pratinjau tema Premiere Night" width="640" height="800" loading="lazy" /><div class="scrim"><span>Lihat Preview</span></div></div>
+        <div class="card-body">
+          <h2>Premiere Night</h2>
+          <p>Malam premier — sobek tiketnya untuk masuk.</p>
+          <div class="card-meta"><span class="chip">Unik</span><span class="num">№ 07</span></div>
+        </div>
+      </a>
+      <a class="card" href="travel/" data-cat="unik">
+        <div class="thumb"><img src="assets/previews/travel.jpg" alt="Pratinjau tema Travel Journal" width="640" height="800" loading="lazy" /><div class="scrim"><span>Lihat Preview</span></div></div>
+        <div class="card-body">
+          <h2>Travel Journal</h2>
+          <p>Jurnal perjalanan dengan peta yang ikut bercerita.</p>
+          <div class="card-meta"><span class="chip">Unik</span><span class="num">№ 08</span></div>
+        </div>
+      </a>
+      <a class="card" href="storybook/" data-cat="playful">
+        <div class="thumb"><img src="assets/previews/storybook.jpg" alt="Pratinjau tema Scrapbook" width="640" height="800" loading="lazy" /><div class="scrim"><span>Lihat Preview</span></div></div>
+        <div class="card-body">
+          <h2>Scrapbook</h2>
+          <p>Album tempel penuh kenangan dan catatan kecil.</p>
+          <div class="card-meta"><span class="chip">Playful</span><span class="num">№ 09</span></div>
+        </div>
+      </a>
+      <a class="card" href="game/" data-cat="playful">
+        <div class="thumb"><img src="assets/previews/game.jpg" alt="Pratinjau tema Story Route" width="640" height="800" loading="lazy" /><div class="scrim"><span>Lihat Preview</span></div></div>
+        <div class="card-body">
+          <h2>Story Route</h2>
+          <p>Rute piksel kecil yang dijelajahi para tamu.</p>
+          <div class="card-meta"><span class="chip">Playful</span><span class="num">№ 10</span></div>
+        </div>
+      </a>
+    </div>
+  </main>
+
+  <div class="divider" role="presentation"><i></i></div>
+
+  <footer class="wrap">
+    <p>Semua tema memakai satu data yang sama &middot; <a href="tools/invites.html">Alat undangan (host)</a></p>
+  </footer>
+
+<script>
+(function(){
+  var buttons=document.querySelectorAll('.filters button');
+  var cards=document.querySelectorAll('.card');
+  buttons.forEach(function(btn){
+    btn.addEventListener('click',function(){
+      buttons.forEach(function(b){b.setAttribute('aria-pressed',b===btn?'true':'false');});
+      var f=btn.dataset.filter;
+      cards.forEach(function(c){
+        c.classList.toggle('is-hidden',f!=='all'&&c.dataset.cat!==f);
+      });
+    });
+  });
+})();
+</script>
 </body>
 </html>
