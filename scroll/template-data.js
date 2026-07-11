@@ -1,20 +1,178 @@
-window.TEMPLATE = {
-  theme: "scroll",
-  opener: {
-    variant: "scroll",
-    kicker: "Wedding Invitation",
-    title: "A Long Scroll",
-    body: "A soft reading flow for the day, the place, and the reply.",
-    button: "Begin",
-    bg: "#f1ead8",
-    accent: "#195446",
-  },
-  quickDock: {
-    rsvp: "RSVP",
-    map: "Map",
-    calendar: "Calendar",
-  },
-  hero: {
-    photoPlaceholder: "Your couple photo here",
-  },
-};
+/* Scroll theme — presentation config + bilingual UI chrome.
+   Default language: Bahasa Indonesia (guests in Solo). ?lang=en switches
+   to English; the page also shows a small ID/EN toggle. Only UI chrome is
+   translated here — long-form content (story html, gift note) lives in
+   ../data.js and stays as written. */
+(function () {
+  var params = new URLSearchParams(location.search);
+  var lang = (params.get("lang") || "id").toLowerCase() === "en" ? "en" : "id";
+
+  var i18n = {
+    id: {
+      /* opener overlay */
+      openerKicker: "Undangan Pernikahan",
+      openerTitle: "Sepucuk Undangan",
+      openerBody: "Silakan dibuka dan digulir perlahan — kisah, waktu, dan tempat kami menanti.",
+      openerButton: "Buka Undangan",
+      /* quick dock */
+      dockRsvp: "RSVP", dockMap: "Peta", dockCal: "Kalender",
+      /* hero */
+      greeting: "Kepada Yth. Bapak/Ibu/Saudara/i {name}",
+      heroTagline: "akan melangsungkan pernikahan",
+      scrollCue: "gulir",
+      /* countdown */
+      cdEyebrow: "Simpan Tanggal",
+      cdTitle: "Menghitung Hari Bahagia",
+      days: "Hari", hours: "Jam", mins: "Menit", secs: "Detik", today: "Hari Ini!",
+      /* couple / family */
+      coupleEyebrow: "Kedua Mempelai",
+      coupleTitle: "Kami yang Berbahagia",
+      turutTitle: "Turut Mengundang",
+      /* venue */
+      venueEyebrow: "Waktu &amp; Tempat",
+      venueTitle: "Dengan Hormat Mengundang",
+      kWhen: "Waktu", kWhere: "Tempat", kDress: "Busana", kLive: "Live",
+      ceremony: "Acara dimulai",
+      btnMap: "Buka Peta",
+      btnCal: "Simpan Tanggal (.ics)",
+      btnGcal: "Google Calendar",
+      btnStream: "Tonton Live Streaming",
+      /* agenda */
+      agendaEyebrow: "Hari Bahagia",
+      agendaTitle: "Susunan Acara",
+      /* gift */
+      giftEyebrow: "Tanda Kasih",
+      giftTitle: "Hadiahkan Sebuah Buku",
+      giftBtn: "Tanya Alamat Pengiriman",
+      giftNote: "Alamat hanya kami bagikan melalui WhatsApp agar tetap privat.",
+      /* wishes */
+      wishesEyebrow: "Tinggalkan Pesan",
+      wishesTitle: "Ucapan &amp; Doa",
+      wishName: "Nama", wishNamePh: "nama Anda",
+      wishMsg: "Ucapan atau doa", wishMsgPh: "tulis dari hati…",
+      wishBtn: "Kirim Ucapan ♥",
+      wishesLoading: "Memuat ucapan…",
+      wishesEmpty: "Jadilah yang pertama mengirim ucapan ♥",
+      wishSent: "Terima kasih, ucapan Anda telah terkirim ♥",
+      wishWaOpened: "WhatsApp terbuka — silakan tekan kirim untuk menyampaikan ucapan Anda.",
+      wishMailOpened: "Aplikasi e-mail terbuka — silakan kirim pesan tersebut untuk menyampaikan ucapan Anda.",
+      wishFailed: "Maaf, ucapan belum dapat terkirim melalui halaman ini. Silakan sampaikan langsung kepada kami. 🙏",
+      wishesFallbackInfo: "Ucapan Anda akan diteruskan langsung kepada kami.",
+      wishesOffline: "Buku tamu daring belum aktif — silakan sampaikan ucapan Anda langsung saat acara. 🙏",
+      /* rsvp */
+      rsvpEyebrow: "Mohon Konfirmasi",
+      rsvpTitle: "Konfirmasi Kehadiran",
+      rsvpName: "Nama", rsvpNamePh: "nama Anda",
+      rsvpAttend: "Apakah Anda berkenan hadir?",
+      optYes: "Hadir dengan sukacita 🎊",
+      optNo: "Mohon maaf berhalangan 💔",
+      rsvpGuests: "Jumlah tamu",
+      rsvpNoteL: "Catatan untuk kami", rsvpNotePh: "permintaan lagu, pantangan makanan…",
+      rsvpBtn: "Konfirmasi Kehadiran ♥",
+      rsvpThanks: "Terima kasih, {name}!",
+      rsvpThanksSub: "Konfirmasi Anda telah kami terima.",
+      rsvpWaOpened: "WhatsApp terbuka — silakan tekan kirim untuk menyelesaikan konfirmasi Anda.",
+      rsvpMailOpened: "Aplikasi e-mail terbuka — silakan kirim pesan tersebut untuk menyelesaikan konfirmasi.",
+      rsvpFailed: "Maaf, konfirmasi belum dapat terkirim melalui halaman ini. Silakan hubungi kami langsung. 🙏",
+      friend: "Sahabat",
+      /* closing */
+      closingTitle: "Merupakan suatu kehormatan dan kebahagiaan bagi kami apabila Bapak/Ibu/Saudara/i berkenan hadir.",
+      /* calendar + whatsapp plumbing */
+      and: "dan",
+      calDesc: "Kami menantikan kehadiran Anda!",
+      waRsvpHeader: "Konfirmasi Kehadiran", waWishHeader: "Ucapan & Doa",
+      waName: "Nama", waAttendance: "Kehadiran", waGuests: "Jumlah tamu", waNote: "Catatan",
+      /* chapter-dot tooltips */
+      dotTop: "Awal", dotCountdown: "Hitung Mundur", dotCouple: "Mempelai",
+      dotVenue: "Lokasi", dotAgenda: "Acara", dotGift: "Kado",
+      dotWishes: "Ucapan", dotRsvp: "RSVP", dotClosing: "Penutup",
+    },
+    en: {
+      openerKicker: "Wedding Invitation",
+      openerTitle: "A Long Scroll",
+      openerBody: "A soft reading flow for the day, the place, and the reply.",
+      openerButton: "Begin",
+      dockRsvp: "RSVP", dockMap: "Map", dockCal: "Calendar",
+      greeting: "Dear {name}, you're invited",
+      heroTagline: "are getting married",
+      scrollCue: "scroll",
+      cdEyebrow: "Save the date",
+      cdTitle: "The Big Day Is Coming",
+      days: "Days", hours: "Hours", mins: "Mins", secs: "Secs", today: "Today!",
+      coupleEyebrow: "Dramatis Personæ",
+      coupleTitle: "Meet the Couple",
+      turutTitle: "Together With the Families",
+      venueEyebrow: "Where &amp; When",
+      venueTitle: "You're Invited",
+      kWhen: "When", kWhere: "Where", kDress: "Dress", kLive: "Live",
+      ceremony: "Ceremony",
+      btnMap: "Open Map",
+      btnCal: "Save the Date (.ics)",
+      btnGcal: "Google Calendar",
+      btnStream: "Watch the Live Stream",
+      agendaEyebrow: "The Day",
+      agendaTitle: "Order of Events",
+      giftEyebrow: "In lieu of gifts",
+      giftTitle: "Gift Us a Book",
+      giftBtn: "Ask Shipping Address",
+      giftNote: "We only share the address through WhatsApp so it stays private.",
+      wishesEyebrow: "Leave your mark",
+      wishesTitle: "Wishes &amp; Prayers",
+      wishName: "Your name", wishNamePh: "your name",
+      wishMsg: "Your wish or prayer", wishMsgPh: "something from the heart…",
+      wishBtn: "Send Wish ♥",
+      wishesLoading: "Loading wishes…",
+      wishesEmpty: "Be the first to leave a wish ♥",
+      wishSent: "Thank you, your wish has been sent ♥",
+      wishWaOpened: "WhatsApp is open — please press send to deliver your wish.",
+      wishMailOpened: "Your e-mail app is open — please send the message to deliver your wish.",
+      wishFailed: "Sorry, your wish couldn't be sent from this page. Please share it with us directly. 🙏",
+      wishesFallbackInfo: "Your wish will be forwarded directly to us.",
+      wishesOffline: "The online guestbook isn't available right now — please share your wish with us in person. 🙏",
+      rsvpEyebrow: "Will you come?",
+      rsvpTitle: "RSVP",
+      rsvpName: "Your name", rsvpNamePh: "your name",
+      rsvpAttend: "Will you attend?",
+      optYes: "Joyfully accepts 🎊",
+      optNo: "Regretfully declines 💔",
+      rsvpGuests: "Number of guests",
+      rsvpNoteL: "A note for us", rsvpNotePh: "song request, dietary needs…",
+      rsvpBtn: "Send RSVP ♥",
+      rsvpThanks: "Thank you, {name}!",
+      rsvpThanksSub: "Your RSVP is in.",
+      rsvpWaOpened: "WhatsApp is open — please press send to complete your RSVP.",
+      rsvpMailOpened: "Your e-mail app is open — please send the message to complete your RSVP.",
+      rsvpFailed: "Sorry, your RSVP couldn't be sent from this page. Please contact us directly. 🙏",
+      friend: "friend",
+      closingTitle: "We can't wait to celebrate with you.",
+      and: "and",
+      calDesc: "We can't wait to celebrate with you!",
+      waRsvpHeader: "Wedding RSVP", waWishHeader: "Wedding Wish",
+      waName: "Name", waAttendance: "Attending", waGuests: "Guests", waNote: "Note",
+      dotTop: "Top", dotCountdown: "Countdown", dotCouple: "The Couple",
+      dotVenue: "Venue", dotAgenda: "Schedule", dotGift: "Gift",
+      dotWishes: "Wishes", dotRsvp: "RSVP", dotClosing: "The End",
+    },
+  };
+  var L = i18n[lang];
+
+  window.TEMPLATE = {
+    theme: "scroll",
+    lang: lang,
+    i18n: i18n,
+    opener: {
+      variant: "scroll",
+      kicker: L.openerKicker,
+      title: L.openerTitle,
+      body: L.openerBody,
+      button: L.openerButton,
+      bg: "#f1ead8",
+      accent: "#195446",
+    },
+    quickDock: {
+      rsvp: L.dockRsvp,
+      map: L.dockMap,
+      calendar: L.dockCal,
+    },
+  };
+})();

@@ -29,8 +29,8 @@ window.WEDDING = {
   ceremonyTime: "4:00 PM",
   venueName: "Solo",
   venueAddress: "Solo, Indonesia",
-  mapsQuery: "[Venue Name, City]", // Google Maps search
-  dress: "[Outdoor smart casual · earth tones welcome]",
+  mapsQuery: "Solo, Indonesia", // Google Maps search (venue name + city works best)
+  dress: "Outdoor smart casual · earth tones welcome",
 
   /* --- love-story beats (add/remove freely) --- */
   story: [
@@ -59,12 +59,27 @@ window.WEDDING = {
 
   /* --- order of the day --- */
   agenda: [
-    { time: "[3:30]", label: "Guests arrive" },
-    { time: "[4:00]", label: "Wedding ceremony" },
-    { time: "[5:00]", label: "Photos &amp; warm greetings" },
-    { time: "[6:30]", label: "Dinner &amp; stories" },
-    { time: "[8:00]", label: "Music, laughter, and the next chapter" },
+    { time: "3:30 PM", label: "Guests arrive" },
+    { time: "4:00 PM", label: "Wedding ceremony" },
+    { time: "5:00 PM", label: "Photos &amp; warm greetings" },
+    { time: "6:30 PM", label: "Dinner &amp; stories" },
+    { time: "8:00 PM", label: "Music, laughter, and the next chapter" },
   ],
+
+  /* --- turut mengundang (extended family who also invite) ---
+     Rendered by themes only when non-empty. Plain strings. */
+  turutMengundang: [
+    // "Keluarga Besar Jesenský — Praha",
+    // "Keluarga Besar Kafka — Wien",
+  ],
+
+  /* --- live streaming (for guests who can't attend) ---
+     Rendered by themes only when url is set. --- */
+  streaming: {
+    url: "", // e.g. YouTube Live / Zoom / Google Meet link
+    label: "Watch the ceremony live",
+    time: "", // optional, e.g. "4:00 PM WIB"
+  },
 
   /* --- GIFT = BOOKS ONLY (no money / no bank transfer). --- */
   gift: {
@@ -74,8 +89,16 @@ window.WEDDING = {
       "Hi Franz & Milena, I'd like to send a book as a wedding gift. Could you share the shipping address?",
   },
 
-  /* --- RSVP e-mail fallback if you DON'T use Firebase ("" = none) --- */
+  /* --- RSVP fallbacks if you DON'T use Firebase ---
+     Themes try Firebase first; without it they offer WhatsApp, then
+     e-mail. With neither set, forms show an honest "couldn't send —
+     contact us directly" message instead of a fake success. --- */
+  rsvpWhatsapp: "", // international format, e.g. "6281234567890"
   rsvpEmail: "",
+
+  /* --- absolute site URL, used for og:image / share links.
+     Showcase = GitHub Pages; switch to your domain for production. --- */
+  siteUrl: "https://chud-lori.github.io/ulem",
 };
 
 /* -------------------------------------------------------------------

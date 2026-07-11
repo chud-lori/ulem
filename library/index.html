@@ -2,8 +2,16 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
-<title>The Library of Us — A Wedding Invitation</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>The Wedding of Milena &amp; Kafka — The Library of Us</title>
+<meta name="description" content="Milena &amp; Kafka are getting married — Saturday, 12 December 2026 in Solo, Indonesia. Read our story chapter by chapter and RSVP." />
+<meta property="og:title" content="The Wedding of Milena &amp; Kafka" />
+<meta property="og:description" content="Saturday, 12 December 2026 · Solo, Indonesia" />
+<meta property="og:image" content="https://chud-lori.github.io/ulem/photos/og-image.jpg" />
+<meta property="og:url" content="https://chud-lori.github.io/ulem/library/" />
+<meta property="og:type" content="website" />
+<meta name="twitter:card" content="summary_large_image" />
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>📚</text></svg>" />
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;1,500&family=EB+Garamond:ital@0;1&family=Special+Elite&family=Caveat:wght@600&display=swap" rel="stylesheet" />
 <style>
@@ -115,15 +123,6 @@
     border:none;border-bottom:1.5px solid #b6a079;background:transparent;}
   select{font-family:"EB Garamond",serif;font-size:15px;}
   textarea{font-size:18px;line-height:27px;}
-  .catalog{display:flex;flex-direction:column;gap:10px;text-align:left;margin:10px 0;}
-  .catcard{position:relative;background:#fcf6e6;border:1px solid #cdb787;border-radius:3px;padding:11px 13px;
-    box-shadow:0 4px 10px rgba(0,0,0,.15);}
-  .catcard .call{font-family:"Special Elite",monospace;font-size:10px;color:#8a6f4e;}
-  .catcard .ttl{font-family:"Cormorant Garamond",serif;font-size:19px;color:var(--leather);line-height:1.2;}
-  .catcard .au{font-size:13px;font-style:italic;color:#6b5640;}
-  .catcard .co{margin-top:8px;}
-  .checkout{font-family:"Special Elite",monospace;font-size:12px;cursor:pointer;background:var(--leather);color:#f3e4c0;
-    border:none;border-radius:3px;padding:7px 12px;letter-spacing:1px;}
   .stamp{font-family:"Special Elite",monospace;color:var(--stamp);border:2px solid var(--stamp);border-radius:4px;
     padding:3px 8px;display:inline-block;transform:rotate(-7deg);font-size:12px;letter-spacing:1px;opacity:.85;}
   .btn{font-family:"Special Elite",monospace;font-size:13px;letter-spacing:1px;cursor:pointer;background:var(--leather);
@@ -223,6 +222,7 @@ const PAGES=[
   {type:"cover", tocSkip:1},
   {type:"contents", tocSkip:1},
   {type:"authors", title:"About the Authors"},
+  ...((W.turutMengundang&&W.turutMengundang.length)?[{type:"tm", title:"Turut Mengundang"}]:[]),
   ...W.story.map(s=>({type:"story", s, title:s.title})),
   {type:"venue", title:"Where to Find Us"},
   {type:"agenda", title:"The Itinerary"},
@@ -238,7 +238,7 @@ function build(p,i){
   if(p.type==="cover") return sheet(`
     <span class="shine"></span>
     <div class="label">A Wedding Invitation</div><div class="rule"></div>
-    <div class="couple" style="display:grid;place-items:center;text-align:center;padding:14px;background:#f5ecd9;color:#5a4533">Your couple photo here</div>
+    <img class="couple" src="../photos/couple.png" onerror="photoFallback(this)" alt="${W.bride} &amp; ${W.groom}"/>
     <h1>The Story of<br/>${W.bride} <span class="amp">&amp;</span> ${W.groom}</h1>
     <div class="rule"></div>
     <p class="serif" style="font-size:20px">${W.dateLabel}</p>
@@ -255,17 +255,25 @@ function build(p,i){
       <div class="author">${img("bride.jpg")}<div class="nm">${W.brideFull}</div><div class="pr">${W.brideParents}</div></div>
       <div class="author">${img("groom.jpg")}<div class="nm">${W.groomFull}</div><div class="pr">${W.groomParents}</div></div>
     </div>`);
+  if(p.type==="tm") return sheet(`<div class="chapno">With Our Families</div><h2>Turut Mengundang</h2>
+    <p class="epigraph">The following families joyfully join us in extending this invitation.</p>
+    ${W.turutMengundang.map(x=>`<p class="serif" style="font-size:18px;margin:8px 0">${x}</p>`).join("")}`);
   if(p.type==="story"){ const s=p.s, e=q(i);
     return sheet(`<div class="chapno">Chapter — ${s.label}</div><h2>${s.title}</h2>
       <div class="epigraph">“${e[0]}”<cite>— ${e[1]}</cite></div>
       ${s.photo?`<div style="margin:10px 0">${img(s.photo)}</div>`:""}
       <div class="drop" style="text-align:left;font-size:17px">${s.html}</div>`); }
-  if(p.type==="venue") return sheet(`<div class="chapno">Location &amp; Hours</div><h2>Where to Find Us</h2>
+  if(p.type==="venue"){ const st=W.streaming;
+    return sheet(`<div class="chapno">Location &amp; Hours</div><h2>Where to Find Us</h2>
     <div class="detail"><span class="k">When</span><span>${W.dateLabel}<br/>Ceremony ${W.ceremonyTime}</span></div>
     <div class="detail"><span class="k">Where</span><span>${W.venueName}<br/>${W.venueAddress}</span></div>
     <div class="detail"><span class="k">Attire</span><span>${W.dress}</span></div>
+    ${(st&&st.url)?`<div class="detail"><span class="k">Live</span><span>${st.label||"Watch the ceremony live"}${st.time?`<br/>${st.time}`:""}</span></div>`:""}
     <p class="type" id="venueCd" style="font-size:12px;color:var(--leather)"></p>
-    <div class="acts"><button class="btn" id="mapBtn">📍 Map</button><button class="btn gold" onclick="addToCalendar()">📅 Calendar</button></div>`);
+    <div class="acts"><button class="btn" id="mapBtn">📍 Map</button>
+      <button class="btn gold" onclick="addToCalendar()">📅 Save .ics</button>
+      <button class="btn gold" onclick="openGoogleCal()">🗓️ Google Cal</button>
+      ${(st&&st.url)?`<button class="btn" id="streamBtn">📺 Watch Live</button>`:""}</div>`); }
   if(p.type==="agenda") return sheet(`<div class="chapno">Programme</div><h2>The Itinerary</h2>
     ${W.agenda.map(a=>`<div class="detail"><span class="k">${a.time}</span><span>${a.label}</span></div>`).join("")}`);
   if(p.type==="gift"){ const g=W.gift;
@@ -280,6 +288,7 @@ function build(p,i){
       <form id="wishForm"><label>Name</label><input name="name" required/>
         <label>A note in the margin</label><textarea name="msg" rows="2" required></textarea>
         <div class="acts"><button class="btn" type="submit">Stamp it ✦</button></div></form></div>
+    <p class="note" id="wishStatus"></p>
     <div class="wishes" id="wishList"><p class="note" id="wishNote">Loading…</p></div>`);
   if(p.type==="rsvp") return sheet(`<div class="chapno">Circulation Desk</div><h2>Check In</h2>
     <div class="card-lib"><div class="hd">Library Card · please sign</div>
@@ -289,7 +298,7 @@ function build(p,i){
         <label>Note for the librarians</label><textarea name="note" rows="2"></textarea>
         <div class="acts"><button class="btn" type="submit">Stamp my card</button></div></form></div>
     <p class="note" id="rsvpNote"></p>`);
-  if(p.type==="closing") return sheet(`<h2 class="serif">Finis</h2><div class="couple" style="display:grid;place-items:center;text-align:center;padding:14px;background:#f5ecd9;color:#5a4533;margin:auto">Your couple photo here</div>
+  if(p.type==="closing") return sheet(`<h2 class="serif">Finis</h2><img class="couple" src="../photos/couple.png" onerror="photoFallback(this)" alt="${W.bride} &amp; ${W.groom}" style="display:block;margin:auto"/>
     <h1 style="font-size:clamp(26px,7vw,42px)">${W.bride} <span class="amp">&amp;</span> ${W.groom}</h1>
     <p class="serif" style="font-size:19px">Thank you for reading our story.<br/>Come help us begin the next chapter. ❧</p>`,"");
   return sheet("");
@@ -342,27 +351,57 @@ window.addToCalendar=function(){ const d=new Date(W.date),pad=n=>String(n).padSt
     `DTSTART:${fmt(d)}`,`DTEND:${fmt(new Date(d.getTime()+5*36e5))}`,`LOCATION:${W.venueName}, ${W.venueAddress}`,
     "DESCRIPTION:Come help us begin the next chapter!","END:VEVENT","END:VCALENDAR"].join("\n");
   const a=document.createElement("a"); a.href=URL.createObjectURL(new Blob([ics],{type:"text/calendar"})); a.download="our-wedding.ics"; a.click(); };
-{ const mb=document.getElementById("mapBtn"); if(mb) mb.onclick=()=>window.open("https://maps.google.com/?q="+encodeURIComponent(W.mapsQuery),"_blank"); }
+window.openGoogleCal=function(){ const d=new Date(W.date),pad=n=>String(n).padStart(2,"0");
+  const fmt=t=>t.getUTCFullYear()+pad(t.getUTCMonth()+1)+pad(t.getUTCDate())+"T"+pad(t.getUTCHours())+pad(t.getUTCMinutes())+"00Z";
+  const u=new URL("https://calendar.google.com/calendar/render");
+  u.searchParams.set("action","TEMPLATE");
+  u.searchParams.set("text",`${W.bride} & ${W.groom} Wedding`);
+  u.searchParams.set("dates",`${fmt(d)}/${fmt(new Date(d.getTime()+5*36e5))}`);
+  u.searchParams.set("details","Come help us begin the next chapter!");
+  u.searchParams.set("location",`${W.venueName}, ${W.venueAddress}`);
+  window.open(u.toString(),"_blank"); };
+{ const mb=document.getElementById("mapBtn"); if(mb) mb.onclick=()=>window.open("https://maps.google.com/?q="+encodeURIComponent(W.mapsQuery),"_blank");
+  const sb=document.getElementById("streamBtn"); if(sb) sb.onclick=()=>window.open(W.streaming.url,"_blank"); }
 
 /* Firebase: wishes + rsvp + book checkouts (graceful without config) */
 function withWB(fn){ const WB=window.WB; if(WB) fn(WB); else addEventListener("wb-ready",()=>fn(window.WB),{once:true}); }
+/* no-Firebase hand-off: WhatsApp → e-mail → honest failure (never a fake success) */
+function directSend(subject,text){
+  const phone=String(W.rsvpWhatsapp||"").replace(/\D/g,"");
+  if(phone){ window.open(`https://wa.me/${phone}?text=${encodeURIComponent(text)}`,"_blank"); return "whatsapp"; }
+  if(W.rsvpEmail){ location.href=`mailto:${W.rsvpEmail}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(text)}`; return "email"; }
+  return null;
+}
 (function(){ const f=document.getElementById("wishForm"); if(!f) return;
-  const list=document.getElementById("wishList"), note=document.getElementById("wishNote");
+  const list=document.getElementById("wishList"), note=document.getElementById("wishNote"), status=document.getElementById("wishStatus");
   withWB(WB=>{ if(WB.ready) WB.watchWishes(items=>{ list.innerHTML=items.length
         ? items.map(w=>`<div class="wishcard"><b>${esc(w.name)}</b>${esc(w.msg)}<div class="dot">— stamped with love</div></div>`).join("")
         : `<p class="note">Be the first to sign 📖</p>`; });
-    else note.textContent="(Live guestbook needs Firebase — see ../firebase.js)"; });
+    else note.textContent="(Notes here go to the librarians directly — the live guestbook needs Firebase.)"; });
   f.addEventListener("submit",e=>{ e.preventDefault(); const d=new FormData(f),WB=window.WB;
-    if(WB&&WB.ready){ WB.addWish(d.get("name"),d.get("msg")).catch(()=>{}); f.reset(); }
-    else note.textContent="(Set up Firebase to share your note.)"; }); })();
+    if(WB&&WB.ready){
+      WB.addWish(d.get("name"),d.get("msg")).then(()=>{ f.reset(); status.textContent="Your note is in the margins ✦"; })
+        .catch(()=>{ status.textContent="Your note couldn't be sent — please try again in a moment."; });
+    } else {
+      const via=directSend(`Wedding wish from ${d.get("name")}`,`Wedding wish from ${d.get("name")}:\n${d.get("msg")}`);
+      status.textContent = via==="whatsapp" ? "We opened WhatsApp with your note — press Send there to share it."
+        : via==="email" ? "We opened your e-mail app with your note — press Send there to share it."
+        : "Sorry — your note couldn't be sent from here. Please tell us directly.";
+    } }); })();
+/* RSVP chain: Firebase → WhatsApp → e-mail → honest failure */
 (function(){ const f=document.getElementById("rsvpForm"); if(!f) return; const note=document.getElementById("rsvpNote");
   f.addEventListener("submit",e=>{ e.preventDefault(); const d=new FormData(f),WB=window.WB,
     data={name:d.get("name"),attending:d.get("attending"),guests:d.get("guests"),note:d.get("note"),to:GUEST||""};
-    if(WB&&WB.ready) WB.addRSVP(data).catch(()=>{});
-    else if(W.rsvpEmail) location.href=`mailto:${W.rsvpEmail}?subject=Wedding RSVP - ${encodeURIComponent(data.name)}&body=`+
-      encodeURIComponent(`Name: ${data.name}\nAttending: ${data.attending}\nGuests: ${data.guests}\nNote: ${data.note}`);
-    f.parentElement.innerHTML=`<div class="hd">Library Card</div><p style="text-align:center;margin-top:10px">
-      <span class="stamp">CHECKED IN ✓</span></p><p style="text-align:center">Thank you, <b>${esc(data.name)||"friend"}</b>! Your card is stamped.</p>`; }); })();
+    const success=()=>{ f.parentElement.innerHTML=`<div class="hd">Library Card</div><p style="text-align:center;margin-top:10px">
+      <span class="stamp">CHECKED IN ✓</span></p><p style="text-align:center">Thank you, <b>${esc(data.name)||"friend"}</b>! Your card is stamped.</p>`; };
+    const fallback=()=>{
+      const via=directSend(`Wedding RSVP - ${data.name}`,
+        `Wedding RSVP\nName: ${data.name}\nAttending: ${data.attending}\nGuests: ${data.guests}\nNote: ${data.note||"-"}`);
+      if(via){ f.parentElement.innerHTML=`<div class="hd">Library Card</div><p style="text-align:center;margin-top:10px">
+        <span class="stamp">IN TRANSIT …</span></p><p style="text-align:center">Almost done, <b>${esc(data.name)||"friend"}</b> — we opened ${via==="whatsapp"?"WhatsApp":"your e-mail app"} with your RSVP. Press <b>Send</b> there to deliver it.</p>`; }
+      else note.textContent="Sorry — we couldn't send your RSVP: no RSVP channel is set up yet, so nothing was sent. Please contact us directly."; };
+    if(WB&&WB.ready) WB.addRSVP(data).then(success).catch(fallback);
+    else fallback(); }); })();
 function giftWaUrl(g){
   const phone=String((g&&g.whatsapp)||"").replace(/\D/g,"");
   const text=encodeURIComponent((g&&g.whatsappText)||"Hi, I'd like to send a book as a wedding gift. Could you share the shipping address?");
@@ -374,6 +413,11 @@ function giftWaUrl(g){
 (function(){ const open=new URLSearchParams(location.search).get("open"); let idx=0;
   if(open){ const k=PAGES.findIndex(p=>p.type===open||(p.s&&p.s.id===open)); if(k>=0) idx=k; }
   go(idx); })();
+/* Opening the opener overlay counts as opening the book too — land straight on
+   page 1 (contents); the cover stays reachable by paging back. */
+document.addEventListener("click",e=>{
+  if(e.target.closest(".wb-open-btn")) setTimeout(()=>{ if(cur===0) go(1); },560);
+},true);
 // ambient gold dust drifting behind the book
 if(window.FX) FX.particles({ chars:["✦","·","❉","✧"], color:"rgba(201,162,75,.8)", count:16, z:0, min:9, var:14, minDur:11, varDur:12 });
 </script>

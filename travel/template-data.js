@@ -20,6 +20,7 @@ window.TEMPLATE = {
   stops: [
     ["story", "Story", "22%", "28%"],
     ["details", "Details", "68%", "26%"],
+    ["itinerary", "Itinerary", "18%", "56%"],
     ["gift", "Gift", "78%", "66%"],
     ["wishes", "Wishes", "38%", "72%"],
     ["rsvp", "RSVP", "54%", "48%"],
